@@ -1,0 +1,32 @@
+.chats-container {
+  min-height: 100vh;
+  display: flex;
+}
+
+.aside {
+  width: 20vw;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+}
+
+.main-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.chat-item {
+  display: flex;
+}
+
+.chat-item-avatar {
+  display: block;
+  width: 47px;
+  height: 47px;
+  border-radius: 50%;
+  background-color: #efefef;
+}
