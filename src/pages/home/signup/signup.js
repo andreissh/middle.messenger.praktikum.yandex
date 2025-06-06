@@ -1,5 +1,5 @@
 import { compile } from "handlebars";
-import signupTemplateSource from "./signup.handlebars?raw";
+import signupTemplateSource from "./signup.hbs?raw";
 import "./signup.css";
 
 const signupTemplate = compile(signupTemplateSource);

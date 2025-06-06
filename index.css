@@ -1,6 +1,20 @@
+:root {
+  --text-color-default: #1e1e1e;
+}
+
 body,
 h1 {
   margin: 0;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  color: var(--text-color-default);
+}
+
+h1 {
+  font-size: 20px;
+  line-height: 20px;
 }
 
 ul {

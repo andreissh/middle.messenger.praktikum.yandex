@@ -1,3 +1,5 @@
 import { renderSigninForm } from "./src/pages/home/signin/signin.js";
 
-renderSigninForm();
+document.addEventListener("DOMContentLoaded", () => {
+  renderSigninForm();
+});

@@ -1,5 +1,5 @@
 import { compile } from "handlebars";
-import notFoundTemplateSource from "./not-found.handlebars?raw";
+import notFoundTemplateSource from "./not-found.hbs?raw";
 import "./not-found.css";
 
 const notFoundTemplate = compile(notFoundTemplateSource);

@@ -1,8 +1,10 @@
-import { compile } from "handlebars";
-import signinTemplateSource from "./signin.handlebars?raw";
+import Handlebars from "handlebars";
+import signinTemplateSource from "./signin.hbs?raw";
+import labelInputPartial from "../../../partials/label-input/label-input.hbs?raw";
 import "./signin.css";
 
-const signinTemplate = compile(signinTemplateSource);
+Handlebars.registerPartial("label-input", labelInputPartial);
+const signinTemplate = Handlebars.compile(signinTemplateSource);
 
 export function renderSigninForm() {
   const html = signinTemplate();

@@ -1,5 +1,5 @@
 import { compile } from "handlebars";
-import serverErrorTemplateSource from "./server-error.handlebars?raw";
+import serverErrorTemplateSource from "./server-error.hbs?raw";
 import "./server-error.css";
 
 const serverErrorTemplate = compile(serverErrorTemplateSource);
