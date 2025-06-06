@@ -3,15 +3,15 @@
     <h1 class="signin-header">Вход</h1>
     <form class="signin-form">
       <div class="signin-form-input-group">
-        {{> label-input label="Логин" inputType="text" inputName="login" inputValue="" autocomplete="login"}}
-        {{> label-input label="Пароль" inputType="password" inputName="password" inputValue="" autocomplete="password"}}
+        {{> label-input label="Логин" type="text" name="login" autocomplete="login"}}
+        {{> label-input label="Пароль" type="password" name="password" autocomplete="password"}}
       </div>
-      <div class="signin-btn-wrapper">
+      <div class="signin-form-signin-btn-wrapper">
         {{> btn href="#" id="renderChatsBtn" class="btn" text="Авторизоваться"}}
       </div>
     </form>
 
-    <div class="signup-btn-wrapper">
+    <div class="signin-container-signup-btn-wrapper">
       {{> btn href="#" id="renderSignupBtn" class="btn-secondary" text="Нет аккаунта?"}}
     </div>
   </div>

@@ -1,8 +1,10 @@
-import { compile } from "handlebars";
+import Handlebars from "handlebars";
 import signupTemplateSource from "./signup.hbs?raw";
+import "../../../partials/label-input/label-input.js";
+import "../../../partials/btn/btn.js";
 import "./signup.css";
 
-const signupTemplate = compile(signupTemplateSource);
+const signupTemplate = Handlebars.compile(signupTemplateSource);
 
 export function renderSignupForm() {
   const html = signupTemplate();

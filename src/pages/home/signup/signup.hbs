@@ -3,27 +3,21 @@
     <h1 class="signup-header">Регистрация</h1>
     <form class="signup-form">
       <div class="signup-form-input-group">
-        <label class="signup-form-label">Почта</label>
-        <input type="text" class="signup-form-input" />
-        <label class="signup-form-label">Логин</label>
-        <input type="text" class="signup-form-input" />
-        <label class="signup-form-label">Имя</label>
-        <input type="text" class="signup-form-input" />
-        <label class="signup-form-label">Фамилия</label>
-        <input type="text" class="signup-form-input" />
-        <label class="signup-form-label">Телефон</label>
-        <input type="text" class="signup-form-input" />
-        <label class="signup-form-label">Пароль</label>
-        <input type="password" class="signup-form-input" />
-        <label class="signup-form-label">Пароль (еще раз)</label>
-        <input type="password" class="signup-form-input" />
+        {{> label-input label="Почта" type="text" name="email" autocomplete="email"}}
+        {{> label-input label="Логин" type="text" name="login" autocomplete="login"}}
+        {{> label-input label="Имя" type="text" name="first_name" autocomplete="first_name"}}
+        {{> label-input label="Фамилия" type="text" name="second_name" autocomplete="second_name"}}
+        {{> label-input label="Телефон" type="text" name="phone" autocomplete="phone"}}
+        {{> label-input label="Пароль" type="password" name="password" autocomplete="password"}}
+        {{> label-input label="Пароль (еще раз)" type="password" name="password" autocomplete="password"}}
       </div>
-      <div class="signup-form-btn-group">
-        <button class="signup-form-btn">Зарегистрироваться</button>
-        <button
-          class="signup-form-btn singup-form-btn--transparent"
-        >Войти</button>
+      <div class="signup-form-signup-btn-wrapper">
+        {{> btn href="#" class="btn" text="Зарегистрироваться"}}
       </div>
     </form>
+
+    <div class="signup-container-signup-btn-wrapper">
+      {{> btn href="#" id="renderSignupBtn" class="btn-secondary" text="Войти"}}
+    </div>
   </div>
 </div>
