@@ -3,6 +3,10 @@ import handlebars from "vite-plugin-handlebars";
 import { resolve } from "path";
 
 export default defineConfig({
+  base: "./",
+  server: {
+    port: 3000,
+  },
   plugins: [
     handlebars({
       partialsDirectory: resolve(__dirname, "src/partials"),
@@ -10,9 +14,8 @@ export default defineConfig({
   ],
   build: {
     rollupOptions: {
-      input: {
-        signin: resolve(__dirname, "src/pages/home/signin/signin.hbs"),
-      },
+      input: "index.html",
     },
   },
+  assetsInclude: ["**/*.hbs"],
 });

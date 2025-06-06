@@ -6,12 +6,14 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",
+    "serve": "^14.2.4",
     "vite": "^6.3.5",
     "vite-plugin-handlebars": "^2.0.0"
   },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "npm run build && serve dist"
   }
 }
