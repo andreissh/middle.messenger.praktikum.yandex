@@ -1,16 +1,16 @@
-.label-input-container {
+.login-field-item {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.label {
+.login-field-label {
   font-size: 9px;
   line-height: 9px;
   color: var(--text-color-muted);
 }
 
-.input {
+.login-field-input {
   border: none;
   outline: none;
   border-bottom: 1px solid var(--bg-color-blue);

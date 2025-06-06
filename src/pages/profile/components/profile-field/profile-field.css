@@ -1,4 +1,4 @@
-.user-label-input-container {
+.profile-field-item {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid var(--border-color);
@@ -10,14 +10,14 @@
   }
 }
 
-.user-label {
+.profile-field-label {
   min-width: 120px;
   font-size: 13px;
   line-height: 13px;
   color: var(--text-color-default);
 }
 
-.user-input {
+.profile-field-input {
   width: 100%;
   border: none;
   outline: none;

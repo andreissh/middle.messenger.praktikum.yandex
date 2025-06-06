@@ -2,10 +2,10 @@
   <div class="signin-container">
     <h1 class="signin-header">Вход</h1>
     <form class="signin-form">
-      <div class="signin-form-input-group">
-        {{> label-input label="Логин" type="text" name="login" autocomplete="login"}}
-        {{> label-input label="Пароль" type="password" name="password" autocomplete="password"}}
-      </div>
+      <ul class="login-field-list">
+        {{> login-field label="Логин" type="text" name="login" autocomplete="login"}}
+        {{> login-field label="Пароль" type="password" name="password" autocomplete="password"}}
+      </ul>
       <div class="signin-form-signin-btn-wrapper">
         {{> btn href="#" id="renderChatsBtn" class="btn" text="Войти"}}
       </div>

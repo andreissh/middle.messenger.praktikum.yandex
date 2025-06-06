@@ -1,9 +1,9 @@
-import { compile } from "handlebars";
+import Handlebars from "handlebars";
 import serverErrorTemplateSource from "./server-error.hbs?raw";
-import "../../partials/btn/btn.js";
+import "../../components/btn/btn.js";
 import "./server-error.css";
 
-const serverErrorTemplate = compile(serverErrorTemplateSource);
+const serverErrorTemplate = Handlebars.compile(serverErrorTemplateSource);
 
 export function renderServerErrorForm() {
   const html = serverErrorTemplate();

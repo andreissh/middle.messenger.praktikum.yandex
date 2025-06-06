@@ -1,9 +1,9 @@
-import { compile } from "handlebars";
+import Handlebars from "handlebars";
 import notFoundTemplateSource from "./not-found.hbs?raw";
-import "../../partials/btn/btn.js";
+import "../../components/btn/btn.js";
 import "./not-found.css";
 
-const notFoundTemplate = compile(notFoundTemplateSource);
+const notFoundTemplate = Handlebars.compile(notFoundTemplateSource);
 
 export function renderNotFoundForm() {
   const html = notFoundTemplate();

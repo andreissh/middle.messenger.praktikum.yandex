@@ -1,17 +1,17 @@
 <div class="chats-container">
-  <aside class="aside">
-    <div class="aside-top-section">
-      <a href="#" id="renderUserInfoBtn" class="aside-to-profile-btn">
-        <span class="aside-to-profile-btn-text">Профиль</span>
+  <aside class="chats-aside">
+    <div class="chats-aside-top-section">
+      <a href="#" id="renderProfileInfoBtn" class="chats-aside-to-profile-btn">
+        <span class="chats-aside-to-profile-btn-text">Профиль</span>
         <img src="{{arrowIcon}}" alt="">
       </a>
-      <input type="search" name="message" class="aside-search" placeholder="Поиск" />
+      <input type="search" name="message" class="chats-aside-search" placeholder="Поиск" />
     </div>
     {{> chat-list chats=chats }}
   </aside>
-  <main class="main">
-    <div class="main-content">
-      <span class="main-content-text-default">Выберите чат, чтобы отправить сообщение</span>
+  <main class="chats-main">
+    <div class="chats-main-content">
+      <span class="chats-main-content-text-default">Выберите чат, чтобы отправить сообщение</span>
     </div>
   </main>
 </div>

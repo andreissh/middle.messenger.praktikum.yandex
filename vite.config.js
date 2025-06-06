@@ -9,7 +9,7 @@ export default defineConfig({
   },
   plugins: [
     handlebars({
-      partialsDirectory: resolve(__dirname, "src/partials"),
+      partialsDirectory: resolve(__dirname, "src/components"),
     }),
   ],
   build: {

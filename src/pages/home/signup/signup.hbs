@@ -2,15 +2,11 @@
   <div class="signup-container">
     <h1 class="signup-header">Регистрация</h1>
     <form class="signup-form">
-      <div class="signup-form-input-group">
-        {{> label-input label="Почта" type="text" name="email" autocomplete="email"}}
-        {{> label-input label="Логин" type="text" name="login" autocomplete="login"}}
-        {{> label-input label="Имя" type="text" name="first_name" autocomplete="first_name"}}
-        {{> label-input label="Фамилия" type="text" name="second_name" autocomplete="second_name"}}
-        {{> label-input label="Телефон" type="text" name="phone" autocomplete="phone"}}
-        {{> label-input label="Пароль" type="password" name="password" autocomplete="password"}}
-        {{> label-input label="Пароль (еще раз)" type="password" name="password" autocomplete="password"}}
-      </div>
+      <ul class="login-field-list">
+        {{#each loginFields}}
+          {{> login-field label=this.label type=this.type name=this.name autocomplete=this.autocomplete }}
+        {{/each}}
+      </ul>
       <div class="signup-form-signup-btn-wrapper">
         {{> btn href="#" class="btn renderSigninBtn" text="Зарегистрироваться"}}
       </div>

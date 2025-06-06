@@ -1,11 +1,10 @@
-import { compile } from "handlebars";
+import Handlebars from "handlebars";
 import chatsTemplateSource from "./chats.hbs?raw";
 import arrowIcon from "../../assets/icons/arrow-right.svg";
-import "../../partials/chat-list/chat-list.js";
-
+import "../chats/components/chat-list/chat-list.js";
 import "./chats.css";
 
-const chatsTemplate = compile(chatsTemplateSource);
+const chatsTemplate = Handlebars.compile(chatsTemplateSource);
 
 const chatData = [
   { name: "Андрей", text: "Изображение", time: "12:49", count: "2" },
@@ -22,11 +21,13 @@ export function renderChatsForm() {
   const html = chatsTemplate({ chats: chatData, arrowIcon });
   document.getElementById("app").innerHTML = html;
 
-  const renderUserInfoBtn = document.querySelector("#renderUserInfoBtn");
-  renderUserInfoBtn.addEventListener("click", (e) => {
+  const renderProfileInfoBtn = document.querySelector("#renderProfileInfoBtn");
+  renderProfileInfoBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    import("../user/user-info/user-info.js").then(({ renderUserInfoForm }) => {
-      renderUserInfoForm();
-    });
+    import("../profile/profile-info/profile-info.js").then(
+      ({ renderProfileInfoForm }) => {
+        renderProfileInfoForm();
+      }
+    );
   });
 }

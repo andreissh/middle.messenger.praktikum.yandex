@@ -27,7 +27,7 @@
   margin: 1.25rem 0 2.5rem 0;
 }
 
-.signin-form-input-group {
+.login-field-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
