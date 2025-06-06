@@ -1,0 +1,17 @@
+.label-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 9px;
+  line-height: 9px;
+  color: var(--text-color-muted);
+}
+
+.input {
+  border: none;
+  outline: none;
+  border-bottom: 1px solid var(--bg-color-blue);
+}

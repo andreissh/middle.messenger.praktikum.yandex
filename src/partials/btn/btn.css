@@ -1,0 +1,18 @@
+.btn {
+  font-size: 13px;
+  line-height: 13px;
+  padding: 0.75rem 0;
+  color: var(--text-color-white);
+  background-color: var(--bg-color-blue);
+  border-radius: 8px;
+  text-decoration: none;
+  text-align: center;
+}
+
+.btn-secondary {
+  font-size: 11px;
+  line-height: 11px;
+  color: var(--text-color-blue);
+  text-decoration: none;
+  margin: 0 auto;
+}

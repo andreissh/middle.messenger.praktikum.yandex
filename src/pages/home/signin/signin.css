@@ -10,7 +10,7 @@
   flex-direction: column;
   width: 340px;
   height: 450px;
-  padding: 30px;
+  padding: 1.875rem;
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.14);
@@ -24,16 +24,22 @@
 
 .signin-header {
   text-align: center;
-  margin: 20px 0 40px 0;
+  margin: 1.25rem 0 2.5rem 0;
 }
 
 .signin-form-input-group {
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 }
 
-.signin-form-btn-group {
+.signin-btn-wrapper {
   display: flex;
   flex-direction: column;
   margin-top: auto;
+}
+
+.signup-btn-wrapper {
+  display: flex;
+  margin-top: 0.875rem;
 }
