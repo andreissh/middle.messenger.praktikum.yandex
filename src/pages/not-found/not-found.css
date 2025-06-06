@@ -1,7 +1,19 @@
-.notFound-container {
+.not-found-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.not-found-header {
+  font-size: 40px;
+  line-height: 40px;
+  margin-bottom: 1.25rem;
+}
+
+.not-found-description {
+  font-size: 20px;
+  line-height: 20px;
+  margin-bottom: 4.5rem;
 }
