@@ -1,56 +1,50 @@
 <div class="user-info">
-    <div class="user-info-goback-block">
-        <span class="user-info-goback-btn">back</span>
+  <div class="user-info-goback-block">
+    <span class="user-info-goback-btn">back</span>
+  </div>
+  <div class="user-info-content-wrapper">
+    <div class="user-info-content">
+      <div class="user-info-avatar-block">
+        <span class="user-info-avatar">
+          <img src="{{avatarImg}}" class="user-info-avatar-img" />
+        </span>
+        <span class="user-info-username">Иван</span>
+      </div>
+      <div class="user-info-data-block">
+        <ul class="user-info-data-list">
+            {{> user-label-input label="Почта" type="text" name="email" autocomplete="email" value="pochta@yandex.ru" readonly="true"}}
+            {{> user-label-input label="Логин" type="text" name="login" autocomplete="login" value="ivanivanov" readonly="true"}}
+            {{> user-label-input label="Имя" type="text" name="first_name" autocomplete="first_name" value="Иван" readonly="true"}}
+            {{> user-label-input label="Фамилия" type="text" name="second_name" autocomplete="second_name" value="Иванов" readonly="true"}}
+            {{> user-label-input label="Имя в чате" type="text" name="display_name" autocomplete="display_name" value="Иван" readonly="true"}}
+            {{> user-label-input label="Телефон" type="text" name="phone" autocomplete="phone" value="+7 (909) 967 30 30" readonly="true"}}
+        </ul>
+      </div>
+      <div class="user-info-links-block">
+        <ul class="user-info-links-list">
+          <li class="user-info-links-item">
+            <a
+              href="#"
+              id="renderChangeDataBtn"
+              class="user-info-links-item-link"
+            >Изменить данные</a>
+          </li>
+          <li class="user-info-links-item">
+            <a
+              href="#"
+              id="renderChangePassBtn"
+              class="user-info-links-item-link"
+            >Изменить пароль</a>
+          </li>
+          <li class="user-info-links-item">
+            <a
+              href="#"
+              id="renderSigninBtn"
+              class="user-info-links-item-link user-info-links-item-link--danger"
+            >Выйти</a>
+          </li>
+        </ul>
+      </div>
     </div>
-    <div class="user-info-content-wrapper">
-        <div class="user-info-content">
-            <div class="user-info-avatar-block">
-                <span class="user-info-avatar">
-                    <img class="user-info-avatar-img">
-                </span>
-                <span class="user-info-username">Иван</span>
-            </div>
-            <div class="user-info-data-block">
-                <ul class="user-info-data-list">
-                    <li class="user-info-data-item">
-                        <span class="user-info-data-item-title">Почта</span>
-                        <span class="user-info-data-item-value">pochta@yandex.ru</span>
-                    </li>
-                    <li class="user-info-data-item">
-                        <span class="user-info-data-item-title">Логин</span>
-                        <span class="user-info-data-item-value">ivanivanov</span>
-                    </li>
-                    <li class="user-info-data-item">
-                        <span class="user-info-data-item-title">Имя</span>
-                        <span class="user-info-data-item-value">Иван</span>
-                    </li>
-                    <li class="user-info-data-item">
-                        <span class="user-info-data-item-title">Фамилия</span>
-                        <span class="user-info-data-item-value">Иванов</span>
-                    </li>
-                    <li class="user-info-data-item">
-                        <span class="user-info-data-item-title">Имя в чате</span>
-                        <span class="user-info-data-item-value">Иван</span>
-                    </li>
-                    <li class="user-info-data-item">
-                        <span class="user-info-data-item-title">Телефон</span>
-                        <span class="user-info-data-item-value">+7 (909) 967 30 30</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="user-info-links-block">
-                <ul class="user-info-links-list">
-                    <li class="user-info-links-item">
-                        <a id="renderChangeDataBtn" class="user-info-links-item-link">Изменить данные</a>
-                    </li>
-                    <li class="user-info-links-item">
-                        <a id="renderChangePassBtn" class="user-info-links-item-link">Изменить пароль</a>
-                    </li>
-                    <li class="user-info-links-item">
-                        <a id="renderSigninBtn" class="user-info-links-item-link user-info-links-item-link--danger">Выйти</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>

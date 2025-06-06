@@ -1,11 +1,13 @@
 import { compile } from "handlebars";
 import userInfoTemplateSource from "./user-info.hbs?raw";
+import avatarImg from "../../../assets/icons/avatar-img.svg";
+import "../../../partials/user-label-input/user-label-input.js";
 import "./user-info.css";
 
 const userInfoTemplate = compile(userInfoTemplateSource);
 
 export function renderUserInfoForm() {
-  const html = userInfoTemplate();
+  const html = userInfoTemplate({ avatarImg });
   document.getElementById("app").innerHTML = html;
 
   const renderBackBtn = document.querySelector(".user-info-goback-btn");
