@@ -1,18 +1,24 @@
 import { compile } from "handlebars";
-import userDataTemplateSource from "./user-change-data.hbs?raw";
+import userChangeDataTemplateSource from "./user-change-data.hbs?raw";
+import avatarImg from "../../../assets/icons/avatar-img.svg";
+import backBtn from "../../../assets/icons/back-btn.svg";
+import "../../../partials/btn/btn.js";
+import "../../../partials/user-label-input/user-label-input.js";
 import "./user-change-data.css";
 
-const userDataTemplate = compile(userDataTemplateSource);
+const userChangeDataTemplate = compile(userChangeDataTemplateSource);
 
-export function renderUserDataForm() {
-  const html = userDataTemplate();
+export function renderUserChangeDataForm() {
+  const html = userChangeDataTemplate({ avatarImg, backBtn });
   document.getElementById("app").innerHTML = html;
 
-  const renderBackBtn = document.querySelector(".user-data-goback-btn");
+  const renderBackBtn = document.querySelector(
+    ".user-change-data-goback-block"
+  );
   renderBackBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    import("../../chats/chats.js").then(({ renderChatsForm }) => {
-      renderChatsForm();
+    import("../user-info/user-info.js").then(({ renderUserInfoForm }) => {
+      renderUserInfoForm();
     });
   });
 }

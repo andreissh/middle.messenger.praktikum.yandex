@@ -1,16 +1,17 @@
 import { compile } from "handlebars";
 import userInfoTemplateSource from "./user-info.hbs?raw";
 import avatarImg from "../../../assets/icons/avatar-img.svg";
+import backBtn from "../../../assets/icons/back-btn.svg";
 import "../../../partials/user-label-input/user-label-input.js";
 import "./user-info.css";
 
 const userInfoTemplate = compile(userInfoTemplateSource);
 
 export function renderUserInfoForm() {
-  const html = userInfoTemplate({ avatarImg });
+  const html = userInfoTemplate({ avatarImg, backBtn });
   document.getElementById("app").innerHTML = html;
 
-  const renderBackBtn = document.querySelector(".user-info-goback-btn");
+  const renderBackBtn = document.querySelector(".user-info-goback-block");
   renderBackBtn.addEventListener("click", (e) => {
     e.preventDefault();
     import("../../chats/chats.js").then(({ renderChatsForm }) => {
@@ -22,8 +23,8 @@ export function renderUserInfoForm() {
   renderChangeDataBtn.addEventListener("click", (e) => {
     e.preventDefault();
     import("../user-change-data/user-change-data.js").then(
-      ({ renderUserDataForm }) => {
-        renderUserDataForm();
+      ({ renderUserChangeDataForm }) => {
+        renderUserChangeDataForm();
       }
     );
   });
@@ -32,8 +33,8 @@ export function renderUserInfoForm() {
   renderChangePassBtn.addEventListener("click", (e) => {
     e.preventDefault();
     import("../user-change-password/user-change-password.js").then(
-      ({ renderUserPassForm }) => {
-        renderUserPassForm();
+      ({ renderUserChangePassForm }) => {
+        renderUserChangePassForm();
       }
     );
   });
