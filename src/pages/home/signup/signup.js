@@ -10,7 +10,7 @@ export function renderSignupForm() {
   const html = signupTemplate();
   document.getElementById("app").innerHTML = html;
 
-  const renderSigninBtn = document.querySelectorAll(".signup-form-btn");
+  const renderSigninBtn = document.querySelectorAll(".renderSigninBtn");
   renderSigninBtn.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();

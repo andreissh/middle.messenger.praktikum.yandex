@@ -4,7 +4,41 @@
 }
 
 .aside {
-  width: 20vw;
+  width: 310px;
+  padding: 0 0.675rem;
+  border-right: 1px solid var(--border-color);
+}
+
+.aside-top-section {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 0 0.875rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.aside-to-profile-btn {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--text-color-muted);
+  text-align: right;
+  text-decoration: none;
+}
+
+.aside-to-profile-btn-text {
+  font-size: 12px;
+  line-height: 12px;
+  margin-right: 8px;
+}
+
+.aside-search {
+  border: none;
+  outline: none;
+  padding: 0.375rem 0.625rem;
+  font-size: 12px;
+  line-height: 12px;
+  color: var(--text-color-muted);
+  background-color: var(--bg-color-muted);
+  border-radius: 5px;
 }
 
 .main {
@@ -19,14 +53,8 @@
   flex: 1;
 }
 
-.chat-item {
-  display: flex;
-}
-
-.chat-item-avatar {
-  display: block;
-  width: 47px;
-  height: 47px;
-  border-radius: 50%;
-  background-color: #efefef;
+.main-content-text-default {
+  font-size: 12px;
+  line-height: 12px;
+  color: var(--text-color-muted);
 }
