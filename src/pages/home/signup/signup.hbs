@@ -1,0 +1,19 @@
+<div class="signup-wrapper">
+  <div class="signup-container">
+    <h1 class="signup-header">Регистрация</h1>
+    <form class="signup-form">
+      <ul class="login-field-list">
+        {{#each loginFields}}
+          {{> login-field label=this.label type=this.type name=this.name autocomplete=this.autocomplete }}
+        {{/each}}
+      </ul>
+      <div class="signup-form-signup-btn-wrapper">
+        {{> btn href="#" class="btn renderSigninBtn" text="Зарегистрироваться"}}
+      </div>
+    </form>
+
+    <div class="signup-container-signin-btn-wrapper">
+      {{> btn href="#" class="btn-secondary renderSigninBtn" text="Войти"}}
+    </div>
+  </div>
+</div>

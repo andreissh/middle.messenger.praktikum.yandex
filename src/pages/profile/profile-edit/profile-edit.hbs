@@ -1,0 +1,22 @@
+<div class="profile-edit">
+  <div class="profile-edit-goback-block">
+    <img src="{{backBtn}}" alt="backBtn">
+  </div>
+  <div class="profile-edit-content-wrapper">
+    <div class="profile-edit-content">
+      <div class="profile-edit-avatar-block">
+        <span class="profile-edit-avatar">
+          <img src="{{avatarImg}}" class="profile-edit-avatar-img" />
+        </span>
+      </div>
+      <form>
+        <div class="profile-edit-data-block">
+          {{> profile-fields-list profileFields=profileFields}}
+        </div>
+        <div class="profile-edit-links-block">
+          {{> btn href="#" class="btn" text="Сохранить"}}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
