@@ -16,11 +16,11 @@ export function renderSigninForm() {
     });
   });
 
-  const renderChatsBtn = document.querySelector("#renderChatsBtn");
-  renderChatsBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    import("../../chats/chats.js").then(({ renderChatsForm }) => {
-      renderChatsForm();
-    });
-  });
+  // const renderChatsBtn = document.querySelector("#renderChatsBtn");
+  // renderChatsBtn.addEventListener("click", (e) => {
+  //   e.preventDefault();
+  //   import("../../chats/chats.js").then(({ renderChatsForm }) => {
+  //     renderChatsForm();
+  //   });
+  // });
 }

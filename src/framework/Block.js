@@ -13,9 +13,12 @@ class Block {
   _element = null;
   _meta = null;
   _id = null;
+  _eventBus = null;
+  _props = null;
 
   constructor(tagName = "div", propsAndChildren = {}) {
     const eventBus = new EventBus();
+    this._eventBus = eventBus;
     const { children, props } = this._getChildren(propsAndChildren);
 
     this.children = children;
@@ -27,9 +30,9 @@ class Block {
 
     this._id = makeUUID();
 
-    this.props = this._makePropsProxy({ ...props, __id: this._id });
+    this._props = this._makePropsProxy({ ...props, __id: this._id });
 
-    this.eventBus = () => eventBus;
+    // this.eventBus = () => eventBus;
 
     this._registerEvents(eventBus);
     eventBus.emit(Block.EVENTS.INIT);
@@ -79,10 +82,20 @@ class Block {
   }
 
   _addEvents() {
-    const { events = {} } = this.props;
+    const { events = {} } = this._props;
+    if (!this._element) return;
 
-    Object.keys(events).forEach((eventName) => {
-      this._element.addEventListener(eventName, events[eventName]);
+    Object.keys(events).forEach(([eventName, handler]) => {
+      this._element.addEventListener(eventName, handler);
+    });
+  }
+
+  _removeEvents() {
+    const { events = {} } = this._props;
+    if (!this._element) return;
+
+    Object.entries(events).forEach(([eventName, handler]) => {
+      this._element.removeEventListener(eventName, handler);
     });
   }
 
@@ -96,7 +109,7 @@ class Block {
 
     Object.values(this.children).forEach((child) => child.init());
 
-    this.eventBus().emit(Block.EVENTS.FLOW_RENDER);
+    this._eventBus.emit(Block.EVENTS.FLOW_RENDER);
   }
 
   _componentDidMount() {
@@ -110,7 +123,7 @@ class Block {
   componentDidMount(oldProps) {}
 
   dispatchComponentDidMount() {
-    this._eventBus().emit(Block.EVENTS.FLOW_CDM);
+    this._eventBus.emit(Block.EVENTS.FLOW_CDM);
   }
 
   _componentDidUpdate(oldProps, newProps) {
@@ -125,12 +138,17 @@ class Block {
     return true;
   }
 
+  get props() {
+    return this._props;
+  }
+
   setProps = (nextProps) => {
     if (!nextProps) {
       return;
     }
 
-    Object.assign(this.props, nextProps);
+    Object.assign(this._props, nextProps);
+    this._eventBus.emit(Block.EVENTS.FLOW_CDU, this._props, nextProps);
   };
 
   get element() {
@@ -140,7 +158,7 @@ class Block {
   _render() {
     const block = this.render();
 
-    // this._removeEvents();
+    this._removeEvents();
     this._element.innerHTML = "";
 
     this._element.appendChild(block);
@@ -149,11 +167,11 @@ class Block {
   }
 
   render() {
-    return this.compile(template, this.props);
+    return this.compile(template, this._props);
   }
 
   getContent() {
-    return this.element;
+    return this._element;
   }
 
   _makePropsProxy(props) {
@@ -165,7 +183,7 @@ class Block {
       },
       set(target, prop, value) {
         target[prop] = value;
-        self.eventBus().emit(Block.EVENTS.FLOW_CDU, { ...target }, target);
+        self._eventBus.emit(Block.EVENTS.FLOW_CDU, { ...target }, target);
         return true;
       },
       deleteProperty() {

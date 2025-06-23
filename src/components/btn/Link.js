@@ -6,7 +6,6 @@ const template = `
     {{{ child }}}
 </a>
 `;
-
 export default class Link extends Block {
   constructor(props) {
     super("a", props);
