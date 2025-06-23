@@ -1,6 +1,6 @@
 <div class="profile-edit-pass">
   <div class="profile-edit-pass-goback-block">
-    <img src="{{backBtn}}" alt="backBtn">
+    <img src="{{backBtn}}" alt="backBtn" />
   </div>
   <div class="profile-edit-pass-content-wrapper">
     <div class="profile-edit-pass-content">
@@ -11,10 +11,14 @@
       </div>
       <form>
         <div class="profile-edit-pass-data-block">
-          {{> profile-fields-list profileFields=passwordFields}}
+          {{#ProfileFieldsList
+            profileFields=passwordFields
+          }}{{/ProfileFieldsList}}
         </div>
         <div class="profile-edit-pass-links-block">
-          {{> btn href="#" class="btn" text="Сохранить"}}
+          {{#Link href="#" id="save" className="btn"}}
+            Сохранить
+          {{/Link}}
         </div>
       </form>
     </div>

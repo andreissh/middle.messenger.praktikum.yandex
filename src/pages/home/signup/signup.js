@@ -1,38 +1,36 @@
 import Handlebars from "handlebars";
 import signupTemplateSource from "./signup.hbs?raw";
-import "../components/login-field/login-field.js";
-import "../../../components/btn/btn.js";
 import "./signup.css";
 
 const signupTemplate = Handlebars.compile(signupTemplateSource);
 
 const loginFields = [
-  { label: "Почта", type: "text", name: "email", autocomplete: "email" },
-  { label: "Логин", type: "text", name: "login", autocomplete: "login" },
+  { id: "email", label: "Почта", type: "text", name: "email" },
+  { id: "login", label: "Логин", type: "text", name: "login" },
   {
+    id: "first_name",
     label: "Имя",
     type: "text",
     name: "first_name",
-    autocomplete: "first_name",
   },
   {
+    id: "second_name",
     label: "Фамилия",
     type: "text",
     name: "second_name",
-    autocomplete: "second_name",
   },
-  { label: "Телефон", type: "text", name: "phone", autocomplete: "phone" },
+  { id: "phone", label: "Телефон", type: "text", name: "phone" },
   {
+    id: "password",
     label: "Пароль",
     type: "password",
     name: "password",
-    autocomplete: "password",
   },
   {
+    id: "password_repeat",
     label: "Пароль (еще раз)",
     type: "password",
     name: "password_repeat",
-    autocomplete: "password",
   },
 ];
 

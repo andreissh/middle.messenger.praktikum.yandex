@@ -1,7 +1,6 @@
 import Handlebars from "handlebars";
 import chatsTemplateSource from "./chats.hbs?raw";
 import arrowIcon from "../../assets/icons/arrow-right.svg";
-import "../chats/components/chat-list/chat-list.js";
 import "./chats.css";
 
 const chatsTemplate = Handlebars.compile(chatsTemplateSource);

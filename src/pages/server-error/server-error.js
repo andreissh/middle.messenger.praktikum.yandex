@@ -1,6 +1,5 @@
 import Handlebars from "handlebars";
 import serverErrorTemplateSource from "./server-error.hbs?raw";
-import "../../components/btn/btn.js";
 import "./server-error.css";
 
 const serverErrorTemplate = Handlebars.compile(serverErrorTemplateSource);

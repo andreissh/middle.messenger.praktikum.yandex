@@ -1,6 +1,5 @@
 import Handlebars from "handlebars";
 import notFoundTemplateSource from "./not-found.hbs?raw";
-import "../../components/btn/btn.js";
 import "./not-found.css";
 
 const notFoundTemplate = Handlebars.compile(notFoundTemplateSource);

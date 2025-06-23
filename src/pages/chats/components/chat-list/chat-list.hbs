@@ -1,5 +1,7 @@
 <ul class="chat-list">
   {{#each chats}}
-    {{> chat-item name=this.name text=this.text time=this.time count=this.count}}
+    {{#ChatItem
+      name=this.name text=this.text time=this.time count=this.count
+    }}{{/ChatItem}}
   {{/each}}
 </ul>

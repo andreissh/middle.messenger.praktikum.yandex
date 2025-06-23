@@ -1,7 +1,5 @@
 import Handlebars from "handlebars";
 import signinTemplateSource from "./signin.hbs?raw";
-import "../components/login-field/login-field.js";
-import "../../../components/btn/btn.js";
 import "./signin.css";
 
 const signinTemplate = Handlebars.compile(signinTemplateSource);

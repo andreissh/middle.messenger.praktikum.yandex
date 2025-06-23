@@ -2,8 +2,6 @@ import Handlebars from "handlebars";
 import profileEditTemplateSource from "./profile-edit.hbs?raw";
 import avatarImg from "../../../assets/icons/avatar-img.svg";
 import backBtn from "../../../assets/icons/back-btn.svg";
-import "../../../components/btn/btn.js";
-import "../components/profile-fields-list/profile-fields-list.js";
 import "./profile-edit.css";
 
 const profileEditTemplate = Handlebars.compile(profileEditTemplateSource);

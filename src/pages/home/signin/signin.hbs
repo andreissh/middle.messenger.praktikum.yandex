@@ -3,19 +3,24 @@
     <h1 class="signin-header">Вход</h1>
     <form class="signin-form">
       <ul class="login-field-list">
-        {{> login-field label="Логин" type="text" name="login" autocomplete="login"}}
-        {{> login-field label="Пароль" type="password" name="password" autocomplete="password"}}
+        {{#LoginField
+          id="login" label="Логин" type="text" name="login"
+        }}{{/LoginField}}
+        {{#LoginField
+          id="password" label="Пароль" type="password" name="password"
+        }}{{/LoginField}}
       </ul>
       <div class="signin-form-signin-btn-wrapper">
-        {{> btn href="#" id="renderChatsBtn" class="btn" text="Войти"}}
+        {{#Link href="#" id="renderChatsBtn" className="btn"}}
+          Войти
+        {{/Link}}
       </div>
     </form>
 
     <div class="signin-container-signup-btn-wrapper">
-      {{> btn href="#" id="renderSignupBtn" class="btn-secondary" text="Нет аккаунта?"}}
-      {{#Button id="testid" className="testclass"}}
-        click me
-      {{/Button}}
+      {{#Link href="#" id="renderSignupBtn" className="btn-secondary"}}
+        Нет аккаунта?
+      {{/Link}}
     </div>
   </div>
 </div>

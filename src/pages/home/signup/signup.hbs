@@ -4,16 +4,22 @@
     <form class="signup-form">
       <ul class="login-field-list">
         {{#each loginFields}}
-          {{> login-field label=this.label type=this.type name=this.name autocomplete=this.autocomplete }}
+          {{#LoginField
+            id=this.id label=this.label type=this.type name=this.name
+          }}{{/LoginField}}
         {{/each}}
       </ul>
       <div class="signup-form-signup-btn-wrapper">
-        {{> btn href="#" class="btn renderSigninBtn" text="Зарегистрироваться"}}
+        {{#Link href="#" id="signup" className="btn renderSigninBtn"}}
+          Зарегистрироваться
+        {{/Link}}
       </div>
     </form>
 
     <div class="signup-container-signin-btn-wrapper">
-      {{> btn href="#" class="btn-secondary renderSigninBtn" text="Войти"}}
+      {{#Link href="#" id="signin" className="btn-secondary renderSigninBtn"}}
+        Войти
+      {{/Link}}
     </div>
   </div>
 </div>

@@ -1,14 +1,15 @@
 import Block from "../../framework/Block";
+import "./btn.css";
 
 const template = `
-<button id="{{ id }}" class="{{ className }}">
+<a href="{{ href }}" id="{{ id }}" class="{{ className }}">
     {{{ child }}}
-</button>
+</a>
 `;
 
-export default class Button extends Block {
+export default class Link extends Block {
   constructor(props) {
-    super("button", props);
+    super("a", props);
   }
   render() {
     return this.compile(template, this.props);
