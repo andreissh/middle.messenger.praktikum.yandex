@@ -1,19 +1,7 @@
-import Link from "./components/Link.js";
+import Link from "./Link.js";
 
-const app = document.getElementById("app");
+export function renderLink(props) {
+  const link = new Link({ ...props });
 
-const link = new Link({
-  href: "#",
-  id: "renderChatsBtn",
-  className: "btn",
-  events: {
-    click: (e) => {
-      e.preventDefault();
-      console.log("Clicked");
-    },
-  },
-  child: "Войти",
-});
-
-app.innerHTML = "";
-app.appendChild(link.getContent());
+  return link.getContent();
+}

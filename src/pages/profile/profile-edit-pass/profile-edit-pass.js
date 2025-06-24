@@ -3,6 +3,7 @@ import profileEditPassTemplateSource from "./profile-edit-pass.hbs?raw";
 import avatarImg from "../../../assets/icons/avatar-img.svg";
 import backBtn from "../../../assets/icons/back-btn.svg";
 import "./profile-edit-pass.css";
+import { renderLink } from "../../../components/btn/index.js";
 
 const profileEditPassTemplate = Handlebars.compile(
   profileEditPassTemplateSource
@@ -30,8 +31,25 @@ const passwordFields = [
 ];
 
 export function renderProfileEditPassForm() {
-  const html = profileEditPassTemplate({ passwordFields, avatarImg, backBtn });
-  document.getElementById("app").innerHTML = html;
+  document.getElementById("app").innerHTML = profileEditPassTemplate({
+    passwordFields,
+    avatarImg,
+    backBtn,
+  });
+
+  const linksContainer = document.querySelector(
+    ".profile-edit-pass-links-container"
+  );
+  if (linksContainer) {
+    const link = renderLink({
+      href: "#",
+      id: "save",
+      className: "btn",
+      child: "Сохранить",
+    });
+    linksContainer.innerHTML = "";
+    linksContainer.appendChild(link);
+  }
 
   const renderBackBtn = document.querySelector(
     ".profile-edit-pass-goback-block"

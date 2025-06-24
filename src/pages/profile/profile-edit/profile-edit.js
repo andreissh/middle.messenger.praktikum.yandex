@@ -3,6 +3,7 @@ import profileEditTemplateSource from "./profile-edit.hbs?raw";
 import avatarImg from "../../../assets/icons/avatar-img.svg";
 import backBtn from "../../../assets/icons/back-btn.svg";
 import "./profile-edit.css";
+import { renderLink } from "../../../components/btn/index.js";
 
 const profileEditTemplate = Handlebars.compile(profileEditTemplateSource);
 
@@ -52,8 +53,25 @@ const profileFields = [
 ];
 
 export function renderProfileEditForm() {
-  const html = profileEditTemplate({ profileFields, avatarImg, backBtn });
-  document.getElementById("app").innerHTML = html;
+  document.getElementById("app").innerHTML = profileEditTemplate({
+    profileFields,
+    avatarImg,
+    backBtn,
+  });
+
+  const linksContainer = document.querySelector(
+    ".profile-edit-links-container"
+  );
+  if (linksContainer) {
+    const link = renderLink({
+      href: "#",
+      id: "save",
+      className: "btn",
+      child: "Сохранить",
+    });
+    linksContainer.innerHTML = "";
+    linksContainer.appendChild(link);
+  }
 
   const renderBackBtn = document.querySelector(".profile-edit-goback-block");
   renderBackBtn.addEventListener("click", (e) => {

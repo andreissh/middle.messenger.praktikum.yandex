@@ -3,6 +3,7 @@ import profileInfoTemplateSource from "./profile-info.hbs?raw";
 import avatarImg from "../../../assets/icons/avatar-img.svg";
 import backBtn from "../../../assets/icons/back-btn.svg";
 import "./profile-info.css";
+import { renderLink } from "../../../components/btn/index.js";
 
 const profileInfoTemplate = Handlebars.compile(profileInfoTemplateSource);
 
@@ -61,28 +62,41 @@ const profileLinks = [
   {
     id: "renderProfileEditBtn",
     text: "Изменить данные",
-    class: "profile-info-links-item-link",
+    className: "profile-info-links-item-link",
   },
   {
     id: "renderProfileEditPassBtn",
     text: "Изменить пароль",
-    class: "profile-info-links-item-link",
+    className: "profile-info-links-item-link",
   },
   {
     id: "renderSigninBtn",
     text: "Выйти",
-    class: "profile-info-links-item-link profile-info-links-item-link--danger",
+    className:
+      "profile-info-links-item-link profile-info-links-item-link--danger",
   },
 ];
 
 export function renderProfileInfoForm() {
-  const html = profileInfoTemplate({
+  document.getElementById("app").innerHTML = profileInfoTemplate({
     profileFields,
-    profileLinks,
     avatarImg,
     backBtn,
   });
-  document.getElementById("app").innerHTML = html;
+
+  const linksList = document.querySelector(".profile-info-links-list");
+  profileLinks.forEach(({ id, text, className }) => {
+    const linksItem = document.createElement("li");
+    linksItem.className = "profile-info-links-item";
+    const link = renderLink({
+      href: "#",
+      id,
+      className,
+      child: text,
+    });
+    linksItem.appendChild(link);
+    linksList.appendChild(linksItem);
+  });
 
   const renderBackBtn = document.querySelector(".profile-info-goback-block");
   renderBackBtn.addEventListener("click", (e) => {

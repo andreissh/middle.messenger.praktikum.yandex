@@ -1,6 +1,7 @@
 import Handlebars from "handlebars";
 import signupTemplateSource from "./signup.hbs?raw";
 import "./signup.css";
+import { renderLink } from "../../../components/btn/index.js";
 
 const signupTemplate = Handlebars.compile(signupTemplateSource);
 
@@ -35,16 +36,49 @@ const loginFields = [
 ];
 
 export function renderSignupForm() {
-  const html = signupTemplate({ loginFields });
-  document.getElementById("app").innerHTML = html;
+  document.getElementById("app").innerHTML = signupTemplate({ loginFields });
 
-  const renderSigninBtn = document.querySelectorAll(".renderSigninBtn");
-  renderSigninBtn.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      import("../signin/signin.js").then(({ renderSigninForm }) => {
-        renderSigninForm();
-      });
+  const signupContainer = document.querySelector(
+    ".signup-form-signup-btn-container"
+  );
+  if (signupContainer) {
+    const link = renderLink({
+      href: "#",
+      id: "signup",
+      className: "btn renderSigninBtn",
+      child: "Зарегистрироваться",
+      events: {
+        click: (e) => {
+          e.preventDefault();
+          import("../signin/signin.js").then(({ renderSigninForm }) => {
+            renderSigninForm();
+          });
+        },
+      },
     });
-  });
+    signupContainer.innerHTML = "";
+    signupContainer.appendChild(link);
+  }
+
+  const signinContainer = document.querySelector(
+    ".signup-form-signin-btn-container"
+  );
+  if (signinContainer) {
+    const link = renderLink({
+      href: "#",
+      id: "signin",
+      className: "btn-secondary renderSigninBtn",
+      child: "Войти",
+      events: {
+        click: (e) => {
+          e.preventDefault();
+          import("../signin/signin.js").then(({ renderSigninForm }) => {
+            renderSigninForm();
+          });
+        },
+      },
+    });
+    signinContainer.innerHTML = "";
+    signinContainer.appendChild(link);
+  }
 }

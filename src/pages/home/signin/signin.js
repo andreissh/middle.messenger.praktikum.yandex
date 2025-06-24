@@ -1,26 +1,54 @@
 import Handlebars from "handlebars";
 import signinTemplateSource from "./signin.hbs?raw";
 import "./signin.css";
+import { renderLink } from "../../../components/btn/index.js";
 
 const signinTemplate = Handlebars.compile(signinTemplateSource);
 
 export function renderSigninForm() {
-  const html = signinTemplate();
-  document.getElementById("app").innerHTML = html;
+  document.getElementById("app").innerHTML = signinTemplate();
 
-  const renderSignupBtn = document.querySelector("#renderSignupBtn");
-  renderSignupBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    import("../signup/signup.js").then(({ renderSignupForm }) => {
-      renderSignupForm();
+  const signinContainer = document.querySelector(
+    ".signin-form-signin-btn-container"
+  );
+  if (signinContainer) {
+    const link = renderLink({
+      href: "#",
+      id: "renderChatsBtn",
+      className: "btn",
+      child: "Войти",
+      events: {
+        click: (e) => {
+          e.preventDefault();
+          import("../../chats/chats.js").then(({ renderChatsForm }) => {
+            renderChatsForm();
+          });
+        },
+      },
     });
-  });
+    signinContainer.innerHTML = "";
+    signinContainer.appendChild(link);
+  }
 
-  // const renderChatsBtn = document.querySelector("#renderChatsBtn");
-  // renderChatsBtn.addEventListener("click", (e) => {
-  //   e.preventDefault();
-  //   import("../../chats/chats.js").then(({ renderChatsForm }) => {
-  //     renderChatsForm();
-  //   });
-  // });
+  const signupContainer = document.querySelector(
+    ".signin-form-signup-btn-container"
+  );
+  if (signupContainer) {
+    const link = renderLink({
+      href: "#",
+      id: "renderSignupBtn",
+      className: "btn-secondary",
+      child: "Нет аккаунта?",
+      events: {
+        click: (e) => {
+          e.preventDefault();
+          import("../signup/signup.js").then(({ renderSignupForm }) => {
+            renderSignupForm();
+          });
+        },
+      },
+    });
+    signupContainer.innerHTML = "";
+    signupContainer.appendChild(link);
+  }
 }

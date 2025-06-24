@@ -85,8 +85,10 @@ class Block {
     const { events = {} } = this._props;
     if (!this._element) return;
 
-    Object.keys(events).forEach(([eventName, handler]) => {
-      this._element.addEventListener(eventName, handler);
+    Object.entries(events).forEach(([eventName, handler]) => {
+      if (typeof handler === "function") {
+        this._element.addEventListener(eventName, handler);
+      }
     });
   }
 
@@ -102,6 +104,12 @@ class Block {
   _createResources() {
     const { tagName } = this._meta;
     this._element = this._createDocumentElement(tagName);
+
+    if (this._props.attributes) {
+      Object.entries(this._props.attributes).forEach(([name, value]) => {
+        if (value) this._element.setAttribute(name, value);
+      });
+    }
   }
 
   init() {

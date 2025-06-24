@@ -78,7 +78,7 @@
   color: var(--text-color-danger);
 }
 
-.profile-edit-pass-links-block {
+.profile-edit-pass-links-container {
   display: flex;
   justify-content: center;
 }

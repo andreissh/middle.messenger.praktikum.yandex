@@ -34,13 +34,13 @@
   margin-bottom: 2rem;
 }
 
-.signup-form-signup-btn-wrapper {
+.signup-form-signup-btn-container {
   display: flex;
   flex-direction: column;
   margin-top: auto;
 }
 
-.signup-container-signin-btn-wrapper {
+.signup-form-signin-btn-container {
   display: flex;
   margin-top: 0.875rem;
 }
