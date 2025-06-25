@@ -3,7 +3,7 @@ import Block from "../../framework/Block";
 import ChatList from "./components/chat-list/ChatList";
 import arrowIcon from "../../assets/icons/arrow-right.svg";
 
-const chatData = [
+const chats = [
   { name: "Андрей", text: "Изображение", time: "12:49", count: "2" },
   { name: "Киноклуб", text: "Вы: стикер", time: "12:00", count: "" },
   {
@@ -20,7 +20,7 @@ const template = `
       <div class="chats-aside-top-section">
         <a href="#" id="renderProfileInfoBtn" class="chats-aside-to-profile-btn">
           <span class="chats-aside-to-profile-btn-text">Профиль</span>
-          <img src="{{arrowIcon}}" alt="" />
+          <img src="{{ arrowIcon }}" alt="" />
         </a>
         <input
           type="search"
@@ -45,10 +45,11 @@ export default class ChatsPage extends Block {
     super("div", {
       arrowIcon,
       ChatList: new ChatList({
-        chats: chatData,
+        chats,
       }),
     });
   }
+
   render() {
     return this.compile(template);
   }

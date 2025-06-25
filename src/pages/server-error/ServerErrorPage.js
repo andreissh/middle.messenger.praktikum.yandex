@@ -28,6 +28,7 @@ export default class ServerErrorPage extends Block {
       }),
     });
   }
+
   render() {
     return this.compile(template);
   }

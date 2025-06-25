@@ -17,6 +17,7 @@ export default class LoginField extends Block {
   constructor(props) {
     super("div", props);
   }
+
   render() {
     return this.compile(template);
   }

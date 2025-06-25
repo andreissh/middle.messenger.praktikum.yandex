@@ -6,10 +6,12 @@ const template = `
     {{ text }}
   </a>
 `;
+
 export default class Link extends Block {
   constructor(props) {
     super("div", props);
   }
+
   render() {
     return this.compile(template);
   }

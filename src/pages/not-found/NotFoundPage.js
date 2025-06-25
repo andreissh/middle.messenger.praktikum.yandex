@@ -28,6 +28,7 @@ export default class NotFoundPage extends Block {
       }),
     });
   }
+
   render() {
     return this.compile(template);
   }

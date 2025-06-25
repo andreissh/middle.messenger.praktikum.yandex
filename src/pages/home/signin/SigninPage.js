@@ -63,6 +63,7 @@ export default class SigninPage extends Block {
       }),
     });
   }
+
   render() {
     return this.compile(template);
   }

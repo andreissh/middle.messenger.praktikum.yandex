@@ -10,11 +10,11 @@ const template = `
 
 export default class ChatList extends Block {
   constructor(props) {
-    super("ul", {
-      ...props,
+    super("div", {
       chats: props.chats.map((chat) => new ChatItem(chat)),
     });
   }
+
   render() {
     return this.compile(template);
   }
