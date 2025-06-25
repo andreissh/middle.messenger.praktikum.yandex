@@ -19,7 +19,7 @@ export default class NotFoundPage extends Block {
         href: "#",
         id: "renderChatsBtn",
         class: "btn-secondary",
-        text: "Назад к чатам",
+        children: "Назад к чатам",
         events: {
           click: () => {
             app.changePage("ChatsPage");

@@ -2,8 +2,8 @@ import Block from "../../framework/Block";
 import "./btn.css";
 
 const template = `
-  <a href={{ href }} id={{ id }} class={{ class }}>
-    {{ text }}
+  <a href="{{ href }}" id="{{ id }}" class="{{ class }}">
+    {{{ children }}}
   </a>
 `;
 

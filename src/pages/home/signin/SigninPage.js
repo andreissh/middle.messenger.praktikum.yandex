@@ -43,7 +43,7 @@ export default class SigninPage extends Block {
         href: "#",
         id: "renderChatsBtn",
         class: "btn",
-        text: "Войти",
+        children: "Войти",
         events: {
           click: () => {
             app.changePage("ChatsPage");
@@ -54,7 +54,7 @@ export default class SigninPage extends Block {
         href: "#",
         id: "renderSignupBtn",
         class: "btn-secondary",
-        text: "Нет аккаунта?",
+        children: "Нет аккаунта?",
         events: {
           click: () => {
             app.changePage("SignupPage");

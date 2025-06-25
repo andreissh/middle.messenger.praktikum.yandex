@@ -2,6 +2,7 @@ import "./chats.css";
 import Block from "../../framework/Block";
 import ChatList from "./components/chat-list/ChatList";
 import arrowIcon from "../../assets/icons/arrow-right.svg";
+import Link from "../../components/btn/Link";
 
 const chats = [
   { name: "Андрей", text: "Изображение", time: "12:49", count: "2" },
@@ -18,10 +19,7 @@ const template = `
   <div class="chats-container">
     <aside class="chats-aside">
       <div class="chats-aside-top-section">
-        <a href="#" id="renderProfileInfoBtn" class="chats-aside-to-profile-btn">
-          <span class="chats-aside-to-profile-btn-text">Профиль</span>
-          <img src="{{ arrowIcon }}" alt="" />
-        </a>
+        {{{ ProfileLink }}}
         <input
           type="search"
           name="message"
@@ -43,6 +41,20 @@ const template = `
 export default class ChatsPage extends Block {
   constructor(app) {
     super("div", {
+      ProfileLink: new Link({
+        href: "#",
+        id: "renderProfileInfoBtn",
+        class: "chats-aside-to-profile-btn",
+        children: `
+          <span class="chats-aside-to-profile-btn-text">Профиль</span>
+          <img src="${arrowIcon}" alt="" />
+        `,
+        events: {
+          click: () => {
+            app.changePage("ProfileInfoPage");
+          },
+        },
+      }),
       arrowIcon,
       ChatList: new ChatList({
         chats,

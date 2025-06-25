@@ -76,7 +76,7 @@ export default class SignupPage extends Block {
         href: "#",
         id: "signup",
         class: "btn renderSigninBtn",
-        text: "Зарегистрироваться",
+        children: "Зарегистрироваться",
         events: {
           click: () => {
             app.changePage("SigninPage");
@@ -87,7 +87,7 @@ export default class SignupPage extends Block {
         href: "#",
         id: "signin",
         class: "btn-secondary renderSigninBtn",
-        text: "Войти",
+        children: "Войти",
         events: {
           click: () => {
             app.changePage("SigninPage");
