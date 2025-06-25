@@ -1,3 +1,5 @@
+import Block from "../../../framework/Block";
+
 const template = "<div></div>";
 
 export default class ProfileInfoPage extends Block {
