@@ -18,23 +18,18 @@ class Block {
 
   constructor(tagName = "div", propsAndChildren = {}) {
     const eventBus = new EventBus();
-    this._eventBus = eventBus;
     const { children, props } = this._getChildren(propsAndChildren);
 
+    this._eventBus = eventBus;
     this.children = children;
-
     this._meta = {
       tagName,
       props,
     };
-
     this._id = makeUUID();
-
     this._props = this._makePropsProxy({ ...props, __id: this._id });
-
-    // this.eventBus = () => eventBus;
-
     this._registerEvents(eventBus);
+
     this._eventBus.emit(Block.EVENTS.INIT);
   }
 
@@ -81,8 +76,6 @@ class Block {
   init() {
     this._createResources();
 
-    Object.values(this.children).forEach((child) => child.init());
-
     this._eventBus.emit(Block.EVENTS.FLOW_RENDER);
   }
 
@@ -99,7 +92,6 @@ class Block {
 
   _createDocumentElement(tagName) {
     const element = document.createElement(tagName);
-    // element.setAttribute("data-id", this._id);
     return element;
   }
 
@@ -107,8 +99,7 @@ class Block {
     const block = this.render();
 
     this._removeEvents();
-    this._element.innerHTML = "";
-    this._element.appendChild(block);
+    this._element = block;
     this._addEvents();
   }
 
@@ -153,7 +144,7 @@ class Block {
       }
     });
 
-    return fragment.content;
+    return fragment.content.firstElementChild;
   }
 
   getContent() {

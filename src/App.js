@@ -1,4 +1,5 @@
-import SigninPage from "./pages/home/signin/signin";
+import SigninPage from "./pages/home/signin/SigninPage";
+import SignupPage from "./pages/home/signup/signup";
 
 export default class App {
   _state;
@@ -8,17 +9,32 @@ export default class App {
     this._state = {
       currentPage: "SigninPage",
     };
-    this._appElement = document.getElementById("app");
+    this._rootElementId = "app";
   }
 
   render() {
-    if (this._state.currentPage === "SigninPage") {
-      const signinPage = new SigninPage();
-      if (this._appElement) {
-        this._appElement.replaceWith(signinPage.getContent());
-      }
+    const rootElement = document.getElementById(this._rootElementId);
+    if (!rootElement) return;
+
+    let newContent;
+
+    switch (this._state.currentPage) {
+      case "SigninPage":
+        const signinPage = new SigninPage(this);
+        newContent = signinPage.getContent();
+        break;
+      case "SignupPage":
+        const signupPage = new SignupPage(this);
+        newContent = signupPage.getContent();
+        break;
+      default:
+        return;
     }
-    return "";
+
+    const newRootElement = document.createElement("div");
+    newRootElement.id = this._rootElementId;
+    newRootElement.appendChild(newContent);
+    rootElement.replaceWith(newRootElement);
   }
 
   changePage(page) {

@@ -1,9 +1,9 @@
 import Handlebars from "handlebars";
 import signupTemplateSource from "./signup.hbs?raw";
 import "./signup.css";
-import { renderLink } from "../../../components/btn/index.js";
+import Block from "../../../framework/Block.js";
 
-const signupTemplate = Handlebars.compile(signupTemplateSource);
+// const signupTemplate = Handlebars.compile(signupTemplateSource);
 
 const loginFields = [
   { id: "email", label: "Почта", type: "text", name: "email" },
@@ -35,50 +35,61 @@ const loginFields = [
   },
 ];
 
-export function renderSignupForm() {
-  document.getElementById("app").innerHTML = signupTemplate({ loginFields });
+// export function renderSignupForm() {
+//   document.getElementById("app").innerHTML = signupTemplate({ loginFields });
 
-  const signupContainer = document.querySelector(
-    ".signup-form-signup-btn-container"
-  );
-  if (signupContainer) {
-    const link = renderLink({
-      href: "#",
-      id: "signup",
-      className: "btn renderSigninBtn",
-      child: "Зарегистрироваться",
-      events: {
-        click: (e) => {
-          e.preventDefault();
-          import("../signin/signin.js").then(({ renderSigninForm }) => {
-            renderSigninForm();
-          });
-        },
-      },
-    });
-    signupContainer.innerHTML = "";
-    signupContainer.appendChild(link);
+//   const signupContainer = document.querySelector(
+//     ".signup-form-signup-btn-container"
+//   );
+//   if (signupContainer) {
+//     const link = renderLink({
+//       href: "#",
+//       id: "signup",
+//       className: "btn renderSigninBtn",
+//       child: "Зарегистрироваться",
+//       events: {
+//         click: (e) => {
+//           e.preventDefault();
+//           import("../signin/signin.js").then(({ renderSigninForm }) => {
+//             renderSigninForm();
+//           });
+//         },
+//       },
+//     });
+//     signupContainer.innerHTML = "";
+//     signupContainer.appendChild(link);
+//   }
+
+//   const signinContainer = document.querySelector(
+//     ".signup-form-signin-btn-container"
+//   );
+//   if (signinContainer) {
+//     const link = renderLink({
+//       href: "#",
+//       id: "signin",
+//       className: "btn-secondary renderSigninBtn",
+//       child: "Войти",
+//       events: {
+//         click: (e) => {
+//           e.preventDefault();
+//           import("../signin/signin.js").then(({ renderSigninForm }) => {
+//             renderSigninForm();
+//           });
+//         },
+//       },
+//     });
+//     signinContainer.innerHTML = "";
+//     signinContainer.appendChild(link);
+//   }
+// }
+
+const template = "<div></div>";
+
+export default class SignupPage extends Block {
+  constructor(app) {
+    super("div");
   }
-
-  const signinContainer = document.querySelector(
-    ".signup-form-signin-btn-container"
-  );
-  if (signinContainer) {
-    const link = renderLink({
-      href: "#",
-      id: "signin",
-      className: "btn-secondary renderSigninBtn",
-      child: "Войти",
-      events: {
-        click: (e) => {
-          e.preventDefault();
-          import("../signin/signin.js").then(({ renderSigninForm }) => {
-            renderSigninForm();
-          });
-        },
-      },
-    });
-    signinContainer.innerHTML = "";
-    signinContainer.appendChild(link);
+  render() {
+    return this.compile(template);
   }
 }
