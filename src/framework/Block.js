@@ -18,10 +18,11 @@ class Block {
 
   constructor(tagName = "div", propsAndChildren = {}) {
     const eventBus = new EventBus();
-    const { children, props } = this._getChildren(propsAndChildren);
+    const { children, props, lists } = this._getChildren(propsAndChildren);
 
     this._eventBus = eventBus;
     this.children = children;
+    this.lists = lists;
     this._meta = {
       tagName,
       props,
@@ -36,16 +37,19 @@ class Block {
   _getChildren(propsAndChildren) {
     const children = {};
     const props = {};
+    const lists = {};
 
     Object.entries(propsAndChildren).forEach(([key, value]) => {
       if (value instanceof Block) {
         children[key] = value;
+      } else if (Array.isArray(value)) {
+        lists[key] = value;
       } else {
         props[key] = value;
       }
     });
 
-    return { children, props };
+    return { children, props, lists };
   }
 
   _makePropsProxy(props) {
@@ -129,9 +133,14 @@ class Block {
 
   compile(template) {
     const propsAndStubs = { ...this._props };
+    const tmpId = Math.floor(100000 + Math.random() * 900000);
 
     Object.entries(this.children).forEach(([key, child]) => {
       propsAndStubs[key] = `<div data-id="${child._id}"></div>`;
+    });
+
+    Object.entries(this.lists).forEach(([key]) => {
+      propsAndStubs[key] = `<div data-id="__l_${tmpId}"></div>`;
     });
 
     const fragment = this._createDocumentElement("template");
@@ -141,6 +150,21 @@ class Block {
       const stub = fragment.content.querySelector(`[data-id="${child._id}"]`);
       if (stub) {
         stub.replaceWith(child.getContent());
+      }
+    });
+
+    Object.entries(this.lists).forEach(([, child]) => {
+      const listFragment = this._createDocumentElement("template");
+      child.forEach((item) => {
+        if (item instanceof Block) {
+          listFragment.content.append(item.getContent());
+        } else {
+          listFragment.content.append(`${item}`);
+        }
+      });
+      const stub = fragment.content.querySelector(`[data-id="__l_${tmpId}"]`);
+      if (stub) {
+        stub.replaceWith(listFragment.content);
       }
     });
 
