@@ -1,5 +1,5 @@
-import SigninPage from "./pages/home/signin/SigninPage";
-import SignupPage from "./pages/home/signup/SignupPage";
+import SigninPage from "./pages/home/signin/SigninPage.ts";
+import SignupPage from "./pages/home/signup/SignupPage.ts";
 import ChatsPage from "./pages/chats/ChatsPage";
 import ProfileInfoPage from "./pages/profile/profile-info/ProfileInfoPage";
 import ProfileEditPage from "./pages/profile/profile-edit/ProfileEditPage";

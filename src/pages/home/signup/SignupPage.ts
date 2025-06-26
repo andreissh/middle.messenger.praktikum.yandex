@@ -1,9 +1,17 @@
 import "./signup.css";
 import Block from "../../../framework/Block.js";
 import Link from "../../../components/btn/Link.ts";
-import LoginFields from "../components/login-fields/LoginFields.js";
+import LoginFields from "../components/login-fields/LoginFields.ts";
+import App from "../../../App.ts";
 
-const fields = [
+type SignupFieldConfig = {
+  id: string;
+  label: string;
+  type: string;
+  name: string;
+};
+
+const fields: SignupFieldConfig[] = [
   {
     id: "email",
     label: "Почта",
@@ -67,11 +75,11 @@ const template = `
 `;
 
 export default class SignupPage extends Block {
-  constructor(app) {
+  constructor(app: App) {
     super("div", {
       LoginFields: new LoginFields({
         fields,
-      }),
+      }) as LoginFields,
       SignupLink: new Link({
         href: "#",
         id: "signup",
@@ -82,7 +90,7 @@ export default class SignupPage extends Block {
             app.changePage("SigninPage");
           },
         },
-      }),
+      }) as Link,
       SigninLink: new Link({
         href: "#",
         id: "signin",
@@ -93,11 +101,11 @@ export default class SignupPage extends Block {
             app.changePage("SigninPage");
           },
         },
-      }),
+      }) as Link,
     });
   }
 
-  render() {
+  render(): HTMLElement {
     return this.compile(template);
   }
 }

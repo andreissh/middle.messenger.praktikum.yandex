@@ -1,6 +1,13 @@
 import Block from "../../../../framework/Block";
 import "./login-field.css";
 
+export type LoginFieldProps = {
+  id: string;
+  label: string;
+  type: string;
+  name: string;
+};
+
 const template = `
   <li class="login-field-item">
     <label for="{{ id }}" class="login-field-label">{{ label }}</label>
@@ -14,11 +21,11 @@ const template = `
 `;
 
 export default class LoginField extends Block {
-  constructor(props) {
+  constructor(props: LoginFieldProps) {
     super("div", props);
   }
 
-  render() {
+  render(): HTMLElement {
     return this.compile(template);
   }
 }

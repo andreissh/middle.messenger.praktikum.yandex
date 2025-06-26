@@ -1,17 +1,37 @@
 import "./signin.css";
 import Block from "../../../framework/Block.js";
 import Link from "../../../components/btn/Link.ts";
-import LoginField from "../components/login-field/LoginField.js";
+import LoginFields from "../components/login-fields/LoginFields.ts";
+import App from "../../../App.ts";
+
+type SigninFieldConfig = {
+  id: string;
+  label: string;
+  type: string;
+  name: string;
+};
+
+const fields: SigninFieldConfig[] = [
+  {
+    id: "login",
+    label: "Логин",
+    type: "text",
+    name: "login",
+  },
+  {
+    id: "password",
+    label: "Пароль",
+    type: "password",
+    name: "password",
+  },
+];
 
 const template = `
   <div class="signin-wrapper">
     <div class="signin-container">
       <h1 class="signin-header">Вход</h1>
       <form class="signin-form">
-        <ul class="login-field-list">
-          {{{ LoginField }}}
-          {{{ PassField }}}
-        </ul>
+        {{{ fields }}}
         <div class="signin-form-signin-btn-container">
           {{{ SigninLink }}}
         </div>
@@ -25,20 +45,11 @@ const template = `
 `;
 
 export default class SigninPage extends Block {
-  constructor(app) {
+  constructor(app: App) {
     super("div", {
-      LoginField: new LoginField({
-        id: "login",
-        label: "Логин",
-        type: "text",
-        name: "login",
-      }),
-      PassField: new LoginField({
-        id: "password",
-        label: "Пароль",
-        type: "password",
-        name: "password",
-      }),
+      fields: new LoginFields({
+        fields,
+      }) as LoginFields,
       SigninLink: new Link({
         href: "#",
         id: "renderChatsBtn",
@@ -49,7 +60,7 @@ export default class SigninPage extends Block {
             app.changePage("ChatsPage");
           },
         },
-      }),
+      }) as Link,
       SignupLink: new Link({
         href: "#",
         id: "renderSignupBtn",
@@ -60,11 +71,11 @@ export default class SigninPage extends Block {
             app.changePage("SignupPage");
           },
         },
-      }),
+      }) as Link,
     });
   }
 
-  render() {
+  render(): HTMLElement {
     return this.compile(template);
   }
 }

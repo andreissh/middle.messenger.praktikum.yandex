@@ -1,6 +1,10 @@
-import Block from "../../../../framework/Block";
-import LoginField from "../login-field/LoginField";
+import Block from "../../../../framework/Block.ts";
+import LoginField, { LoginFieldProps } from "../login-field/LoginField.ts";
 import "./login-fields.css";
+
+type LoginFieldsProps = {
+  fields: LoginFieldProps[];
+};
 
 const template = `
   <ul class="login-field-list">
@@ -9,13 +13,13 @@ const template = `
 `;
 
 export default class LoginFields extends Block {
-  constructor(props) {
+  constructor(props: LoginFieldsProps) {
     super("div", {
       fields: props.fields.map((field) => new LoginField(field)),
     });
   }
 
-  render() {
+  render(): HTMLElement {
     return this.compile(template);
   }
 }
