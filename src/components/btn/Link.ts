@@ -3,11 +3,11 @@ import { EventsType } from "@/types/types";
 import "./btn.css";
 
 type LinkProps = {
-  href: string;
-  id?: string;
-  class?: string;
-  children?: Block | Block[] | string;
-  events?: EventsType;
+	href: string;
+	id?: string;
+	class?: string;
+	children?: Block | Block[] | string;
+	events?: EventsType;
 };
 
 const template = `
@@ -17,11 +17,11 @@ const template = `
 `;
 
 export default class Link extends Block {
-  constructor(props: LinkProps) {
-    super("div", props);
-  }
+	constructor(props: LinkProps) {
+		super("div", props);
+	}
 
-  render() {
-    return this.compile(template);
-  }
+	render() {
+		return this.compile(template);
+	}
 }
