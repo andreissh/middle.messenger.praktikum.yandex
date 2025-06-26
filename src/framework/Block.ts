@@ -1,21 +1,21 @@
 import { EventBus } from "./EventBus.ts";
 import { v4 as makeUUID } from "uuid";
 import Handlebars from "handlebars";
+import { EventsType } from "../types/types.ts";
 
 type Children = Record<string, Block>;
 type Lists = Record<string, Block[] | string[]>;
 type Attributes = Record<string, string | boolean>;
-type EventsType = Record<string, (e?: Event) => void>;
+
+export type Props = {
+  [key: string]: any;
+  attributes?: Attributes;
+  events?: EventsType;
+};
 
 type BlockMeta = {
   tagName: string;
   props: Props;
-};
-
-type Props = {
-  [key: string]: any;
-  attributes?: Attributes;
-  events?: EventsType;
 };
 
 class Block {

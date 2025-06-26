@@ -1,6 +1,6 @@
 import "./signin.css";
 import Block from "../../../framework/Block.js";
-import Link from "../../../components/btn/Link.js";
+import Link from "../../../components/btn/Link.ts";
 import LoginField from "../components/login-field/LoginField.js";
 
 const template = `

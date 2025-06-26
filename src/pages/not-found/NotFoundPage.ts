@@ -1,6 +1,7 @@
 import "./not-found.css";
 import Link from "../../components/btn/Link";
 import Block from "../../framework/Block";
+import App from "../../App";
 
 const template = `
   <div class="not-found-container">
@@ -13,7 +14,7 @@ const template = `
 `;
 
 export default class NotFoundPage extends Block {
-  constructor(app) {
+  constructor(app: App) {
     super("div", {
       HomeLink: new Link({
         href: "#",
@@ -29,7 +30,7 @@ export default class NotFoundPage extends Block {
     });
   }
 
-  render() {
+  render(): HTMLElement {
     return this.compile(template);
   }
 }

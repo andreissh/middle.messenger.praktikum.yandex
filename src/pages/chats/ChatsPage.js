@@ -2,7 +2,7 @@ import "./chats.css";
 import Block from "../../framework/Block";
 import ChatList from "./components/chat-list/ChatList";
 import arrowIcon from "../../assets/icons/arrow-right.svg";
-import Link from "../../components/btn/Link";
+import Link from "../../components/btn/Link.ts";
 
 const chats = [
   { name: "Андрей", text: "Изображение", time: "12:49", count: "2" },

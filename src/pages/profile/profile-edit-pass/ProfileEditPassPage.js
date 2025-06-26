@@ -1,7 +1,7 @@
 import Block from "../../../framework/Block";
 import "./profile-edit-pass.css";
 import backBtn from "../../../assets/icons/back-btn.svg";
-import Link from "../../../components/btn/Link";
+import Link from "../../../components/btn/Link.ts";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { passwordFields } from "../utils/profileData";
 

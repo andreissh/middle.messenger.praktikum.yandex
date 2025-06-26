@@ -1,4 +1,4 @@
-import Link from "../../../components/btn/Link";
+import Link from "../../../components/btn/Link.ts";
 import Block from "../../../framework/Block";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import "./profile-edit.css";

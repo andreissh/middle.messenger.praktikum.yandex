@@ -1,6 +1,7 @@
 import "./server-error.css";
-import Link from "../../components/btn/Link";
+import Link from "../../components/btn/Link.ts";
 import Block from "../../framework/Block";
+import App from "../../App.ts";
 
 const template = `
   <div class="server-error-container">
@@ -13,7 +14,7 @@ const template = `
 `;
 
 export default class ServerErrorPage extends Block {
-  constructor(app) {
+  constructor(app: App) {
     super("div", {
       HomeLink: new Link({
         href: "#",
@@ -29,7 +30,7 @@ export default class ServerErrorPage extends Block {
     });
   }
 
-  render() {
+  render(): HTMLElement {
     return this.compile(template);
   }
 }

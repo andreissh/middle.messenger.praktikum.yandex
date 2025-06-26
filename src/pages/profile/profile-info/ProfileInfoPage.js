@@ -1,5 +1,5 @@
 import Block from "../../../framework/Block";
-import Link from "../../../components/btn/Link";
+import Link from "../../../components/btn/Link.ts";
 import "./profile-info.css";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileFields } from "../utils/profileData";

@@ -1,6 +1,6 @@
 import "./signup.css";
 import Block from "../../../framework/Block.js";
-import Link from "../../../components/btn/Link.js";
+import Link from "../../../components/btn/Link.ts";
 import LoginFields from "../components/login-fields/LoginFields.js";
 
 const fields = [
