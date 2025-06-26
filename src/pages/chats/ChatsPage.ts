@@ -1,10 +1,18 @@
-import "./chats.css";
-import Block from "../../framework/Block";
+import Block from "@/framework/Block";
+import App from "@/App";
+import Link from "@/components/btn/Link";
+import arrowIcon from "@/assets/icons/arrow-right.svg";
 import ChatList from "./components/chat-list/ChatList";
-import arrowIcon from "../../assets/icons/arrow-right.svg";
-import Link from "../../components/btn/Link.ts";
+import "./chats.css";
 
-const chats = [
+type ChatConfig = {
+  name: string;
+  text: string;
+  time: string;
+  count: string;
+};
+
+const chats: ChatConfig[] = [
   { name: "Андрей", text: "Изображение", time: "12:49", count: "2" },
   { name: "Киноклуб", text: "Вы: стикер", time: "12:00", count: "" },
   {
@@ -39,7 +47,7 @@ const template = `
 `;
 
 export default class ChatsPage extends Block {
-  constructor(app) {
+  constructor(app: App) {
     super("div", {
       ProfileLink: new Link({
         href: "#",
@@ -54,15 +62,15 @@ export default class ChatsPage extends Block {
             app.changePage("ProfileInfoPage");
           },
         },
-      }),
+      }) as Link,
       arrowIcon,
       ChatList: new ChatList({
         chats,
-      }),
+      }) as ChatList,
     });
   }
 
-  render() {
+  render(): HTMLElement {
     return this.compile(template);
   }
 }

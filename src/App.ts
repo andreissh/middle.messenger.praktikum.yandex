@@ -1,11 +1,11 @@
-import SigninPage from "./pages/home/signin/SigninPage.ts";
-import SignupPage from "./pages/home/signup/SignupPage.ts";
+import SigninPage from "./pages/home/signin/SigninPage";
+import SignupPage from "./pages/home/signup/SignupPage";
 import ChatsPage from "./pages/chats/ChatsPage";
 import ProfileInfoPage from "./pages/profile/profile-info/ProfileInfoPage";
 import ProfileEditPage from "./pages/profile/profile-edit/ProfileEditPage";
 import ProfileEditPassPage from "./pages/profile/profile-edit-pass/ProfileEditPassPage";
-import NotFoundPage from "./pages/not-found/NotFoundPage.ts";
-import ServerErrorPage from "./pages/server-error/ServerErrorPage.ts";
+import NotFoundPage from "./pages/not-found/NotFoundPage";
+import ServerErrorPage from "./pages/server-error/ServerErrorPage";
 import Block from "./framework/Block";
 
 type PageName =

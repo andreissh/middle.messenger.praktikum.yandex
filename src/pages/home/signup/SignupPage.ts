@@ -1,8 +1,8 @@
+import Block from "@/framework/Block";
+import App from "@/App";
+import Link from "@/components/btn/Link";
+import LoginFields from "../components/login-fields/LoginFields";
 import "./signup.css";
-import Block from "../../../framework/Block.js";
-import Link from "../../../components/btn/Link.ts";
-import LoginFields from "../components/login-fields/LoginFields.ts";
-import App from "../../../App.ts";
 
 type SignupFieldConfig = {
   id: string;

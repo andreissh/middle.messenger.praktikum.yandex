@@ -1,7 +1,7 @@
+import Block from "@/framework/Block";
+import App from "@/App";
+import Link from "@/components/btn/Link";
 import "./server-error.css";
-import Link from "../../components/btn/Link.ts";
-import Block from "../../framework/Block";
-import App from "../../App.ts";
 
 const template = `
   <div class="server-error-container">

@@ -1,5 +1,5 @@
-import Block from "../../../../framework/Block.ts";
-import LoginField, { LoginFieldProps } from "../login-field/LoginField.ts";
+import Block from "@/framework/Block";
+import LoginField, { LoginFieldProps } from "../login-field/LoginField";
 import "./login-fields.css";
 
 type LoginFieldsProps = {

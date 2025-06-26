@@ -1,5 +1,5 @@
-import Block from "../../framework/Block";
-import { EventsType } from "../../types/types";
+import Block from "@/framework/Block";
+import { EventsType } from "@/types/types";
 import "./btn.css";
 
 type LinkProps = {

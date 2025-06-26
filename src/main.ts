@@ -1,4 +1,4 @@
-import App from "./App.ts";
+import App from "./App";
 
 document.addEventListener("DOMContentLoaded", () => {
   const app = new App();

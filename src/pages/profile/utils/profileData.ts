@@ -50,28 +50,9 @@ export const profileFields = [
 ];
 
 export const profileEditFields = structuredClone(profileFields).map((field) => {
-  field.readonly = false;
+  field.readonly = "false";
   return field;
 });
-
-export const profileLinks = [
-  {
-    id: "renderProfileEditBtn",
-    text: "Изменить данные",
-    className: "profile-info-links-item-link",
-  },
-  {
-    id: "renderProfileEditPassBtn",
-    text: "Изменить пароль",
-    className: "profile-info-links-item-link",
-  },
-  {
-    id: "renderSigninBtn",
-    text: "Выйти",
-    className:
-      "profile-info-links-item-link profile-info-links-item-link--danger",
-  },
-];
 
 export const passwordFields = [
   {

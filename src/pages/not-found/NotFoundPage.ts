@@ -1,7 +1,7 @@
+import Block from "@/framework/Block";
+import App from "@/App";
+import Link from "@/components/btn/Link";
 import "./not-found.css";
-import Link from "../../components/btn/Link";
-import Block from "../../framework/Block";
-import App from "../../App";
 
 const template = `
   <div class="not-found-container">

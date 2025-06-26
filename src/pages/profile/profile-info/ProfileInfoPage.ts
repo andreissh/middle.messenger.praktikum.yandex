@@ -1,9 +1,10 @@
-import Block from "../../../framework/Block";
-import Link from "../../../components/btn/Link.ts";
-import "./profile-info.css";
+import Block from "@/framework/Block";
+import App from "@/App";
+import Link from "@/components/btn/Link";
+import backBtn from "@/assets/icons/back-btn.svg";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileFields } from "../utils/profileData";
-import backBtn from "../../../assets/icons/back-btn.svg";
+import "./profile-info.css";
 
 const template = `
   <div class="profile-info">
@@ -38,7 +39,7 @@ const template = `
 `;
 
 export default class ProfileInfoPage extends Block {
-  constructor(app) {
+  constructor(app: App) {
     super("div", {
       BackLink: new Link({
         href: "#",
@@ -53,10 +54,10 @@ export default class ProfileInfoPage extends Block {
             app.changePage("ChatsPage");
           },
         },
-      }),
+      }) as Link,
       ProfileFieldsList: new ProfileFieldsList({
         fields: profileFields,
-      }),
+      }) as ProfileFieldsList,
       ChangeDataLink: new Link({
         href: "#",
         id: "renderProfileEditBtn",
@@ -67,7 +68,7 @@ export default class ProfileInfoPage extends Block {
             app.changePage("ProfileEditPage");
           },
         },
-      }),
+      }) as Link,
       ChangePasswordLink: new Link({
         href: "#",
         id: "renderProfileEditPassBtn",
@@ -78,7 +79,7 @@ export default class ProfileInfoPage extends Block {
             app.changePage("ProfileEditPassPage");
           },
         },
-      }),
+      }) as Link,
       LogoutLink: new Link({
         href: "#",
         id: "renderSigninBtn",
@@ -90,10 +91,10 @@ export default class ProfileInfoPage extends Block {
             app.changePage("SigninPage");
           },
         },
-      }),
+      }) as Link,
     });
   }
-  render() {
+  render(): HTMLElement {
     return this.compile(template);
   }
 }

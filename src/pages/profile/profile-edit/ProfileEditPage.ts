@@ -1,9 +1,10 @@
-import Link from "../../../components/btn/Link.ts";
-import Block from "../../../framework/Block";
+import Block from "@/framework/Block";
+import Link from "@/components/btn/Link";
+import App from "@/App";
+import backBtn from "@/assets/icons/back-btn.svg";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
-import "./profile-edit.css";
-import backBtn from "../../../assets/icons/back-btn.svg";
 import { profileEditFields } from "../utils/profileData";
+import "./profile-edit.css";
 
 const template = `
   <div class="profile-edit">
@@ -29,7 +30,7 @@ const template = `
 `;
 
 export default class ProfileEditPage extends Block {
-  constructor(app) {
+  constructor(app: App) {
     super("div", {
       BackLink: new Link({
         href: "#",
@@ -44,20 +45,20 @@ export default class ProfileEditPage extends Block {
             app.changePage("ProfileInfoPage");
           },
         },
-      }),
+      }) as Link,
       ProfileFieldsList: new ProfileFieldsList({
         fields: profileEditFields,
-      }),
+      }) as ProfileFieldsList,
       SaveLink: new Link({
         href: "#",
         id: "save",
         class: "btn",
         children: "Сохранить",
-      }),
+      }) as Link,
     });
   }
 
-  render() {
+  render(): HTMLElement {
     return this.compile(template);
   }
 }

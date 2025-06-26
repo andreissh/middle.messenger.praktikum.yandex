@@ -1,7 +1,7 @@
-import { EventBus } from "./EventBus.ts";
+import { EventBus } from "./EventBus";
 import { v4 as makeUUID } from "uuid";
 import Handlebars from "handlebars";
-import { EventsType } from "../types/types.ts";
+import { EventsType } from "@/types/types";
 
 type Children = Record<string, Block>;
 type Lists = Record<string, Block[] | string[]>;
@@ -26,7 +26,7 @@ class Block {
     FLOW_RENDER: "flow:render",
   };
 
-  private _element: HTMLElement;
+  private _element!: HTMLElement;
   private _meta: BlockMeta;
   private readonly _id: string;
   private _eventBus: EventBus;

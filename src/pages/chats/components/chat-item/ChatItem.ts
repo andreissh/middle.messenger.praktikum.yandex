@@ -1,5 +1,12 @@
-import Block from "../../../../framework/Block";
+import Block from "@/framework/Block";
 import "./chat-item.css";
+
+export type ChatItemProps = {
+  name: string;
+  text: string;
+  time: string;
+  count: string;
+};
 
 const template = `
   <li class="chat-item">
@@ -18,11 +25,11 @@ const template = `
 `;
 
 export default class ChatItem extends Block {
-  constructor(props) {
+  constructor(props: ChatItemProps) {
     super("div", props);
   }
 
-  render() {
+  render(): HTMLElement {
     return this.compile(template);
   }
 }
