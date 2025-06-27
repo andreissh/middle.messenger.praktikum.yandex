@@ -173,7 +173,7 @@ abstract class Block {
 		});
 
 		const fragment = Block._createDocumentElement(
-			"template",
+			"template"
 		) as HTMLTemplateElement;
 		fragment.innerHTML = Handlebars.compile(template)(propsAndStubs);
 
@@ -186,7 +186,7 @@ abstract class Block {
 
 		Object.entries(this.lists).forEach(([, child]) => {
 			const listFragment = Block._createDocumentElement(
-				"template",
+				"template"
 			) as HTMLTemplateElement;
 			child.forEach((item) => {
 				if (item instanceof Block) {

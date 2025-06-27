@@ -13,6 +13,7 @@
 		"eslint": "^8.57.1",
 		"eslint-config-airbnb-base": "^15.0.0",
 		"eslint-config-airbnb-typescript": "^18.0.0",
+		"eslint-config-prettier": "^10.1.5",
 		"eslint-import-resolver-typescript": "^3.5.2",
 		"eslint-plugin-import": "^2.32.0",
 		"serve": "^14.2.4",
@@ -26,8 +27,8 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"start": "npm run build && serve dist",
-		"lint": "eslint 'src/**/*.{ts,js}'",
-		"lint:style": "stylelint 'src/**/*.css'",
+		"lint": "eslint src/**/*.{ts,js}",
+		"lint:style": "stylelint src/**/*.css",
 		"typecheck": "tsc --noEmit",
 		"test": "vitest"
 	}

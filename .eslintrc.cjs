@@ -6,18 +6,9 @@ module.exports = {
 		tsconfigRootDir: __dirname,
 	},
 	plugins: ["@typescript-eslint"],
-	extends: ["airbnb-base", "airbnb-typescript/base"],
+	extends: ["airbnb-base", "airbnb-typescript/base", "prettier"],
 	rules: {
-		indent: "off",
-		"@typescript-eslint/indent": ["error", "tab"],
-		"no-tabs": "off",
-		quotes: ["error", "double"],
-		"@typescript-eslint/quotes": ["error", "double"],
 		"no-underscore-dangle": "off",
-		"linebreak-style": [
-			"error",
-			process.platform === "win32" ? "windows" : "unix",
-		],
 	},
 	ignorePatterns: ["dist/", "node_modules/", "*.config.*js"],
 	settings: {
