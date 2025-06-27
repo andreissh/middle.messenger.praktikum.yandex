@@ -14,6 +14,10 @@ module.exports = {
 		quotes: ["error", "double"],
 		"@typescript-eslint/quotes": ["error", "double"],
 		"no-underscore-dangle": "off",
+		"linebreak-style": [
+			"error",
+			process.platform === "win32" ? "windows" : "unix",
+		],
 	},
 	ignorePatterns: ["dist/", "node_modules/", "*.config.*js"],
 	settings: {

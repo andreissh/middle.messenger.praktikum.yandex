@@ -2,10 +2,10 @@ import Block from "@/framework/Block";
 import "./login-field.css";
 
 export type LoginFieldProps = {
-  id: string;
-  label: string;
-  type: string;
-  name: string;
+	id: string;
+	label: string;
+	type: string;
+	name: string;
 };
 
 const template = `
@@ -21,11 +21,11 @@ const template = `
 `;
 
 export default class LoginField extends Block {
-  constructor(props: LoginFieldProps) {
-    super("div", props);
-  }
+	constructor(props: LoginFieldProps) {
+		super("div", props);
+	}
 
-  render(): HTMLElement {
-    return this.compile(template);
-  }
+	render(): HTMLElement {
+		return this.compile(template);
+	}
 }

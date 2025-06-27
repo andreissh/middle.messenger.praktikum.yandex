@@ -3,7 +3,7 @@ import "./chat-list.css";
 import ChatItem, { ChatItemProps } from "../chat-item/ChatItem";
 
 type ChatListProps = {
-  chats: ChatItemProps[];
+	chats: ChatItemProps[];
 };
 
 const template = `
@@ -13,13 +13,13 @@ const template = `
 `;
 
 export default class ChatList extends Block {
-  constructor(props: ChatListProps) {
-    super("div", {
-      chats: props.chats.map((chat) => new ChatItem(chat)),
-    });
-  }
+	constructor(props: ChatListProps) {
+		super("div", {
+			chats: props.chats.map((chat) => new ChatItem(chat)),
+		});
+	}
 
-  render(): HTMLElement {
-    return this.compile(template);
-  }
+	render(): HTMLElement {
+		return this.compile(template);
+	}
 }

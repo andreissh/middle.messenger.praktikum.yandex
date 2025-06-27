@@ -1,26 +1,36 @@
 import Block from "@/framework/Block";
-import App from "@/App";
 import Link from "@/components/btn/Link";
 import arrowIcon from "@/assets/icons/arrow-right.svg";
+import { PageProps } from "@/types/types";
 import ChatList from "./components/chat-list/ChatList";
 import "./chats.css";
 
 type ChatConfig = {
-  name: string;
-  text: string;
-  time: string;
-  count: string;
+	name: string;
+	text: string;
+	time: string;
+	count: string;
 };
 
 const chats: ChatConfig[] = [
-  { name: "Андрей", text: "Изображение", time: "12:49", count: "2" },
-  { name: "Киноклуб", text: "Вы: стикер", time: "12:00", count: "" },
-  {
-    name: "Илья",
-    text: "Друзья, у меня для вас особенный выпуск новостей!...",
-    time: "15:12",
-    count: "4",
-  },
+	{
+		name: "Андрей",
+		text: "Изображение",
+		time: "12:49",
+		count: "2",
+	},
+	{
+		name: "Киноклуб",
+		text: "Вы: стикер",
+		time: "12:00",
+		count: "",
+	},
+	{
+		name: "Илья",
+		text: "Друзья, у меня для вас особенный выпуск новостей!...",
+		time: "15:12",
+		count: "4",
+	},
 ];
 
 const template = `
@@ -47,30 +57,30 @@ const template = `
 `;
 
 export default class ChatsPage extends Block {
-  constructor(app: App) {
-    super("div", {
-      ProfileLink: new Link({
-        href: "#",
-        id: "renderProfileInfoBtn",
-        class: "chats-aside-to-profile-btn",
-        children: `
+	constructor(props: PageProps) {
+		super("div", {
+			ProfileLink: new Link({
+				href: "#",
+				id: "renderProfileInfoBtn",
+				class: "chats-aside-to-profile-btn",
+				children: `
           <span class="chats-aside-to-profile-btn-text">Профиль</span>
           <img src="${arrowIcon}" alt="" />
         `,
-        events: {
-          click: () => {
-            app.changePage("ProfileInfoPage");
-          },
-        },
-      }) as Link,
-      arrowIcon,
-      ChatList: new ChatList({
-        chats,
-      }) as ChatList,
-    });
-  }
+				events: {
+					click: () => {
+						props.onChangePage("ProfileInfoPage");
+					},
+				},
+			}) as Link,
+			arrowIcon,
+			ChatList: new ChatList({
+				chats,
+			}) as ChatList,
+		});
+	}
 
-  render(): HTMLElement {
-    return this.compile(template);
-  }
+	render(): HTMLElement {
+		return this.compile(template);
+	}
 }

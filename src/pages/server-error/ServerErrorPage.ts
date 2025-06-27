@@ -1,7 +1,7 @@
 import Block from "@/framework/Block";
-import App from "@/App";
 import Link from "@/components/btn/Link";
 import "./server-error.css";
+import { PageProps } from "@/types/types";
 
 const template = `
   <div class="server-error-container">
@@ -14,23 +14,23 @@ const template = `
 `;
 
 export default class ServerErrorPage extends Block {
-  constructor(app: App) {
-    super("div", {
-      HomeLink: new Link({
-        href: "#",
-        id: "renderChatsBtn",
-        class: "btn-secondary",
-        children: "Назад к чатам",
-        events: {
-          click: () => {
-            app.changePage("ChatsPage");
-          },
-        },
-      }),
-    });
-  }
+	constructor(props: PageProps) {
+		super("div", {
+			HomeLink: new Link({
+				href: "#",
+				id: "renderChatsBtn",
+				class: "btn-secondary",
+				children: "Назад к чатам",
+				events: {
+					click: () => {
+						props.onChangePage("ChatsPage");
+					},
+				},
+			}),
+		});
+	}
 
-  render(): HTMLElement {
-    return this.compile(template);
-  }
+	render(): HTMLElement {
+		return this.compile(template);
+	}
 }

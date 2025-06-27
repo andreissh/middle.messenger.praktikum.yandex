@@ -18,7 +18,7 @@ type BlockMeta = {
 	props: Props;
 };
 
-class Block {
+abstract class Block {
 	static EVENTS = {
 		INIT: "init",
 		FLOW_CDM: "flow:component-did-mount",
@@ -42,7 +42,7 @@ class Block {
 
 	constructor(tagName: string = "div", propsAndChildren: Props = {}) {
 		const eventBus = new EventBus();
-		const { children, props, lists } = this._getChildren(propsAndChildren);
+		const { children, props, lists } = Block._getChildren(propsAndChildren);
 
 		this._eventBus = eventBus;
 		this.children = children;
@@ -58,7 +58,7 @@ class Block {
 		this._eventBus.emit(Block.EVENTS.INIT);
 	}
 
-	private _getChildren(propsAndChildren: Props): {
+	private static _getChildren(propsAndChildren: Props): {
 		children: Children;
 		props: Props;
 		lists: Lists;
@@ -88,9 +88,9 @@ class Block {
 				return typeof value === "function" ? value.bind(target) : value;
 			},
 			set(target: Props, prop: string, value: any) {
-				target[prop] = value;
+				const success = Reflect.set(target, prop, value);
 				self._eventBus.emit(Block.EVENTS.FLOW_CDU, { ...target }, target);
-				return true;
+				return success;
 			},
 			deleteProperty() {
 				throw new Error("Нет доступа");
@@ -100,8 +100,8 @@ class Block {
 
 	private _registerEvents(eventBus: EventBus): void {
 		eventBus.on(Block.EVENTS.INIT, this.init.bind(this));
-		eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
-		eventBus.on(Block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
+		// eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
+		// eventBus.on(Block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
 		eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
 	}
 
@@ -113,7 +113,7 @@ class Block {
 
 	private _createResources(): void {
 		const { tagName } = this._meta;
-		this._element = this._createDocumentElement(tagName);
+		this._element = Block._createDocumentElement(tagName);
 
 		if (this._props.attributes) {
 			Object.entries(this._props.attributes).forEach(([name, value]) => {
@@ -125,7 +125,7 @@ class Block {
 		}
 	}
 
-	private _createDocumentElement(tagName: string): HTMLElement {
+	private static _createDocumentElement(tagName: string): HTMLElement {
 		const element = document.createElement(tagName);
 		return element;
 	}
@@ -138,9 +138,7 @@ class Block {
 		this._addEvents();
 	}
 
-	protected render(): HTMLElement {
-		throw new Error("Render method must be implemented");
-	}
+	protected abstract render(): HTMLElement;
 
 	private _addEvents(): void {
 		const { events = {} } = this._props;
@@ -174,7 +172,7 @@ class Block {
 			propsAndStubs[key] = `<div data-id="__l_${tmpId}"></div>`;
 		});
 
-		const fragment = this._createDocumentElement(
+		const fragment = Block._createDocumentElement(
 			"template",
 		) as HTMLTemplateElement;
 		fragment.innerHTML = Handlebars.compile(template)(propsAndStubs);
@@ -187,7 +185,7 @@ class Block {
 		});
 
 		Object.entries(this.lists).forEach(([, child]) => {
-			const listFragment = this._createDocumentElement(
+			const listFragment = Block._createDocumentElement(
 				"template",
 			) as HTMLTemplateElement;
 			child.forEach((item) => {
@@ -223,31 +221,31 @@ class Block {
 		return this._element;
 	}
 
-	private _componentDidMount(oldProps: Props): void {
-		this.componentDidMount(oldProps);
+	// private _componentDidMount(oldProps: Props): void {
+	// 	this.componentDidMount(oldProps);
 
-		Object.values(this.children).forEach((child) => {
-			child.dispatchComponentDidMount();
-		});
-	}
+	// 	Object.values(this.children).forEach((child) => {
+	// 		child.dispatchComponentDidMount();
+	// 	});
+	// }
 
-	protected componentDidMount(oldProps: Props): void {}
+	// protected componentDidMount(oldProps: Props): void {}
 
 	protected dispatchComponentDidMount(): void {
 		this._eventBus.emit(Block.EVENTS.FLOW_CDM);
 	}
 
-	private _componentDidUpdate(oldProps: Props, newProps: Props): void {
-		const shouldUpdate = this.componentDidUpdate(oldProps, newProps);
+	// private _componentDidUpdate(oldProps: Props, newProps: Props): void {
+	// 	const shouldUpdate = this.componentDidUpdate(oldProps, newProps);
 
-		if (shouldUpdate) {
-			this._render();
-		}
-	}
+	// 	if (shouldUpdate) {
+	// 		this._render();
+	// 	}
+	// }
 
-	protected componentDidUpdate(oldProps: Props, newProps: Props): boolean {
-		return true;
-	}
+	// protected componentDidUpdate(oldProps: Props, newProps: Props): boolean {
+	// 	return true;
+	// }
 
 	public get props(): Props {
 		return this._props;

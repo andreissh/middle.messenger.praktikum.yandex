@@ -2,11 +2,11 @@ import Block from "@/framework/Block";
 import "./profile-field.css";
 
 export type ProfileFieldProps = {
-  id: string;
-  label: string;
-  type: string;
-  name: string;
-  value?: string;
+	id: string;
+	label: string;
+	type: string;
+	name: string;
+	value?: string;
 };
 
 const template = `
@@ -24,11 +24,11 @@ const template = `
 `;
 
 export default class ProfileField extends Block {
-  constructor(props: ProfileFieldProps) {
-    super("div", props);
-  }
+	constructor(props: ProfileFieldProps) {
+		super("div", props);
+	}
 
-  render(): HTMLElement {
-    return this.compile(template);
-  }
+	render(): HTMLElement {
+		return this.compile(template);
+	}
 }

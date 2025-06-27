@@ -1,29 +1,29 @@
 import Block from "@/framework/Block";
-import App from "@/App";
 import Link from "@/components/btn/Link";
+import { PageProps } from "@/types/types";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signin.css";
 
 type SigninFieldConfig = {
-  id: string;
-  label: string;
-  type: string;
-  name: string;
+	id: string;
+	label: string;
+	type: string;
+	name: string;
 };
 
 const fields: SigninFieldConfig[] = [
-  {
-    id: "login",
-    label: "Логин",
-    type: "text",
-    name: "login",
-  },
-  {
-    id: "password",
-    label: "Пароль",
-    type: "password",
-    name: "password",
-  },
+	{
+		id: "login",
+		label: "Логин",
+		type: "text",
+		name: "login",
+	},
+	{
+		id: "password",
+		label: "Пароль",
+		type: "password",
+		name: "password",
+	},
 ];
 
 const template = `
@@ -45,37 +45,37 @@ const template = `
 `;
 
 export default class SigninPage extends Block {
-  constructor(app: App) {
-    super("div", {
-      fields: new LoginFields({
-        fields,
-      }) as LoginFields,
-      SigninLink: new Link({
-        href: "#",
-        id: "renderChatsBtn",
-        class: "btn",
-        children: "Войти",
-        events: {
-          click: () => {
-            app.changePage("ChatsPage");
-          },
-        },
-      }) as Link,
-      SignupLink: new Link({
-        href: "#",
-        id: "renderSignupBtn",
-        class: "btn-secondary",
-        children: "Нет аккаунта?",
-        events: {
-          click: () => {
-            app.changePage("SignupPage");
-          },
-        },
-      }) as Link,
-    });
-  }
+	constructor(props: PageProps) {
+		super("div", {
+			fields: new LoginFields({
+				fields,
+			}) as LoginFields,
+			SigninLink: new Link({
+				href: "#",
+				id: "renderChatsBtn",
+				class: "btn",
+				children: "Войти",
+				events: {
+					click: () => {
+						props.onChangePage("ChatsPage");
+					},
+				},
+			}) as Link,
+			SignupLink: new Link({
+				href: "#",
+				id: "renderSignupBtn",
+				class: "btn-secondary",
+				children: "Нет аккаунта?",
+				events: {
+					click: () => {
+						props.onChangePage("SignupPage");
+					},
+				},
+			}) as Link,
+		});
+	}
 
-  render(): HTMLElement {
-    return this.compile(template);
-  }
+	render(): HTMLElement {
+		return this.compile(template);
+	}
 }

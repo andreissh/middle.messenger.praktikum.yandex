@@ -2,10 +2,10 @@ import Block from "@/framework/Block";
 import "./chat-item.css";
 
 export type ChatItemProps = {
-  name: string;
-  text: string;
-  time: string;
-  count: string;
+	name: string;
+	text: string;
+	time: string;
+	count: string;
 };
 
 const template = `
@@ -25,11 +25,11 @@ const template = `
 `;
 
 export default class ChatItem extends Block {
-  constructor(props: ChatItemProps) {
-    super("div", props);
-  }
+	constructor(props: ChatItemProps) {
+		super("div", props);
+	}
 
-  render(): HTMLElement {
-    return this.compile(template);
-  }
+	render(): HTMLElement {
+		return this.compile(template);
+	}
 }

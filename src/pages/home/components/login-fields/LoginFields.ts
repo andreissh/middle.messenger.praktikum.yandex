@@ -3,7 +3,7 @@ import LoginField, { LoginFieldProps } from "../login-field/LoginField";
 import "./login-fields.css";
 
 type LoginFieldsProps = {
-  fields: LoginFieldProps[];
+	fields: LoginFieldProps[];
 };
 
 const template = `
@@ -13,13 +13,13 @@ const template = `
 `;
 
 export default class LoginFields extends Block {
-  constructor(props: LoginFieldsProps) {
-    super("div", {
-      fields: props.fields.map((field) => new LoginField(field)),
-    });
-  }
+	constructor(props: LoginFieldsProps) {
+		super("div", {
+			fields: props.fields.map((field) => new LoginField(field)),
+		});
+	}
 
-  render(): HTMLElement {
-    return this.compile(template);
-  }
+	render(): HTMLElement {
+		return this.compile(template);
+	}
 }

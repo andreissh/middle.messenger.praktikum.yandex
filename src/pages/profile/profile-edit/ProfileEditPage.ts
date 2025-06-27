@@ -1,7 +1,7 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
-import App from "@/App";
 import backBtn from "@/assets/icons/back-btn.svg";
+import { PageProps } from "@/types/types";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileEditFields } from "../utils/profileData";
 import "./profile-edit.css";
@@ -30,35 +30,35 @@ const template = `
 `;
 
 export default class ProfileEditPage extends Block {
-  constructor(app: App) {
-    super("div", {
-      BackLink: new Link({
-        href: "#",
-        id: "backBtn",
-        children: `
+	constructor(props: PageProps) {
+		super("div", {
+			BackLink: new Link({
+				href: "#",
+				id: "backBtn",
+				children: `
           <div class="profile-edit-goback-block">
             <img src="${backBtn}" alt="backBtn" />
           </div>
         `,
-        events: {
-          click: () => {
-            app.changePage("ProfileInfoPage");
-          },
-        },
-      }) as Link,
-      ProfileFieldsList: new ProfileFieldsList({
-        fields: profileEditFields,
-      }) as ProfileFieldsList,
-      SaveLink: new Link({
-        href: "#",
-        id: "save",
-        class: "btn",
-        children: "Сохранить",
-      }) as Link,
-    });
-  }
+				events: {
+					click: () => {
+						props.onChangePage("ProfileInfoPage");
+					},
+				},
+			}) as Link,
+			ProfileFieldsList: new ProfileFieldsList({
+				fields: profileEditFields,
+			}) as ProfileFieldsList,
+			SaveLink: new Link({
+				href: "#",
+				id: "save",
+				class: "btn",
+				children: "Сохранить",
+			}) as Link,
+		});
+	}
 
-  render(): HTMLElement {
-    return this.compile(template);
-  }
+	render(): HTMLElement {
+		return this.compile(template);
+	}
 }

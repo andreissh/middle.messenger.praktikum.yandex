@@ -6,25 +6,11 @@ import ProfileEditPage from "./pages/profile/profile-edit/ProfileEditPage";
 import ProfileEditPassPage from "./pages/profile/profile-edit-pass/ProfileEditPassPage";
 import NotFoundPage from "./pages/not-found/NotFoundPage";
 import ServerErrorPage from "./pages/server-error/ServerErrorPage";
-import Block from "./framework/Block";
-
-type PageName =
-	| "SigninPage"
-	| "SignupPage"
-	| "ChatsPage"
-	| "ProfileInfoPage"
-	| "ProfileEditPage"
-	| "ProfileEditPassPage"
-	| "NotFoundPage"
-	| "ServerErrorPage";
+import { PageConstructor, PageName } from "./types/types";
 
 type AppState = {
 	currentPage: PageName;
 };
-
-interface PageConstructor {
-	new (app: App): Block;
-}
 
 export default class App {
 	private _state: AppState;
@@ -58,15 +44,17 @@ export default class App {
 			return;
 		}
 
-		const PageConstructor = this._pageConstructors[this._state.currentPage];
-		if (!PageConstructor) {
+		const PageComponent = this._pageConstructors[this._state.currentPage];
+		if (!PageComponent) {
 			console.error(
 				`No constructor found for page: ${this._state.currentPage}`,
 			);
 			return;
 		}
 
-		const pageInstance = new PageConstructor(this);
+		const pageInstance = new PageComponent({
+			onChangePage: (pageName) => this.changePage(pageName),
+		});
 		const newContent = pageInstance.getContent();
 
 		const newRootElement = document.createElement("div");
