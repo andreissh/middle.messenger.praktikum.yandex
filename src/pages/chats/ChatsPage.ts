@@ -2,6 +2,7 @@ import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
 import arrowIcon from "@/assets/icons/arrow-right.svg";
 import { PageProps } from "@/types/types";
+import sendBtn from "@/assets/icons/back-btn.svg";
 import ChatList from "./components/chat-list/ChatList";
 import "./chats.css";
 
@@ -40,7 +41,7 @@ const template = `
         {{{ ProfileLink }}}
         <input
           type="search"
-          name="message"
+          name="search"
           class="chats-aside-search"
           placeholder="Поиск"
         />
@@ -48,9 +49,23 @@ const template = `
       {{{ ChatList }}}
     </aside>
     <main class="chats-main">
-      <div class="chats-main-content">
-        <span class="chats-main-content-text-default">Выберите чат, чтобы
-          отправить сообщение</span>
+			<div class="chats-main-content">
+				<div class="chats-main-content-header"></div>
+				<div class="chats-main-content-body">
+					<span class="chats-main-content-text-default">Выберите чат, чтобы
+						отправить сообщение</span>
+				</div>
+				<div class="chats-main-content-footer">
+				  <input
+						type="text"
+						name="message"
+						class="message"
+						placeholder="Сообщение"
+					/>
+					<button class="message-send-btn" >
+						<img src=${sendBtn} alt="send" />
+					</button>
+				</div>
       </div>
     </main>
   </div>
