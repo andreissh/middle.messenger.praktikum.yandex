@@ -100,8 +100,8 @@ abstract class Block {
 
 	private _registerEvents(eventBus: EventBus): void {
 		eventBus.on(Block.EVENTS.INIT, this.init.bind(this));
-		// eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
-		// eventBus.on(Block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
+		eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
+		eventBus.on(Block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
 		eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
 	}
 
@@ -221,31 +221,37 @@ abstract class Block {
 		return this._element;
 	}
 
-	// private _componentDidMount(oldProps: Props): void {
-	// 	this.componentDidMount(oldProps);
+	private _componentDidMount(oldProps: Props): void {
+		this.componentDidMount(oldProps);
 
-	// 	Object.values(this.children).forEach((child) => {
-	// 		child.dispatchComponentDidMount();
-	// 	});
-	// }
+		Object.values(this.children).forEach((child) => {
+			child.dispatchComponentDidMount();
+		});
+	}
 
-	// protected componentDidMount(oldProps: Props): void {}
+	// Eslint конфиг требует this внутри метода, хотя он здесь не нужен, поэтому отключил правило
+	// Отключил правило для обязательного использования аргумента в теле функции,
+	// т.к. метод должен переопределяться в конструкторе дочернего класса
+	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
+	protected componentDidMount(oldProps: Props): void {}
 
 	protected dispatchComponentDidMount(): void {
 		this._eventBus.emit(Block.EVENTS.FLOW_CDM);
 	}
 
-	// private _componentDidUpdate(oldProps: Props, newProps: Props): void {
-	// 	const shouldUpdate = this.componentDidUpdate(oldProps, newProps);
+	private _componentDidUpdate(oldProps: Props, newProps: Props): void {
+		const shouldUpdate = this.componentDidUpdate(oldProps, newProps);
 
-	// 	if (shouldUpdate) {
-	// 		this._render();
-	// 	}
-	// }
+		if (shouldUpdate) {
+			this._render();
+		}
+	}
 
-	// protected componentDidUpdate(oldProps: Props, newProps: Props): boolean {
-	// 	return true;
-	// }
+	// Eslint конфиг требует this внутри метода, хотя он здесь не нужен, поэтому отключил правило
+	// eslint-disable-next-line class-methods-use-this
+	protected componentDidUpdate(oldProps: Props, newProps: Props): boolean {
+		return oldProps !== newProps;
+	}
 
 	public get props(): Props {
 		return this._props;
