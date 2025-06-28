@@ -11,11 +11,24 @@ type SigninFieldConfig = {
 	label: string;
 	type: string;
 	name: string;
+	autocomplete: string;
 };
 
 const fields: SigninFieldConfig[] = [
-	{ id: "login", label: "Логин", type: "text", name: "login" },
-	{ id: "password", label: "Пароль", type: "password", name: "password" },
+	{
+		id: "login",
+		label: "Логин",
+		type: "text",
+		name: "login",
+		autocomplete: "login",
+	},
+	{
+		id: "password",
+		label: "Пароль",
+		type: "password",
+		name: "password",
+		autocomplete: "password",
+	},
 ];
 
 const template = `

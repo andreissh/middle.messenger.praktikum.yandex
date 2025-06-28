@@ -18,6 +18,7 @@ const template = `
       type="{{ type }}"
       name="{{ name }}"
       value="{{ value }}"
+			autocomplete="{{ autocomplete }}"
       {{#if readonly}}readonly{{/if}}
     />
   </li>

@@ -3,8 +3,9 @@ type ProfileField = {
 	label: string;
 	type: string;
 	name: string;
-	value: string;
+	value?: string;
 	readonly?: string;
+	autocomplete?: string;
 };
 
 export const profileFields: ProfileField[] = [
@@ -15,6 +16,7 @@ export const profileFields: ProfileField[] = [
 		name: "email",
 		value: "pochta@yandex.ru",
 		readonly: "true",
+		autocomplete: "email",
 	},
 	{
 		id: "login",
@@ -23,6 +25,7 @@ export const profileFields: ProfileField[] = [
 		name: "login",
 		value: "ivanivanov",
 		readonly: "true",
+		autocomplete: "username",
 	},
 	{
 		id: "first_name",
@@ -31,6 +34,7 @@ export const profileFields: ProfileField[] = [
 		name: "first_name",
 		value: "Иван",
 		readonly: "true",
+		autocomplete: "given-name",
 	},
 	{
 		id: "second_name",
@@ -39,6 +43,7 @@ export const profileFields: ProfileField[] = [
 		name: "second_name",
 		value: "Иванов",
 		readonly: "true",
+		autocomplete: "family-name",
 	},
 	{
 		id: "display_name",
@@ -47,6 +52,7 @@ export const profileFields: ProfileField[] = [
 		name: "display_name",
 		value: "Иван",
 		readonly: "true",
+		autocomplete: "nickname",
 	},
 	{
 		id: "phone",
@@ -55,6 +61,7 @@ export const profileFields: ProfileField[] = [
 		name: "phone",
 		value: "+7 (909) 967 30 30",
 		readonly: "true",
+		autocomplete: "tel",
 	},
 ];
 
@@ -66,23 +73,26 @@ export const profileEditFields: ProfileField[] = structuredClone(
 	return newField;
 });
 
-export const passwordFields = [
+export const passwordFields: ProfileField[] = [
 	{
 		id: "oldPassword",
 		label: "Старый пароль",
 		type: "password",
 		name: "oldPassword",
+		autocomplete: "current-password",
 	},
 	{
 		id: "newPassword",
 		label: "Новый пароль",
 		type: "password",
 		name: "newPassword",
+		autocomplete: "new-password",
 	},
 	{
 		id: "repeatPassword",
 		label: "Повторите пароль",
 		type: "password",
 		name: "repeatPassword",
+		autocomplete: "new-password",
 	},
 ];

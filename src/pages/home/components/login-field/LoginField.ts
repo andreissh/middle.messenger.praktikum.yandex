@@ -16,6 +16,7 @@ const template = `
       class="login-field-input"
       type="{{ type }}"
       name="{{ name }}"
+			autocomplete="{{ autocomplete }}"
     />
   </li>
 `;
