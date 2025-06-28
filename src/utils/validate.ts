@@ -78,9 +78,19 @@ function validateField(
 			break;
 
 		case "oldPassword":
+			if (!patterns.password.test(value)) {
+				return {
+					valid: false,
+					error: "От 8 до 40 символов, обязательно заглавная буква и цифра",
+				};
+			}
+			break;
 		case "newPassword":
-			if (value.length < 6) {
-				return { valid: false, error: "Минимум 6 символов" };
+			if (!patterns.password.test(value)) {
+				return {
+					valid: false,
+					error: "От 8 до 40 символов, обязательно заглавная буква и цифра",
+				};
 			}
 			break;
 		case "repeatPassword":
