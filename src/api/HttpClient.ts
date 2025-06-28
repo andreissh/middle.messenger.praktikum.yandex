@@ -1,9 +1,9 @@
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
-interface RequestOptions {
+type RequestOptions<TBody = unknown> = {
 	params?: Record<string, string | number>;
-	body?: any;
-}
+	body?: TBody;
+};
 
 export default class HttpClient {
 	private baseURL: string;
@@ -23,18 +23,18 @@ export default class HttpClient {
 		return `?${query.toString()}`;
 	}
 
-	private _request<T>(
+	private _request<TResponse, TBody = unknown>(
 		method: HttpMethod,
 		url: string,
-		options: RequestOptions = {}
-	): Promise<T> {
+		options: RequestOptions<TBody> = {}
+	): Promise<TResponse> {
 		const { params, body } = options;
 		const fullUrl =
 			this.baseURL +
 			url +
 			(method === "GET" && params ? HttpClient._buildQueryString(params) : "");
 
-		return new Promise<T>((resolve, reject) => {
+		return new Promise<TResponse>((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
 			xhr.open(method, fullUrl);
 			xhr.setRequestHeader("Content-Type", "application/json");
@@ -47,7 +47,7 @@ export default class HttpClient {
 					: xhr.responseText;
 
 				if (xhr.status >= 200 && xhr.status < 300) {
-					resolve(responseData as T);
+					resolve(responseData as TResponse);
 				} else {
 					reject(new Error(`Request failed with status ${xhr.status}`));
 				}
@@ -65,19 +65,31 @@ export default class HttpClient {
 		});
 	}
 
-	get<T>(url: string, params?: Record<string, string | number>): Promise<T> {
-		return this._request<T>("GET", url, { params });
+	get<TResponse>(
+		url: string,
+		params?: Record<string, string | number>
+	): Promise<TResponse> {
+		return this._request<TResponse>("GET", url, { params });
 	}
 
-	post<T>(url: string, body?: any): Promise<T> {
-		return this._request<T>("POST", url, { body });
+	post<TResponse, TBody = unknown>(
+		url: string,
+		body?: TBody
+	): Promise<TResponse> {
+		return this._request<TResponse, TBody>("POST", url, { body });
 	}
 
-	put<T>(url: string, body?: any): Promise<T> {
-		return this._request<T>("PUT", url, { body });
+	put<TResponse, TBody = unknown>(
+		url: string,
+		body?: TBody
+	): Promise<TResponse> {
+		return this._request<TResponse, TBody>("PUT", url, { body });
 	}
 
-	delete<T>(url: string, body?: any): Promise<T> {
-		return this._request<T>("DELETE", url, { body });
+	delete<TResponse, TBody = unknown>(
+		url: string,
+		body?: TBody
+	): Promise<TResponse> {
+		return this._request<TResponse, TBody>("DELETE", url, { body });
 	}
 }

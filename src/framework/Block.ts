@@ -8,9 +8,9 @@ type Lists = Record<string, Block[] | string[]>;
 type Attributes = Record<string, string | boolean>;
 
 export type Props = {
-	[key: string]: any;
 	attributes?: Attributes;
 	events?: EventsType;
+	[key: string]: unknown;
 };
 
 type BlockMeta = {
@@ -87,7 +87,7 @@ abstract class Block {
 				const value = target[prop];
 				return typeof value === "function" ? value.bind(target) : value;
 			},
-			set(target: Props, prop: string, value: any) {
+			set(target: Props, prop: string, value: unknown) {
 				const success = Reflect.set(target, prop, value);
 				self._eventBus.emit(Block.EVENTS.FLOW_CDU, { ...target }, target);
 				return success;
