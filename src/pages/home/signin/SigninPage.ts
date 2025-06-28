@@ -1,6 +1,7 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
 import { PageProps } from "@/types/types";
+import getFormData from "@/utils/getFormData";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signin.css";
 
@@ -56,7 +57,12 @@ export default class SigninPage extends Block {
 				class: "btn",
 				children: "Войти",
 				events: {
-					click: () => {
+					click: (e?: Event) => {
+						e?.preventDefault();
+						const form = this.element?.querySelector(
+							".signin-form"
+						) as HTMLFormElement;
+						getFormData(form);
 						props.onChangePage("ChatsPage");
 					},
 				},

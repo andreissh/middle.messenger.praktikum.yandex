@@ -50,7 +50,7 @@ export const profileFields = [
 ];
 
 export const profileEditFields = structuredClone(profileFields).map(
-	(field) => ({ ...field, readonly: "false" }),
+	(field) => ({ ...field, readonly: "false" })
 );
 
 export const passwordFields = [
@@ -70,6 +70,6 @@ export const passwordFields = [
 		id: "repeatPassword",
 		label: "Повторите пароль",
 		type: "password",
-		name: "newPassword",
+		name: "repeatPassword",
 	},
 ];
