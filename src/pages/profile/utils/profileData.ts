@@ -1,4 +1,13 @@
-export const profileFields = [
+type ProfileField = {
+	id: string;
+	label: string;
+	type: string;
+	name: string;
+	value: string;
+	readonly?: string;
+};
+
+export const profileFields: ProfileField[] = [
 	{
 		id: "email",
 		label: "Почта",
@@ -49,9 +58,13 @@ export const profileFields = [
 	},
 ];
 
-export const profileEditFields = structuredClone(profileFields).map(
-	(field) => ({ ...field, readonly: "false" })
-);
+export const profileEditFields: ProfileField[] = structuredClone(
+	profileFields
+).map((field) => {
+	const newField = { ...field };
+	delete newField.readonly;
+	return newField;
+});
 
 export const passwordFields = [
 	{

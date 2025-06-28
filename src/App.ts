@@ -47,7 +47,7 @@ export default class App {
 		const PageComponent = this._pageConstructors[this._state.currentPage];
 		if (!PageComponent) {
 			console.error(
-				`No constructor found for page: ${this._state.currentPage}`,
+				`No constructor found for page: ${this._state.currentPage}`
 			);
 			return;
 		}
@@ -61,6 +61,10 @@ export default class App {
 		newRootElement.id = this._rootElementId;
 		newRootElement.appendChild(newContent);
 		rootElement.replaceWith(newRootElement);
+
+		if (typeof pageInstance.componentDidMount === "function") {
+			pageInstance.componentDidMount();
+		}
 	}
 
 	public render(): void {

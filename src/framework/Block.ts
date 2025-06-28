@@ -233,7 +233,7 @@ abstract class Block {
 	// Отключил правило для обязательного использования аргумента в теле функции,
 	// т.к. метод должен переопределяться в конструкторе дочернего класса
 	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
-	protected componentDidMount(oldProps: Props): void {}
+	public componentDidMount(oldProps?: Props): void {}
 
 	protected dispatchComponentDidMount(): void {
 		this._eventBus.emit(Block.EVENTS.FLOW_CDM);

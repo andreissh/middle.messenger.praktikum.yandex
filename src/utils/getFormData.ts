@@ -1,7 +1,9 @@
-export default function getFormData(form: HTMLFormElement): void {
+export default function getFormData(
+	form: HTMLFormElement
+): Record<string, string> | null {
 	if (!form) {
 		console.log("Форма не найдена");
-		return;
+		return null;
 	}
 
 	const formData = new FormData(form);
@@ -12,4 +14,6 @@ export default function getFormData(form: HTMLFormElement): void {
 	});
 
 	console.log("Данные из формы:", data);
+
+	return data;
 }

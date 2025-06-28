@@ -54,3 +54,10 @@ li {
 input {
 	padding: 0;
 }
+
+.error-message {
+	margin: 5px 0;
+	font-size: 12px;
+	line-height: 16px;
+	color: var(--text-color-danger);
+}
