@@ -7,7 +7,7 @@ type Children = Record<string, Block>;
 type Lists = Record<string, Block[] | string[]>;
 type Attributes = Record<string, string | boolean>;
 
-export type Props = {
+type Props = {
 	attributes?: Attributes;
 	events?: EventsType;
 	[key: string]: unknown;

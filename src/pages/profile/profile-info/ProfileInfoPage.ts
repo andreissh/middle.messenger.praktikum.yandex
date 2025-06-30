@@ -45,14 +45,12 @@ export default class ProfileInfoPage extends Block {
 				href: "#",
 				id: "backBtn",
 				children: `
-          <div class="profile-info-goback-block">
-            <img src="${backBtn}" alt="backBtn" />
-          </div>
-        `,
+					<div class="profile-info-goback-block">
+						<img src="${backBtn}" alt="backBtn" />
+					</div>
+				`,
 				events: {
-					click: () => {
-						props.onChangePage("ChatsPage");
-					},
+					click: () => props.onChangePage("ChatsPage"),
 				},
 			}) as Link,
 			ProfileFieldsList: new ProfileFieldsList({
@@ -64,9 +62,7 @@ export default class ProfileInfoPage extends Block {
 				class: "profile-info-links-item-link",
 				children: "Изменить данные",
 				events: {
-					click: () => {
-						props.onChangePage("ProfileEditPage");
-					},
+					click: () => props.onChangePage("ProfileEditPage"),
 				},
 			}) as Link,
 			ChangePasswordLink: new Link({
@@ -75,9 +71,7 @@ export default class ProfileInfoPage extends Block {
 				class: "profile-info-links-item-link",
 				children: "Изменить пароль",
 				events: {
-					click: () => {
-						props.onChangePage("ProfileEditPassPage");
-					},
+					click: () => props.onChangePage("ProfileEditPassPage"),
 				},
 			}) as Link,
 			LogoutLink: new Link({
@@ -87,9 +81,7 @@ export default class ProfileInfoPage extends Block {
 					"profile-info-links-item-link profile-info-links-item-link--danger",
 				children: "Выйти",
 				events: {
-					click: () => {
-						props.onChangePage("SigninPage");
-					},
+					click: () => props.onChangePage("SigninPage"),
 				},
 			}) as Link,
 		});

@@ -1,6 +1,5 @@
-import { validateField } from "@/utils/validate";
-
-type ValidationResult = { valid: boolean; error?: string };
+import { ValidationResult } from "@/types/types";
+import validateField from "./validate";
 
 export default class FormValidator {
 	private form: HTMLFormElement;

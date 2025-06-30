@@ -45,9 +45,7 @@ export default class ProfileEditPage extends Block {
 					</div>
 				`,
 				events: {
-					click: () => {
-						props.onChangePage("ProfileInfoPage");
-					},
+					click: () => props.onChangePage("ProfileInfoPage"),
 				},
 			}) as Link,
 			ProfileFieldsList: new ProfileFieldsList({
@@ -62,9 +60,7 @@ export default class ProfileEditPage extends Block {
 				class: "btn",
 				children: "Сохранить",
 				events: {
-					click: (e?: Event) => {
-						this.handleSave(e, props);
-					},
+					click: (e?: Event) => this.handleSave(e, props),
 				},
 			}) as Link,
 		});

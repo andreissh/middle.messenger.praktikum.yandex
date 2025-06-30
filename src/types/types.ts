@@ -15,5 +15,7 @@ export type PageProps = {
 };
 
 export type PageConstructor = new (
-	props: PageProps,
+	props: PageProps
 ) => import("@/framework/Block").default;
+
+export type ValidationResult = { valid: boolean; error?: string };

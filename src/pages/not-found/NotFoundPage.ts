@@ -22,9 +22,7 @@ export default class NotFoundPage extends Block {
 				class: "btn-secondary",
 				children: "Назад к чатам",
 				events: {
-					click: () => {
-						props.onChangePage("ChatsPage");
-					},
+					click: () => props.onChangePage("ChatsPage"),
 				},
 			}),
 		});

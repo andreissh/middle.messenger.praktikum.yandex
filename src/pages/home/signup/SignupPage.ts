@@ -1,9 +1,8 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
-import { PageProps } from "@/types/types";
+import { PageProps, ValidationResult } from "@/types/types";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
-import { ValidationResult } from "@/utils/validate";
 import { InputProps } from "@/pages/profile/utils/profileData";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signup.css";
@@ -107,9 +106,7 @@ export default class SignupPage extends Block {
 				class: "btn-secondary renderSigninBtn",
 				children: "Войти",
 				events: {
-					click: () => {
-						props.onChangePage("SigninPage");
-					},
+					click: () => props.onChangePage("SigninPage"),
 				},
 			}) as Link,
 		});

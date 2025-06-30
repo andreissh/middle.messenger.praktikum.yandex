@@ -1,7 +1,7 @@
 import Block from "@/framework/Block";
 import { EventsType } from "@/types/types";
-import "./profile-field.css";
 import { InputProps } from "../../utils/profileData";
+import "./profile-field.css";
 
 export type ProfileFieldProps = InputProps & { label: string } & {
 	events?: EventsType;

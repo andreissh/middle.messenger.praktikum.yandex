@@ -1,4 +1,4 @@
-type ValidationResult = { valid: boolean; error?: string };
+import { ValidationResult } from "@/types/types";
 
 const patterns = {
 	first_name: /^[A-ZА-ЯЁ][a-zа-яё-]+$/u,
@@ -10,7 +10,7 @@ const patterns = {
 	message: /^(?!\s*$).+/,
 };
 
-function validateField(
+export default function validateField(
 	name: string,
 	value: string,
 	relatedValues?: Record<string, string>
@@ -85,6 +85,7 @@ function validateField(
 				};
 			}
 			break;
+
 		case "newPassword":
 			if (!patterns.password.test(value)) {
 				return {
@@ -93,6 +94,7 @@ function validateField(
 				};
 			}
 			break;
+
 		case "repeatPassword":
 			break;
 
@@ -102,5 +104,3 @@ function validateField(
 
 	return { valid: true };
 }
-
-export { validateField, ValidationResult };

@@ -1,10 +1,9 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
 import backBtn from "@/assets/icons/back-btn.svg";
-import { PageProps } from "@/types/types";
+import { PageProps, ValidationResult } from "@/types/types";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
-import { ValidationResult } from "@/utils/validate";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { passwordFields } from "../utils/profileData";
 import "./profile-edit-pass.css";
@@ -46,9 +45,7 @@ export default class ProfileEditPassPage extends Block {
 					</div>
 				`,
 				events: {
-					click: () => {
-						props.onChangePage("ProfileInfoPage");
-					},
+					click: () => props.onChangePage("ProfileInfoPage"),
 				},
 			}) as Link,
 			ProfileFieldsList: new ProfileFieldsList({

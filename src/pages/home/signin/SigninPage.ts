@@ -67,9 +67,7 @@ export default class SigninPage extends Block {
 				class: "btn-secondary",
 				children: "Нет аккаунта?",
 				events: {
-					click: () => {
-						props.onChangePage("SignupPage");
-					},
+					click: () => props.onChangePage("SignupPage"),
 				},
 			}) as Link,
 		});
