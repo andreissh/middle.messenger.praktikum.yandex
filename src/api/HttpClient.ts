@@ -1,9 +1,14 @@
-type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
+type HttpMethodName = "GET" | "POST" | "PUT" | "DELETE";
 
 type RequestOptions<TBody = unknown> = {
 	params?: Record<string, string | number>;
 	body?: TBody;
 };
+
+type HTTPMethod = <TResponse, TBody = unknown>(
+	url: string,
+	options?: RequestOptions<TBody>
+) => Promise<TResponse>;
 
 export default class HttpClient {
 	private baseURL: string;
@@ -24,7 +29,7 @@ export default class HttpClient {
 	}
 
 	private _request<TResponse, TBody = unknown>(
-		method: HttpMethod,
+		method: HttpMethodName,
 		url: string,
 		options: RequestOptions<TBody> = {}
 	): Promise<TResponse> {
@@ -65,31 +70,11 @@ export default class HttpClient {
 		});
 	}
 
-	get<TResponse>(
-		url: string,
-		params?: Record<string, string | number>
-	): Promise<TResponse> {
-		return this._request<TResponse>("GET", url, { params });
-	}
+	get: HTTPMethod = (url, options) => this._request("GET", url, options);
 
-	post<TResponse, TBody = unknown>(
-		url: string,
-		body?: TBody
-	): Promise<TResponse> {
-		return this._request<TResponse, TBody>("POST", url, { body });
-	}
+	post: HTTPMethod = (url, options) => this._request("POST", url, options);
 
-	put<TResponse, TBody = unknown>(
-		url: string,
-		body?: TBody
-	): Promise<TResponse> {
-		return this._request<TResponse, TBody>("PUT", url, { body });
-	}
+	put: HTTPMethod = (url, options) => this._request("PUT", url, options);
 
-	delete<TResponse, TBody = unknown>(
-		url: string,
-		body?: TBody
-	): Promise<TResponse> {
-		return this._request<TResponse, TBody>("DELETE", url, { body });
-	}
+	delete: HTTPMethod = (url, options) => this._request("DELETE", url, options);
 }
