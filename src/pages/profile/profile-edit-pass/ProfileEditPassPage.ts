@@ -4,6 +4,7 @@ import backBtn from "@/assets/icons/back-btn.svg";
 import { PageProps } from "@/types/types";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
+import { ValidationResult } from "@/utils/validate";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { passwordFields } from "../utils/profileData";
 import "./profile-edit-pass.css";
@@ -40,10 +41,10 @@ export default class ProfileEditPassPage extends Block {
 				href: "#",
 				id: "backBtn",
 				children: `
-          <div class="profile-edit-pass-goback-block">
-            <img src="${backBtn}" alt="backBtn" />
-          </div>
-        `,
+					<div class="profile-edit-pass-goback-block">
+						<img src="${backBtn}" alt="backBtn" />
+					</div>
+				`,
 				events: {
 					click: () => {
 						props.onChangePage("ProfileInfoPage");
@@ -52,6 +53,9 @@ export default class ProfileEditPassPage extends Block {
 			}) as Link,
 			ProfileFieldsList: new ProfileFieldsList({
 				fields: passwordFields,
+				events: {
+					blur: (e?: Event) => this.handleFieldBlur(e as Event),
+				},
 			}) as ProfileFieldsList,
 			SaveLink: new Link({
 				href: "#",
@@ -59,43 +63,58 @@ export default class ProfileEditPassPage extends Block {
 				class: "btn",
 				children: "Сохранить",
 				events: {
-					click: (e?: Event) => {
-						e?.preventDefault();
-						const form = this.element?.querySelector(
-							".profile-edit-pass-data-form"
-						) as HTMLFormElement;
-						if (!form || !this.validator) return;
-
-						const passwordsMatchCheck = () => {
-							const newPassword =
-								form.querySelector<HTMLInputElement>(
-									'input[name="newPassword"]'
-								)?.value || "";
-							const repeatPassword =
-								form.querySelector<HTMLInputElement>(
-									'input[name="repeatPassword"]'
-								)?.value || "";
-							const valid = newPassword === repeatPassword;
-							return {
-								valid,
-								error: valid ? undefined : "Пароли не совпадают",
-							};
-						};
-
-						const isValid = this.validator.validateForm({
-							repeatPassword: passwordsMatchCheck,
-						});
-
-						if (isValid) {
-							const data = getFormData(form);
-							if (data) {
-								props.onChangePage("ProfileInfoPage");
-							}
-						}
-					},
+					click: (e?: Event) => this.handleSave(e, props),
 				},
 			}) as Link,
 		});
+	}
+
+	private checkPasswordsMatch(): ValidationResult {
+		const form = this.element?.querySelector(".profile-edit-pass-data-form");
+		if (!form) return { valid: false };
+
+		const newPassword = form.querySelector<HTMLInputElement>(
+			'input[name="newPassword"]'
+		)?.value;
+		const repeatPassword = form.querySelector<HTMLInputElement>(
+			'input[name="repeatPassword"]'
+		)?.value;
+
+		const valid = newPassword === repeatPassword;
+		return {
+			valid,
+			error: valid ? undefined : "Пароли не совпадают",
+		};
+	}
+
+	private handleFieldBlur(e: Event): void {
+		if (!this.validator) return;
+
+		const input = e.target as HTMLInputElement;
+		if (input.name === "repeatPassword") {
+			this.validator.validateInput(input, () => this.checkPasswordsMatch());
+		} else {
+			this.validator.validateInput(input);
+		}
+	}
+
+	private handleSave(e: Event | undefined, props: PageProps): void {
+		e?.preventDefault();
+		if (!this.validator) return;
+
+		const isValid = this.validator.validateForm({
+			repeatPassword: () => this.checkPasswordsMatch(),
+		});
+
+		if (isValid) {
+			const form = this.element?.querySelector(
+				".profile-edit-pass-data-form"
+			) as HTMLFormElement;
+			const data = getFormData(form);
+			if (data) {
+				props.onChangePage("ProfileInfoPage");
+			}
+		}
 	}
 
 	componentDidMount(): void {
@@ -105,24 +124,6 @@ export default class ProfileEditPassPage extends Block {
 		if (!form) return;
 
 		this.validator = new FormValidator(form, ".profile-field-item");
-
-		const passwordsMatchCheck = () => {
-			const newPassword =
-				form.querySelector<HTMLInputElement>('input[name="newPassword"]')
-					?.value || "";
-			const repeatPassword =
-				form.querySelector<HTMLInputElement>('input[name="repeatPassword"]')
-					?.value || "";
-			const valid = newPassword === repeatPassword;
-			return {
-				valid,
-				error: valid ? undefined : "Пароли не совпадают",
-			};
-		};
-
-		this.validator.attachBlurListeners({
-			repeatPassword: passwordsMatchCheck,
-		});
 	}
 
 	render(): HTMLElement {

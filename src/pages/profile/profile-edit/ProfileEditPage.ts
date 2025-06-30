@@ -40,10 +40,10 @@ export default class ProfileEditPage extends Block {
 				href: "#",
 				id: "backBtn",
 				children: `
-          <div class="profile-edit-goback-block">
-            <img src="${backBtn}" alt="backBtn" />
-          </div>
-        `,
+					<div class="profile-edit-goback-block">
+						<img src="${backBtn}" alt="backBtn" />
+					</div>
+				`,
 				events: {
 					click: () => {
 						props.onChangePage("ProfileInfoPage");
@@ -52,6 +52,9 @@ export default class ProfileEditPage extends Block {
 			}) as Link,
 			ProfileFieldsList: new ProfileFieldsList({
 				fields: profileEditFields,
+				events: {
+					blur: (e?: Event) => this.handleFieldBlur(e as Event),
+				},
 			}) as ProfileFieldsList,
 			SaveLink: new Link({
 				href: "#",
@@ -60,22 +63,31 @@ export default class ProfileEditPage extends Block {
 				children: "Сохранить",
 				events: {
 					click: (e?: Event) => {
-						e?.preventDefault();
-						const form = this.element?.querySelector(
-							".profile-edit-data-form"
-						) as HTMLFormElement;
-						if (!form || !this.validator) return;
-
-						if (this.validator.validateForm()) {
-							const data = getFormData(form);
-							if (data) {
-								props.onChangePage("ProfileInfoPage");
-							}
-						}
+						this.handleSave(e, props);
 					},
 				},
 			}) as Link,
 		});
+	}
+
+	private handleSave(e: Event | undefined, props: PageProps): void {
+		e?.preventDefault();
+		const form = this.element?.querySelector(
+			".profile-edit-data-form"
+		) as HTMLFormElement;
+		if (!form || !this.validator) return;
+
+		if (this.validator.validateForm()) {
+			const data = getFormData(form);
+			if (data) {
+				props.onChangePage("ProfileInfoPage");
+			}
+		}
+	}
+
+	private handleFieldBlur(e: Event): void {
+		if (!this.validator) return;
+		this.validator.handleBlur(e);
 	}
 
 	componentDidMount() {
@@ -85,7 +97,6 @@ export default class ProfileEditPage extends Block {
 		if (!form) return;
 
 		this.validator = new FormValidator(form, ".profile-field-item");
-		this.validator.attachBlurListeners();
 	}
 
 	render(): HTMLElement {

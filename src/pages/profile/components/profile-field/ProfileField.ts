@@ -1,12 +1,10 @@
 import Block from "@/framework/Block";
+import { EventsType } from "@/types/types";
 import "./profile-field.css";
+import { InputProps } from "../../utils/profileData";
 
-export type ProfileFieldProps = {
-	id: string;
-	label: string;
-	type: string;
-	name: string;
-	value?: string;
+export type ProfileFieldProps = InputProps & { label: string } & {
+	events?: EventsType;
 };
 
 const template = `
@@ -18,7 +16,7 @@ const template = `
       type="{{ type }}"
       name="{{ name }}"
       value="{{ value }}"
-			autocomplete="{{ autocomplete }}"
+	  autocomplete="{{ autocomplete }}"
       {{#if readonly}}readonly{{/if}}
     />
   </li>

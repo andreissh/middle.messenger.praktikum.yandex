@@ -1,21 +1,24 @@
-type ProfileField = {
+import { EventsType } from "@/types/types";
+
+export type InputProps = {
 	id: string;
-	label: string;
+	class?: string;
 	type: string;
 	name: string;
 	value?: string;
-	readonly?: string;
-	autocomplete?: string;
+	autocomplete: string;
+	readonly?: boolean;
+	events?: EventsType;
 };
 
-export const profileFields: ProfileField[] = [
+export const profileFields: Array<InputProps & { label: string }> = [
 	{
 		id: "email",
 		label: "Почта",
 		type: "text",
 		name: "email",
 		value: "pochta@yandex.ru",
-		readonly: "true",
+		readonly: true,
 		autocomplete: "email",
 	},
 	{
@@ -24,7 +27,7 @@ export const profileFields: ProfileField[] = [
 		type: "text",
 		name: "login",
 		value: "ivanivanov",
-		readonly: "true",
+		readonly: true,
 		autocomplete: "username",
 	},
 	{
@@ -33,7 +36,7 @@ export const profileFields: ProfileField[] = [
 		type: "text",
 		name: "first_name",
 		value: "Иван",
-		readonly: "true",
+		readonly: true,
 		autocomplete: "given-name",
 	},
 	{
@@ -42,7 +45,7 @@ export const profileFields: ProfileField[] = [
 		type: "text",
 		name: "second_name",
 		value: "Иванов",
-		readonly: "true",
+		readonly: true,
 		autocomplete: "family-name",
 	},
 	{
@@ -51,7 +54,7 @@ export const profileFields: ProfileField[] = [
 		type: "text",
 		name: "display_name",
 		value: "Иван",
-		readonly: "true",
+		readonly: true,
 		autocomplete: "nickname",
 	},
 	{
@@ -60,20 +63,19 @@ export const profileFields: ProfileField[] = [
 		type: "text",
 		name: "phone",
 		value: "+7 (909) 967 30 30",
-		readonly: "true",
+		readonly: true,
 		autocomplete: "tel",
 	},
 ];
 
-export const profileEditFields: ProfileField[] = structuredClone(
-	profileFields
-).map((field) => {
-	const newField = { ...field };
-	delete newField.readonly;
-	return newField;
-});
+export const profileEditFields: Array<InputProps & { label: string }> =
+	structuredClone(profileFields).map((field) => {
+		const newField = { ...field };
+		delete newField.readonly;
+		return newField;
+	});
 
-export const passwordFields: ProfileField[] = [
+export const passwordFields: Array<InputProps & { label: string }> = [
 	{
 		id: "oldPassword",
 		label: "Старый пароль",

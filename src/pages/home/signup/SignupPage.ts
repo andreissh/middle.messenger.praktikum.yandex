@@ -3,28 +3,60 @@ import Link from "@/components/btn/Link";
 import { PageProps } from "@/types/types";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
+import { ValidationResult } from "@/utils/validate";
+import { InputProps } from "@/pages/profile/utils/profileData";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signup.css";
 
-type SignupFieldConfig = {
-	id: string;
-	label: string;
-	type: string;
-	name: string;
-};
-
-const fields: SignupFieldConfig[] = [
-	{ id: "email", label: "Почта", type: "text", name: "email" },
-	{ id: "login", label: "Логин", type: "text", name: "login" },
-	{ id: "first_name", label: "Имя", type: "text", name: "first_name" },
-	{ id: "second_name", label: "Фамилия", type: "text", name: "second_name" },
-	{ id: "phone", label: "Телефон", type: "text", name: "phone" },
-	{ id: "password", label: "Пароль", type: "password", name: "password" },
+const fields: Array<InputProps & { label: string }> = [
+	{
+		id: "email",
+		label: "Почта",
+		type: "text",
+		name: "email",
+		autocomplete: "email",
+	},
+	{
+		id: "login",
+		label: "Логин",
+		type: "text",
+		name: "login",
+		autocomplete: "login",
+	},
+	{
+		id: "first_name",
+		label: "Имя",
+		type: "text",
+		name: "first_name",
+		autocomplete: "first_name",
+	},
+	{
+		id: "second_name",
+		label: "Фамилия",
+		type: "text",
+		name: "second_name",
+		autocomplete: "second_name",
+	},
+	{
+		id: "phone",
+		label: "Телефон",
+		type: "text",
+		name: "phone",
+		autocomplete: "phone",
+	},
+	{
+		id: "password",
+		label: "Пароль",
+		type: "password",
+		name: "password",
+		autocomplete: "password",
+	},
 	{
 		id: "password_repeat",
 		label: "Пароль (еще раз)",
 		type: "password",
 		name: "password_repeat",
+		autocomplete: "password_repeat",
 	},
 ];
 
@@ -48,49 +80,25 @@ const template = `
 export default class SignupPage extends Block {
 	private validator?: FormValidator;
 
+	private customChecks = {
+		password_repeat: () => this.checkPasswordsMatch(),
+	};
+
 	constructor(props: PageProps) {
 		super("div", {
-			LoginFields: new LoginFields({ fields }) as LoginFields,
+			LoginFields: new LoginFields({
+				fields,
+				events: {
+					blur: (e?: Event) => this.handleFieldBlur(e as Event),
+				},
+			}) as LoginFields,
 			SignupLink: new Link({
 				href: "#",
 				id: "signup",
 				class: "btn renderSigninBtn",
 				children: "Зарегистрироваться",
 				events: {
-					click: (e?: Event) => {
-						e?.preventDefault();
-						const form = this.element?.querySelector(
-							".signup-form"
-						) as HTMLFormElement;
-						if (!form) return;
-
-						if (this.validator) {
-							const passwordsMatchCheck = () => {
-								const pass =
-									form.querySelector<HTMLInputElement>('input[name="password"]')
-										?.value || "";
-								const repeat =
-									form.querySelector<HTMLInputElement>(
-										'input[name="password_repeat"]'
-									)?.value || "";
-								const valid = pass === repeat;
-								return {
-									valid,
-									error: valid ? undefined : "Пароли не совпадают",
-								};
-							};
-
-							const isValid = this.validator.validateForm({
-								password_repeat: passwordsMatchCheck,
-							});
-							if (isValid) {
-								const data = getFormData(form);
-								if (data) {
-									props.onChangePage("SigninPage");
-								}
-							}
-						}
-					},
+					click: (e?: Event) => this.handleSignup(e, props),
 				},
 			}) as Link,
 			SigninLink: new Link({
@@ -107,27 +115,47 @@ export default class SignupPage extends Block {
 		});
 	}
 
+	private checkPasswordsMatch(): ValidationResult {
+		const form = this.element?.querySelector(".signup-form");
+		if (!form) return { valid: false };
+
+		const password = form.querySelector<HTMLInputElement>(
+			'input[name="password"]'
+		)?.value;
+		const repeat = form.querySelector<HTMLInputElement>(
+			'input[name="password_repeat"]'
+		)?.value;
+
+		const valid = password === repeat;
+		return {
+			valid,
+			error: valid ? undefined : "Пароли не совпадают",
+		};
+	}
+
+	private handleSignup(e: Event | undefined, props: PageProps): void {
+		e?.preventDefault();
+		const form = this.element?.querySelector(".signup-form") as HTMLFormElement;
+		if (!form || !this.validator) return;
+
+		if (this.validator.validateForm(this.customChecks)) {
+			const data = getFormData(form);
+			if (data) {
+				props.onChangePage("SigninPage");
+			}
+		}
+	}
+
+	private handleFieldBlur(e: Event) {
+		if (!this.validator) return;
+		this.validator.handleBlur(e, this.customChecks);
+	}
+
 	componentDidMount() {
 		const form = this.element?.querySelector(".signup-form") as HTMLFormElement;
 		if (!form) return;
 
 		this.validator = new FormValidator(form, ".login-field-item");
-		const passwordsMatchCheck = () => {
-			const pass =
-				form.querySelector<HTMLInputElement>('input[name="password"]')?.value ||
-				"";
-			const repeat =
-				form.querySelector<HTMLInputElement>('input[name="password_repeat"]')
-					?.value || "";
-			const valid = pass === repeat;
-			return {
-				valid,
-				error: valid ? undefined : "Пароли не совпадают",
-			};
-		};
-		this.validator.attachBlurListeners({
-			password_repeat: passwordsMatchCheck,
-		});
 	}
 
 	render(): HTMLElement {

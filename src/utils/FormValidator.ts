@@ -63,17 +63,12 @@ export default class FormValidator {
 		});
 	}
 
-	attachBlurListeners(
+	public handleBlur(
+		e: Event,
 		customChecks: Record<string, () => ValidationResult> = {}
-	) {
-		this.form.querySelectorAll("input").forEach((input) => {
-			input.addEventListener("blur", () => {
-				if (input.name in customChecks) {
-					this.validateInput(input, customChecks[input.name]);
-				} else {
-					this.validateInput(input);
-				}
-			});
-		});
+	): void {
+		const input = e.target as HTMLInputElement;
+		const checkFn = customChecks[input.name];
+		this.validateInput(input, checkFn?.bind(this));
 	}
 }

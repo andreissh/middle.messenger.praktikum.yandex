@@ -1,9 +1,12 @@
 import Block from "@/framework/Block";
-import ProfileField, { ProfileFieldProps } from "../profile-field/ProfileField";
+import { EventsType } from "@/types/types";
+import ProfileField from "../profile-field/ProfileField";
 import "./profile-fields-list.css";
+import { InputProps } from "../../utils/profileData";
 
 type ProfileFieldsProps = {
-	fields: ProfileFieldProps[];
+	fields: Array<InputProps & { label: string }>;
+	events?: EventsType;
 };
 
 const template = `

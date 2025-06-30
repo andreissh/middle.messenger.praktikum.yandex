@@ -1,9 +1,12 @@
 import Block from "@/framework/Block";
-import LoginField, { LoginFieldProps } from "../login-field/LoginField";
+import { EventsType } from "@/types/types";
+import { InputProps } from "@/pages/profile/utils/profileData";
+import LoginField from "../login-field/LoginField";
 import "./login-fields.css";
 
 type LoginFieldsProps = {
-	fields: LoginFieldProps[];
+	fields: Array<InputProps & { label: string }>;
+	events?: EventsType;
 };
 
 const template = `
@@ -15,7 +18,9 @@ const template = `
 export default class LoginFields extends Block {
 	constructor(props: LoginFieldsProps) {
 		super("div", {
-			fields: props.fields.map((field) => new LoginField(field)),
+			fields: props.fields.map(
+				(field) => new LoginField({ ...field, events: props.events })
+			),
 		});
 	}
 
