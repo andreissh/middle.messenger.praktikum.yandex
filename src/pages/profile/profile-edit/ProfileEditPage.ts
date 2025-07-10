@@ -1,12 +1,12 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
 import backBtn from "@/assets/icons/back-btn.svg";
-import { PageProps } from "@/types/types";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileEditFields } from "../utils/profileData";
 import "./profile-edit.css";
+import { router } from "@/routes/Router";
 
 const template = `
   <div class="profile-edit">
@@ -34,7 +34,7 @@ const template = `
 export default class ProfileEditPage extends Block {
 	private validator?: FormValidator;
 
-	constructor(props: PageProps) {
+	constructor() {
 		super("div", {
 			BackLink: new Link({
 				href: "#",
@@ -45,7 +45,7 @@ export default class ProfileEditPage extends Block {
 					</div>
 				`,
 				events: {
-					click: () => props.onChangePage("ProfileInfoPage"),
+					click: () => router.go("/profile"),
 				},
 			}) as Link,
 			ProfileFieldsList: new ProfileFieldsList({
@@ -60,24 +60,25 @@ export default class ProfileEditPage extends Block {
 				class: "btn",
 				children: "Сохранить",
 				events: {
-					click: (e?: Event) => this.handleSave(e, props),
+					click: (e?: Event) => this.handleSave(e),
 				},
 			}) as Link,
 		});
 	}
 
-	private handleSave(e: Event | undefined, props: PageProps): void {
+	private handleSave(e: Event | undefined): void {
 		e?.preventDefault();
 		const form = this.element?.querySelector(
 			".profile-edit-data-form"
 		) as HTMLFormElement;
 		if (!form || !this.validator) return;
 
+		router.go("/profile");
 		if (this.validator.validateForm()) {
 			const data = getFormData(form);
-			if (data) {
-				props.onChangePage("ProfileInfoPage");
-			}
+			// if (data) {
+			// 	router.go('/profile');
+			// }
 		}
 	}
 

@@ -1,11 +1,11 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
-import { PageProps } from "@/types/types";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import { InputProps } from "@/pages/profile/utils/profileData";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signin.css";
+import { router } from "@/routes/Router";
 
 const fields: Array<InputProps & { label: string }> = [
 	{
@@ -44,7 +44,7 @@ const template = `
 export default class SigninPage extends Block {
 	private validator?: FormValidator;
 
-	constructor(props: PageProps) {
+	constructor() {
 		super("div", {
 			fields: new LoginFields({
 				fields,
@@ -58,7 +58,7 @@ export default class SigninPage extends Block {
 				class: "btn",
 				children: "Войти",
 				events: {
-					click: (e?: Event) => this.handleSigninClick(e, props),
+					click: (e?: Event) => this.handleSigninClick(e),
 				},
 			}) as Link,
 			SignupLink: new Link({
@@ -67,7 +67,7 @@ export default class SigninPage extends Block {
 				class: "btn-secondary",
 				children: "Нет аккаунта?",
 				events: {
-					click: () => props.onChangePage("SignupPage"),
+					click: () => router.go("/signup"),
 				},
 			}) as Link,
 		});
@@ -81,16 +81,17 @@ export default class SigninPage extends Block {
 		this.validator.validateInput(input as HTMLInputElement);
 	}
 
-	private handleSigninClick(e: Event | undefined, props: PageProps) {
+	private handleSigninClick(e: Event | undefined) {
 		e?.preventDefault();
 		const form = this.element?.querySelector(".signin-form") as HTMLFormElement;
 		if (!form) return;
 
+		router.go("/chats");
 		if (this.validator && this.validator.validateForm()) {
 			const data = getFormData(form);
-			if (data) {
-				props.onChangePage("ChatsPage");
-			}
+			// if (data) {
+			// 	router.go("/chats");
+			// }
 		}
 	}
 

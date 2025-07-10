@@ -1,10 +1,10 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
 import arrowIcon from "@/assets/icons/arrow-right.svg";
-import { PageProps } from "@/types/types";
 import sendBtn from "@/assets/icons/back-btn.svg";
 import ChatList from "./components/chat-list/ChatList";
 import "./chats.css";
+import { router } from "@/routes/Router";
 
 type ChatConfig = {
 	name: string;
@@ -72,7 +72,7 @@ const template = `
 `;
 
 export default class ChatsPage extends Block {
-	constructor(props: PageProps) {
+	constructor() {
 		super("div", {
 			ProfileLink: new Link({
 				href: "#",
@@ -83,7 +83,7 @@ export default class ChatsPage extends Block {
 					<img src="${arrowIcon}" alt="" />
 				`,
 				events: {
-					click: () => props.onChangePage("ProfileInfoPage"),
+					click: () => router.go("/profile"),
 				},
 			}) as Link,
 			arrowIcon,

@@ -1,10 +1,10 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
 import backBtn from "@/assets/icons/back-btn.svg";
-import { PageProps } from "@/types/types";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileFields } from "../utils/profileData";
 import "./profile-info.css";
+import { router } from "@/routes/Router";
 
 const template = `
   <div class="profile-info">
@@ -39,7 +39,7 @@ const template = `
 `;
 
 export default class ProfileInfoPage extends Block {
-	constructor(props: PageProps) {
+	constructor() {
 		super("div", {
 			BackLink: new Link({
 				href: "#",
@@ -50,7 +50,7 @@ export default class ProfileInfoPage extends Block {
 					</div>
 				`,
 				events: {
-					click: () => props.onChangePage("ChatsPage"),
+					click: () => router.go("/chats"),
 				},
 			}) as Link,
 			ProfileFieldsList: new ProfileFieldsList({
@@ -62,7 +62,7 @@ export default class ProfileInfoPage extends Block {
 				class: "profile-info-links-item-link",
 				children: "Изменить данные",
 				events: {
-					click: () => props.onChangePage("ProfileEditPage"),
+					click: () => router.go("/profile-edit"),
 				},
 			}) as Link,
 			ChangePasswordLink: new Link({
@@ -71,7 +71,7 @@ export default class ProfileInfoPage extends Block {
 				class: "profile-info-links-item-link",
 				children: "Изменить пароль",
 				events: {
-					click: () => props.onChangePage("ProfileEditPassPage"),
+					click: () => router.go("/profile-pass-edit"),
 				},
 			}) as Link,
 			LogoutLink: new Link({
@@ -81,7 +81,7 @@ export default class ProfileInfoPage extends Block {
 					"profile-info-links-item-link profile-info-links-item-link--danger",
 				children: "Выйти",
 				events: {
-					click: () => props.onChangePage("SigninPage"),
+					click: () => router.go("/signin"),
 				},
 			}) as Link,
 		});

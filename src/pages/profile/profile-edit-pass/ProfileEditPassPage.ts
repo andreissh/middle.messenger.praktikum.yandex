@@ -1,12 +1,13 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
 import backBtn from "@/assets/icons/back-btn.svg";
-import { PageProps, ValidationResult } from "@/types/types";
+import { ValidationResult } from "@/types/types";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { passwordFields } from "../utils/profileData";
 import "./profile-edit-pass.css";
+import { router } from "@/routes/Router";
 
 const template = `
   <div class="profile-edit-pass">
@@ -34,7 +35,7 @@ const template = `
 export default class ProfileEditPassPage extends Block {
 	private validator?: FormValidator;
 
-	constructor(props: PageProps) {
+	constructor() {
 		super("div", {
 			BackLink: new Link({
 				href: "#",
@@ -45,7 +46,7 @@ export default class ProfileEditPassPage extends Block {
 					</div>
 				`,
 				events: {
-					click: () => props.onChangePage("ProfileInfoPage"),
+					click: () => router.go("/profile"),
 				},
 			}) as Link,
 			ProfileFieldsList: new ProfileFieldsList({
@@ -60,7 +61,7 @@ export default class ProfileEditPassPage extends Block {
 				class: "btn",
 				children: "Сохранить",
 				events: {
-					click: (e?: Event) => this.handleSave(e, props),
+					click: (e?: Event) => this.handleSave(e),
 				},
 			}) as Link,
 		});
@@ -95,7 +96,7 @@ export default class ProfileEditPassPage extends Block {
 		}
 	}
 
-	private handleSave(e: Event | undefined, props: PageProps): void {
+	private handleSave(e: Event | undefined): void {
 		e?.preventDefault();
 		if (!this.validator) return;
 
@@ -103,14 +104,15 @@ export default class ProfileEditPassPage extends Block {
 			repeatPassword: () => this.checkPasswordsMatch(),
 		});
 
+		router.go("/profile");
 		if (isValid) {
 			const form = this.element?.querySelector(
 				".profile-edit-pass-data-form"
 			) as HTMLFormElement;
 			const data = getFormData(form);
-			if (data) {
-				props.onChangePage("ProfileInfoPage");
-			}
+			// if (data) {
+			// 	router.go('/profile')
+			// }
 		}
 	}
 
