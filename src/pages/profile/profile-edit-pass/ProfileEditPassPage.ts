@@ -65,6 +65,19 @@ export default class ProfileEditPassPage extends Block {
 				},
 			}) as Link,
 		});
+
+		this.validator = this.initValidator();
+	}
+
+	private initValidator(): FormValidator {
+		const form = this.element?.querySelector(
+			".profile-edit-pass-data-form"
+		) as HTMLFormElement;
+		if (!form) {
+			throw new Error("Form not found for validator initialization");
+		}
+
+		return new FormValidator(form, ".profile-field-item");
 	}
 
 	private checkPasswordsMatch(): ValidationResult {
@@ -104,25 +117,19 @@ export default class ProfileEditPassPage extends Block {
 			repeatPassword: () => this.checkPasswordsMatch(),
 		});
 
-		router.go("/profile");
 		if (isValid) {
 			const form = this.element?.querySelector(
 				".profile-edit-pass-data-form"
 			) as HTMLFormElement;
 			const data = getFormData(form);
-			// if (data) {
-			// 	router.go('/profile')
-			// }
+			if (data) {
+				router.go("/profile");
+			}
 		}
 	}
 
 	componentDidMount(): void {
-		const form = this.element?.querySelector(
-			".profile-edit-pass-data-form"
-		) as HTMLFormElement;
-		if (!form) return;
-
-		this.validator = new FormValidator(form, ".profile-field-item");
+		this.validator = this.initValidator();
 	}
 
 	render(): HTMLElement {

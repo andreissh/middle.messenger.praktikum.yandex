@@ -71,6 +71,16 @@ export default class SigninPage extends Block {
 				},
 			}) as Link,
 		});
+
+		this.validator = this.initValidator();
+	}
+
+	private initValidator(): FormValidator {
+		const form = this.element?.querySelector(".signin-form") as HTMLFormElement;
+		if (!form) {
+			throw new Error("Form not found for validator initialization");
+		}
+		return new FormValidator(form, ".login-field-item");
 	}
 
 	private handleFieldBlur(e: Event) {
@@ -86,20 +96,16 @@ export default class SigninPage extends Block {
 		const form = this.element?.querySelector(".signin-form") as HTMLFormElement;
 		if (!form) return;
 
-		router.go("/chats");
 		if (this.validator && this.validator.validateForm()) {
 			const data = getFormData(form);
-			// if (data) {
-			// 	router.go("/chats");
-			// }
+			if (data) {
+				router.go("/chats");
+			}
 		}
 	}
 
 	componentDidMount() {
-		const form = this.element?.querySelector(".signin-form") as HTMLFormElement;
-		if (!form) return;
-
-		this.validator = new FormValidator(form, ".login-field-item");
+		this.validator = this.initValidator();
 	}
 
 	render(): HTMLElement {

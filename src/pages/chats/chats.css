@@ -1,6 +1,6 @@
 .chats-container {
 	min-height: 100vh;
-	display: flex;
+	display: flex !important;
 }
 
 .chats-aside {

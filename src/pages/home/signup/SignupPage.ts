@@ -111,6 +111,17 @@ export default class SignupPage extends Block {
 				},
 			}) as Link,
 		});
+
+		this.validator = this.initValidator();
+	}
+
+	private initValidator(): FormValidator {
+		const form = this.element?.querySelector(".signup-form") as HTMLFormElement;
+		if (!form) {
+			throw new Error("Form not found for validator initialization");
+		}
+
+		return new FormValidator(form, ".login-field-item");
 	}
 
 	private checkPasswordsMatch(): ValidationResult {
@@ -136,12 +147,11 @@ export default class SignupPage extends Block {
 		const form = this.element?.querySelector(".signup-form") as HTMLFormElement;
 		if (!form || !this.validator) return;
 
-		router.go("/signin");
 		if (this.validator.validateForm(this.customChecks)) {
 			const data = getFormData(form);
-			// if (data) {
-			// 	router.go("/signin");
-			// }
+			if (data) {
+				router.go("/signin");
+			}
 		}
 	}
 
@@ -151,10 +161,7 @@ export default class SignupPage extends Block {
 	}
 
 	componentDidMount() {
-		const form = this.element?.querySelector(".signup-form") as HTMLFormElement;
-		if (!form) return;
-
-		this.validator = new FormValidator(form, ".login-field-item");
+		this.validator = this.initValidator();
 	}
 
 	render(): HTMLElement {

@@ -7,11 +7,11 @@ interface RouteProps {
 
 class Route {
 	private _pathname: string;
-	private _blockClass: typeof Block;
+	private _blockClass: new () => Block;
 	private _block: Block | null;
 	private _props: RouteProps;
 
-	constructor(pathname: string, view: typeof Block, props: RouteProps) {
+	constructor(pathname: string, view: new () => Block, props: RouteProps) {
 		this._pathname = pathname;
 		this._blockClass = view;
 		this._block = null;
@@ -28,11 +28,6 @@ class Route {
 	leave() {
 		if (this._block) {
 			this._block.hide();
-
-			const root = document.querySelector(this._props.rootQuery);
-			if (root) {
-				root.innerHTML = "";
-			}
 		}
 	}
 

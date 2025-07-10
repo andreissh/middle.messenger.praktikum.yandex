@@ -1,7 +1,7 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
 import "./server-error.css";
-import { PageProps } from "@/types/types";
+import { router } from "@/routes/Router";
 
 const template = `
   <div class="server-error-container">
@@ -14,7 +14,7 @@ const template = `
 `;
 
 export default class ServerErrorPage extends Block {
-	constructor(props: PageProps) {
+	constructor() {
 		super("div", {
 			HomeLink: new Link({
 				href: "#",
@@ -22,7 +22,7 @@ export default class ServerErrorPage extends Block {
 				class: "btn-secondary",
 				children: "Назад к чатам",
 				events: {
-					click: () => props.onChangePage("ChatsPage"),
+					click: () => router.go("/chats"),
 				},
 			}),
 		});

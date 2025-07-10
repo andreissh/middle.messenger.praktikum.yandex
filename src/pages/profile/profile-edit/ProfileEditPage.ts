@@ -64,6 +64,19 @@ export default class ProfileEditPage extends Block {
 				},
 			}) as Link,
 		});
+
+		this.validator = this.initValidator();
+	}
+
+	private initValidator(): FormValidator {
+		const form = this.element?.querySelector(
+			".profile-edit-data-form"
+		) as HTMLFormElement;
+		if (!form) {
+			throw new Error("Form not found for validator initialization");
+		}
+
+		return new FormValidator(form, ".profile-field-item");
 	}
 
 	private handleSave(e: Event | undefined): void {
@@ -73,12 +86,11 @@ export default class ProfileEditPage extends Block {
 		) as HTMLFormElement;
 		if (!form || !this.validator) return;
 
-		router.go("/profile");
 		if (this.validator.validateForm()) {
 			const data = getFormData(form);
-			// if (data) {
-			// 	router.go('/profile');
-			// }
+			if (data) {
+				router.go("/profile");
+			}
 		}
 	}
 
@@ -88,12 +100,7 @@ export default class ProfileEditPage extends Block {
 	}
 
 	componentDidMount() {
-		const form = this.element?.querySelector(
-			".profile-edit-data-form"
-		) as HTMLFormElement;
-		if (!form) return;
-
-		this.validator = new FormValidator(form, ".profile-field-item");
+		this.validator = this.initValidator();
 	}
 
 	render(): HTMLElement {
