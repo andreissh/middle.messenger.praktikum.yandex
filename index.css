@@ -1,56 +1,63 @@
 :root {
-  --text-color-default: #1e1e1e;
-  --text-color-white: #fff;
-  --text-color-muted: #999;
-  --text-color-blue: #3369f3;
-  --text-color-danger: #ff0000;
+	--text-color-default: #1e1e1e;
+	--text-color-white: #fff;
+	--text-color-muted: #999;
+	--text-color-blue: #3369f3;
+	--text-color-danger: #ff0000;
 
-  --bg-color-subtle: #fbfbfb;
-  --bg-color-muted: #efefef;
-  --bg-color-blue: #3369f3;
+	--bg-color-subtle: #fbfbfb;
+	--bg-color-muted: #efefef;
+	--bg-color-blue: #3369f3;
 
-  --border-color: #eaeaea;
+	--border-color: #eaeaea;
 }
 
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 body,
 h1,
 h5,
 p {
-  margin: 0;
+	margin: 0;
 }
 
 body {
-  font-family: "Inter", sans-serif;
-  font-size: 16px;
-  line-height: 16px;
-  color: var(--text-color-default);
+	font-family: "Inter", sans-serif;
+	font-size: 16px;
+	line-height: 16px;
+	color: var(--text-color-default);
 }
 
 h1 {
-  font-size: 20px;
-  line-height: 20px;
+	font-size: 20px;
+	line-height: 20px;
 }
 
 h5 {
-  font-size: 13px;
-  line-height: 13px;
+	font-size: 13px;
+	line-height: 13px;
 }
 
 ul {
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 li {
-  list-style: none;
+	list-style: none;
 }
 
 input {
-  padding: 0;
+	padding: 0;
+}
+
+.error-message {
+	margin: 5px 0;
+	font-size: 12px;
+	line-height: 16px;
+	color: var(--text-color-danger);
 }

@@ -1,46 +1,46 @@
 .signin-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
 }
 
 .signin-container {
-  display: flex;
-  flex-direction: column;
-  width: 340px;
-  height: 450px;
-  padding: 1.875rem;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.14);
+	display: flex;
+	flex-direction: column;
+	width: 340px;
+	height: 450px;
+	padding: 1.875rem;
+	background-color: #fff;
+	border-radius: 12px;
+	box-shadow: 0 0 6px 0 rgb(0 0 0 / 14%);
 }
 
 .signin-form {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
 }
 
 .signin-header {
-  text-align: center;
-  margin: 1.25rem 0 2.5rem 0;
+	text-align: center;
+	margin: 1.25rem 0 2.5rem;
 }
 
 .login-field-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 2rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin-bottom: 2rem;
 }
 
-.signin-form-signin-btn-wrapper {
-  display: flex;
-  flex-direction: column;
-  margin-top: auto;
+.signin-form-signin-btn-container {
+	display: flex;
+	flex-direction: column;
+	margin-top: auto;
 }
 
-.signin-container-signup-btn-wrapper {
-  display: flex;
-  margin-top: 0.875rem;
+.signin-form-signup-btn-container {
+	display: flex;
+	margin-top: 0.875rem;
 }

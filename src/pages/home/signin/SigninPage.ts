@@ -1,0 +1,107 @@
+import Block from "@/framework/Block";
+import Link from "@/components/btn/Link";
+import { PageProps } from "@/types/types";
+import getFormData from "@/utils/getFormData";
+import FormValidator from "@/utils/FormValidator";
+import { InputProps } from "@/pages/profile/utils/profileData";
+import LoginFields from "../components/login-fields/LoginFields";
+import "./signin.css";
+
+const fields: Array<InputProps & { label: string }> = [
+	{
+		id: "login",
+		label: "Логин",
+		type: "text",
+		name: "login",
+		autocomplete: "login",
+	},
+	{
+		id: "password",
+		label: "Пароль",
+		type: "password",
+		name: "password",
+		autocomplete: "password",
+	},
+];
+
+const template = `
+  <div class="signin-wrapper">
+    <div class="signin-container">
+      <h1 class="signin-header">Вход</h1>
+      <form class="signin-form">
+        {{{ fields }}}
+        <div class="signin-form-signin-btn-container">
+          {{{ SigninLink }}}
+        </div>
+      </form>
+      <div class="signin-form-signup-btn-container">
+        {{{ SignupLink }}}
+      </div>
+    </div>
+  </div>
+`;
+
+export default class SigninPage extends Block {
+	private validator?: FormValidator;
+
+	constructor(props: PageProps) {
+		super("div", {
+			fields: new LoginFields({
+				fields,
+				events: {
+					blur: (e?: Event) => this.handleFieldBlur(e as Event),
+				},
+			}) as LoginFields,
+			SigninLink: new Link({
+				href: "#",
+				id: "renderChatsBtn",
+				class: "btn",
+				children: "Войти",
+				events: {
+					click: (e?: Event) => this.handleSigninClick(e, props),
+				},
+			}) as Link,
+			SignupLink: new Link({
+				href: "#",
+				id: "renderSignupBtn",
+				class: "btn-secondary",
+				children: "Нет аккаунта?",
+				events: {
+					click: () => props.onChangePage("SignupPage"),
+				},
+			}) as Link,
+		});
+	}
+
+	private handleFieldBlur(e: Event) {
+		const input = (e.target as HTMLElement).closest("input.login-field-input");
+
+		if (!this.validator || !input) return;
+
+		this.validator.validateInput(input as HTMLInputElement);
+	}
+
+	private handleSigninClick(e: Event | undefined, props: PageProps) {
+		e?.preventDefault();
+		const form = this.element?.querySelector(".signin-form") as HTMLFormElement;
+		if (!form) return;
+
+		if (this.validator && this.validator.validateForm()) {
+			const data = getFormData(form);
+			if (data) {
+				props.onChangePage("ChatsPage");
+			}
+		}
+	}
+
+	componentDidMount() {
+		const form = this.element?.querySelector(".signin-form") as HTMLFormElement;
+		if (!form) return;
+
+		this.validator = new FormValidator(form, ".login-field-item");
+	}
+
+	render(): HTMLElement {
+		return this.compile(template);
+	}
+}

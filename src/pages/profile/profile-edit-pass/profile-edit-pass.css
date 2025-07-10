@@ -8,6 +8,7 @@
   justify-content: center;
   align-items: center;
   width: 64px;
+  min-height: 100vh;
   background-color: var(--bg-color-subtle);
   border-right: 1px solid var(--border-color);
   cursor: pointer;
@@ -78,7 +79,7 @@
   color: var(--text-color-danger);
 }
 
-.profile-edit-pass-links-block {
+.profile-edit-pass-links-container {
   display: flex;
   justify-content: center;
 }
