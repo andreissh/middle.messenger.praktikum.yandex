@@ -1,3 +1,5 @@
+import { router } from "@/routes/Router";
+
 type HttpMethodName = "GET" | "POST" | "PUT" | "DELETE";
 
 type RequestOptions<TBody = unknown> = {
@@ -54,7 +56,20 @@ export default class HttpClient {
 				if (xhr.status >= 200 && xhr.status < 300) {
 					resolve(responseData as TResponse);
 				} else {
-					reject(new Error(`Request failed with status ${xhr.status}`));
+					if (xhr.status === 401) {
+						router.go("/signin");
+					}
+					if (xhr.status === 404) {
+						router.go("/404");
+					} else if (xhr.status >= 500) {
+						router.go("/500");
+					}
+
+					reject({
+						status: xhr.status,
+						message: xhr.statusText,
+						data: responseData,
+					});
 				}
 			};
 

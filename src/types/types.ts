@@ -19,3 +19,7 @@ export type PageConstructor = new (
 ) => import("@/framework/Block").default;
 
 export type ValidationResult = { valid: boolean; error?: string };
+
+export type HttpError = {
+	status?: number;
+};

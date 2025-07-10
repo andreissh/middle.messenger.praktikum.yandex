@@ -1,12 +1,13 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
-import { ValidationResult } from "@/types/types";
+import { HttpError, ValidationResult } from "@/types/types";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import { InputProps } from "@/pages/profile/utils/profileData";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signup.css";
 import { router } from "@/routes/Router";
+import http from "@/api/http";
 
 const fields: Array<InputProps & { label: string }> = [
 	{
@@ -142,7 +143,7 @@ export default class SignupPage extends Block {
 		};
 	}
 
-	private handleSignup(e: Event | undefined): void {
+	private async handleSignup(e: Event | undefined): Promise<void> {
 		e?.preventDefault();
 		const form = this.element?.querySelector(".signup-form") as HTMLFormElement;
 		if (!form || !this.validator) return;
@@ -150,7 +151,27 @@ export default class SignupPage extends Block {
 		if (this.validator.validateForm(this.customChecks)) {
 			const data = getFormData(form);
 			if (data) {
-				router.go("/signin");
+				try {
+					await http.post("auth/signup", {
+						body: {
+							first_name: data.first_name,
+							second_name: data.second_name,
+							login: data.login,
+							email: data.email,
+							password: data.password,
+							phone: data.phone,
+						},
+					});
+
+					router.go("/signin");
+				} catch (err) {
+					const error = err as HttpError;
+					if (error.status === 400) {
+						console.error("Неверный логин или пароль");
+					} else {
+						console.error("Ошибка:", error);
+					}
+				}
 			}
 		}
 	}

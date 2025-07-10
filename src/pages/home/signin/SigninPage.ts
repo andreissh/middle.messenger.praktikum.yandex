@@ -6,6 +6,8 @@ import { InputProps } from "@/pages/profile/utils/profileData";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signin.css";
 import { router } from "@/routes/Router";
+import http from "@/api/http";
+import { HttpError } from "@/types/types";
 
 const fields: Array<InputProps & { label: string }> = [
 	{
@@ -83,7 +85,7 @@ export default class SigninPage extends Block {
 		return new FormValidator(form, ".login-field-item");
 	}
 
-	private handleFieldBlur(e: Event) {
+	private handleFieldBlur(e: Event): void {
 		const input = (e.target as HTMLElement).closest("input.login-field-input");
 
 		if (!this.validator || !input) return;
@@ -91,7 +93,7 @@ export default class SigninPage extends Block {
 		this.validator.validateInput(input as HTMLInputElement);
 	}
 
-	private handleSigninClick(e: Event | undefined) {
+	private async handleSigninClick(e: Event | undefined): Promise<void> {
 		e?.preventDefault();
 		const form = this.element?.querySelector(".signin-form") as HTMLFormElement;
 		if (!form) return;
@@ -99,7 +101,23 @@ export default class SigninPage extends Block {
 		if (this.validator && this.validator.validateForm()) {
 			const data = getFormData(form);
 			if (data) {
-				router.go("/chats");
+				try {
+					await http.post("auth/signin", {
+						body: {
+							login: data.login,
+							password: data.password,
+						},
+					});
+
+					router.go("/chats");
+				} catch (err) {
+					const error = err as HttpError;
+					if (error.status === 400) {
+						console.error("Неверный логин или пароль");
+					} else {
+						console.error("Ошибка:", error);
+					}
+				}
 			}
 		}
 	}
