@@ -1,13 +1,13 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
-import { HttpError, ValidationResult } from "@/types/types";
+import { router } from "@/routes/Router";
+import { InputProps } from "@/pages/profile/utils/profileData";
+import http from "@/api/http";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
-import { InputProps } from "@/pages/profile/utils/profileData";
+import { HttpError, ValidationResult } from "@/types/types";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signup.css";
-import { router } from "@/routes/Router";
-import http from "@/api/http";
 
 const fields: Array<InputProps & { label: string }> = [
 	{
@@ -90,7 +90,7 @@ export default class SignupPage extends Block {
 			LoginFields: new LoginFields({
 				fields,
 				events: {
-					blur: (e?: Event) => this.handleFieldBlur(e as Event),
+					blur: (e?: Event) => this.handleFieldBlur(e),
 				},
 			}) as LoginFields,
 			SignupLink: new Link({
@@ -99,7 +99,7 @@ export default class SignupPage extends Block {
 				class: "btn renderSigninBtn",
 				children: "Зарегистрироваться",
 				events: {
-					click: (e?: Event) => this.handleSignup(e),
+					click: (e?: Event) => this.handleSignupClick(e),
 				},
 			}) as Link,
 			SigninLink: new Link({
@@ -108,7 +108,7 @@ export default class SignupPage extends Block {
 				class: "btn-secondary renderSigninBtn",
 				children: "Войти",
 				events: {
-					click: () => router.go("/signin"),
+					click: (e?: Event) => this.handleSigninClick(e),
 				},
 			}) as Link,
 		});
@@ -143,7 +143,7 @@ export default class SignupPage extends Block {
 		};
 	}
 
-	private async handleSignup(e: Event | undefined): Promise<void> {
+	private async handleSignupClick(e?: Event): Promise<void> {
 		e?.preventDefault();
 		const form = this.element?.querySelector(".signup-form") as HTMLFormElement;
 		if (!form || !this.validator) return;
@@ -176,9 +176,16 @@ export default class SignupPage extends Block {
 		}
 	}
 
-	private handleFieldBlur(e: Event) {
+	private handleSigninClick(e?: Event): void {
+		e?.preventDefault();
+		router.go("/signin");
+	}
+
+	private handleFieldBlur(e?: Event) {
 		if (!this.validator) return;
-		this.validator.handleBlur(e, this.customChecks);
+		if (e) {
+			this.validator.handleBlur(e, this.customChecks);
+		}
 	}
 
 	componentDidMount() {

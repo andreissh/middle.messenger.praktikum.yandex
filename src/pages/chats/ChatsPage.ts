@@ -1,10 +1,10 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
+import { router } from "@/routes/Router";
 import arrowIcon from "@/assets/icons/arrow-right.svg";
 import sendBtn from "@/assets/icons/back-btn.svg";
 import ChatList from "./components/chat-list/ChatList";
 import "./chats.css";
-import { router } from "@/routes/Router";
 
 type ChatConfig = {
 	name: string;
@@ -83,7 +83,7 @@ export default class ChatsPage extends Block {
 					<img src="${arrowIcon}" alt="" />
 				`,
 				events: {
-					click: () => router.go("/profile"),
+					click: (e?: Event) => this.handleProfileClick(e),
 				},
 			}) as Link,
 			arrowIcon,
@@ -91,6 +91,11 @@ export default class ChatsPage extends Block {
 				chats,
 			}) as ChatList,
 		});
+	}
+
+	private handleProfileClick(e?: Event): void {
+		e?.preventDefault();
+		router.go("/profile");
 	}
 
 	render(): HTMLElement {

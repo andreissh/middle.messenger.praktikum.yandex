@@ -1,13 +1,13 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
-import backBtn from "@/assets/icons/back-btn.svg";
-import { ValidationResult } from "@/types/types";
+import { router } from "@/routes/Router";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
+import { ValidationResult } from "@/types/types";
+import backBtn from "@/assets/icons/back-btn.svg";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { passwordFields } from "../utils/profileData";
 import "./profile-edit-pass.css";
-import { router } from "@/routes/Router";
 
 const template = `
   <div class="profile-edit-pass">
@@ -46,13 +46,13 @@ export default class ProfileEditPassPage extends Block {
 					</div>
 				`,
 				events: {
-					click: () => router.go("/profile"),
+					click: (e?: Event) => this.handleBackClick(e),
 				},
 			}) as Link,
 			ProfileFieldsList: new ProfileFieldsList({
 				fields: passwordFields,
 				events: {
-					blur: (e?: Event) => this.handleFieldBlur(e as Event),
+					blur: (e?: Event) => this.handleFieldBlur(e),
 				},
 			}) as ProfileFieldsList,
 			SaveLink: new Link({
@@ -61,7 +61,7 @@ export default class ProfileEditPassPage extends Block {
 				class: "btn",
 				children: "Сохранить",
 				events: {
-					click: (e?: Event) => this.handleSave(e),
+					click: (e?: Event) => this.handleSaveClick(e),
 				},
 			}) as Link,
 		});
@@ -98,10 +98,15 @@ export default class ProfileEditPassPage extends Block {
 		};
 	}
 
-	private handleFieldBlur(e: Event): void {
+	private handleBackClick(e?: Event): void {
+		e?.preventDefault();
+		router.go("/profile");
+	}
+
+	private handleFieldBlur(e?: Event): void {
 		if (!this.validator) return;
 
-		const input = e.target as HTMLInputElement;
+		const input = e?.target as HTMLInputElement;
 		if (input.name === "repeatPassword") {
 			this.validator.validateInput(input, () => this.checkPasswordsMatch());
 		} else {
@@ -109,7 +114,7 @@ export default class ProfileEditPassPage extends Block {
 		}
 	}
 
-	private handleSave(e: Event | undefined): void {
+	private handleSaveClick(e?: Event): void {
 		e?.preventDefault();
 		if (!this.validator) return;
 

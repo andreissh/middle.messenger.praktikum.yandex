@@ -1,10 +1,10 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
+import { router } from "@/routes/Router";
 import backBtn from "@/assets/icons/back-btn.svg";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileFields } from "../utils/profileData";
 import "./profile-info.css";
-import { router } from "@/routes/Router";
 
 const template = `
   <div class="profile-info">
@@ -50,7 +50,7 @@ export default class ProfileInfoPage extends Block {
 					</div>
 				`,
 				events: {
-					click: () => router.go("/chats"),
+					click: (e?: Event) => this.handleBackClick(e),
 				},
 			}) as Link,
 			ProfileFieldsList: new ProfileFieldsList({
@@ -62,7 +62,7 @@ export default class ProfileInfoPage extends Block {
 				class: "profile-info-links-item-link",
 				children: "Изменить данные",
 				events: {
-					click: () => router.go("/profile-edit"),
+					click: (e?: Event) => this.handleChangeDataClick(e),
 				},
 			}) as Link,
 			ChangePasswordLink: new Link({
@@ -71,7 +71,7 @@ export default class ProfileInfoPage extends Block {
 				class: "profile-info-links-item-link",
 				children: "Изменить пароль",
 				events: {
-					click: () => router.go("/profile-pass-edit"),
+					click: (e?: Event) => this.handleChangePassClick(e),
 				},
 			}) as Link,
 			LogoutLink: new Link({
@@ -81,10 +81,30 @@ export default class ProfileInfoPage extends Block {
 					"profile-info-links-item-link profile-info-links-item-link--danger",
 				children: "Выйти",
 				events: {
-					click: () => router.go("/signin"),
+					click: (e?: Event) => this.handleLogoutClick(e),
 				},
 			}) as Link,
 		});
+	}
+
+	private handleBackClick(e?: Event): void {
+		e?.preventDefault();
+		router.go("/chats");
+	}
+
+	private handleChangeDataClick(e?: Event): void {
+		e?.preventDefault();
+		router.go("/profile-edit");
+	}
+
+	private handleChangePassClick(e?: Event): void {
+		e?.preventDefault();
+		router.go("/profile-pass-edit");
+	}
+
+	private handleLogoutClick(e?: Event): void {
+		e?.preventDefault();
+		router.go("/signin");
 	}
 
 	render(): HTMLElement {

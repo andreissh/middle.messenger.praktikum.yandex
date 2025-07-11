@@ -1,12 +1,12 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
-import backBtn from "@/assets/icons/back-btn.svg";
+import { router } from "@/routes/Router";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
+import backBtn from "@/assets/icons/back-btn.svg";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileEditFields } from "../utils/profileData";
 import "./profile-edit.css";
-import { router } from "@/routes/Router";
 
 const template = `
   <div class="profile-edit">
@@ -45,13 +45,13 @@ export default class ProfileEditPage extends Block {
 					</div>
 				`,
 				events: {
-					click: () => router.go("/profile"),
+					click: (e?: Event) => this.handleBackClick(e),
 				},
 			}) as Link,
 			ProfileFieldsList: new ProfileFieldsList({
 				fields: profileEditFields,
 				events: {
-					blur: (e?: Event) => this.handleFieldBlur(e as Event),
+					blur: (e?: Event) => this.handleFieldBlur(e),
 				},
 			}) as ProfileFieldsList,
 			SaveLink: new Link({
@@ -60,7 +60,7 @@ export default class ProfileEditPage extends Block {
 				class: "btn",
 				children: "Сохранить",
 				events: {
-					click: (e?: Event) => this.handleSave(e),
+					click: (e?: Event) => this.handleSaveClick(e),
 				},
 			}) as Link,
 		});
@@ -79,7 +79,12 @@ export default class ProfileEditPage extends Block {
 		return new FormValidator(form, ".profile-field-item");
 	}
 
-	private handleSave(e: Event | undefined): void {
+	private handleBackClick(e?: Event): void {
+		e?.preventDefault();
+		router.go("/profile");
+	}
+
+	private handleSaveClick(e?: Event): void {
 		e?.preventDefault();
 		const form = this.element?.querySelector(
 			".profile-edit-data-form"
@@ -94,9 +99,11 @@ export default class ProfileEditPage extends Block {
 		}
 	}
 
-	private handleFieldBlur(e: Event): void {
+	private handleFieldBlur(e?: Event): void {
 		if (!this.validator) return;
-		this.validator.handleBlur(e);
+		if (e) {
+			this.validator.handleBlur(e);
+		}
 	}
 
 	componentDidMount() {

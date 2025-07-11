@@ -1,13 +1,13 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
+import { router } from "@/routes/Router";
+import { InputProps } from "@/pages/profile/utils/profileData";
+import http from "@/api/http";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
-import { InputProps } from "@/pages/profile/utils/profileData";
+import { HttpError } from "@/types/types";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signin.css";
-import { router } from "@/routes/Router";
-import http from "@/api/http";
-import { HttpError } from "@/types/types";
 
 const fields: Array<InputProps & { label: string }> = [
 	{
@@ -51,7 +51,7 @@ export default class SigninPage extends Block {
 			fields: new LoginFields({
 				fields,
 				events: {
-					blur: (e?: Event) => this.handleFieldBlur(e as Event),
+					blur: (e?: Event) => this.handleFieldBlur(e),
 				},
 			}) as LoginFields,
 			SigninLink: new Link({
@@ -69,7 +69,7 @@ export default class SigninPage extends Block {
 				class: "btn-secondary",
 				children: "Нет аккаунта?",
 				events: {
-					click: () => router.go("/signup"),
+					click: (e?: Event) => this.handleSignupClick(e),
 				},
 			}) as Link,
 		});
@@ -85,15 +85,15 @@ export default class SigninPage extends Block {
 		return new FormValidator(form, ".login-field-item");
 	}
 
-	private handleFieldBlur(e: Event): void {
-		const input = (e.target as HTMLElement).closest("input.login-field-input");
+	private handleFieldBlur(e?: Event): void {
+		const input = (e?.target as HTMLElement).closest("input.login-field-input");
 
 		if (!this.validator || !input) return;
 
 		this.validator.validateInput(input as HTMLInputElement);
 	}
 
-	private async handleSigninClick(e: Event | undefined): Promise<void> {
+	private async handleSigninClick(e?: Event): Promise<void> {
 		e?.preventDefault();
 		const form = this.element?.querySelector(".signin-form") as HTMLFormElement;
 		if (!form) return;
@@ -120,6 +120,11 @@ export default class SigninPage extends Block {
 				}
 			}
 		}
+	}
+
+	private handleSignupClick(e?: Event): void {
+		e?.preventDefault();
+		router.go("/signup");
 	}
 
 	componentDidMount() {
