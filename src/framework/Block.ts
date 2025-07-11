@@ -235,7 +235,7 @@ abstract class Block {
 	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
 	public componentDidMount(_oldProps?: Props): void {}
 
-	protected dispatchComponentDidMount(): void {
+	public dispatchComponentDidMount(): void {
 		this._eventBus.emit(Block.EVENTS.FLOW_CDM);
 	}
 

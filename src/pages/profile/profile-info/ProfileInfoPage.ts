@@ -118,6 +118,30 @@ export default class ProfileInfoPage extends Block {
 		}
 	}
 
+	componentDidMount() {
+		const getUserData = async () => {
+			try {
+				const userData = await http.get("auth/user");
+				let profileFieldsClone = structuredClone(profileFields);
+				profileFieldsClone = profileFieldsClone.map((field) => {
+					return {
+						...field,
+						value: userData[field.id] ?? field.value,
+					};
+				});
+
+				// this.setProps({
+				// 	ProfileFieldsList: new ProfileFieldsList({
+				// 		fields: profileFieldsClone,
+				// 	}) as ProfileFieldsList,
+				// });
+			} catch (err) {
+				console.log(err);
+			}
+		};
+		getUserData();
+	}
+
 	render(): HTMLElement {
 		return this.compile(template);
 	}

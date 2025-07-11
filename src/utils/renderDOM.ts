@@ -7,6 +7,8 @@ function renderDOM(query: string, block: Block) {
 	root.innerHTML = "";
 
 	root.appendChild(block.getContent());
+
+	block.dispatchComponentDidMount();
 }
 
 export default renderDOM;
