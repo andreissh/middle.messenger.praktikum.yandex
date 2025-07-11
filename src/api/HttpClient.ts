@@ -45,6 +45,7 @@ export default class HttpClient {
 			const xhr = new XMLHttpRequest();
 			xhr.open(method, fullUrl);
 			xhr.setRequestHeader("Content-Type", "application/json");
+			xhr.withCredentials = true;
 
 			xhr.onload = () => {
 				const contentType = xhr.getResponseHeader("Content-Type") || "";

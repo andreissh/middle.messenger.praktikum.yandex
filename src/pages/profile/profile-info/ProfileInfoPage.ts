@@ -1,6 +1,8 @@
 import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
 import { router } from "@/routes/Router";
+import http from "@/api/http";
+import { HttpError } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileFields } from "../utils/profileData";
@@ -102,9 +104,18 @@ export default class ProfileInfoPage extends Block {
 		router.go("/profile-pass-edit");
 	}
 
-	private handleLogoutClick(e?: Event): void {
+	private async handleLogoutClick(e?: Event): Promise<void> {
 		e?.preventDefault();
-		router.go("/signin");
+		try {
+			await http.post("auth/logout");
+
+			router.go("/signin");
+		} catch (err) {
+			const error = err as HttpError;
+			if (error) {
+				console.error("Ошибка:", error);
+			}
+		}
 	}
 
 	render(): HTMLElement {
