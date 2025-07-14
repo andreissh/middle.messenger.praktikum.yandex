@@ -39,8 +39,10 @@ class Route {
 		if (!this._block) {
 			this._block = new this._blockClass();
 			renderDOM(this._props.rootQuery, this._block);
+			this._block.dispatchComponentDidMount();
 		} else {
 			renderDOM(this._props.rootQuery, this._block);
+			this._block.dispatchComponentDidMount();
 			this._block.show();
 		}
 	}

@@ -2,7 +2,8 @@ import Block from "@/framework/Block";
 import Link from "@/components/btn/Link";
 import { router } from "@/routes/Router";
 import http from "@/api/http";
-import { HttpError } from "@/types/types";
+import renderDOM from "@/utils/renderDOM";
+import { HttpError, UserData } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileFields } from "../utils/profileData";
@@ -121,7 +122,7 @@ export default class ProfileInfoPage extends Block {
 	componentDidMount() {
 		const getUserData = async () => {
 			try {
-				const userData = await http.get("auth/user");
+				const userData = await http.get<UserData>("auth/user");
 				let profileFieldsClone = structuredClone(profileFields);
 				profileFieldsClone = profileFieldsClone.map((field) => {
 					return {
@@ -130,11 +131,13 @@ export default class ProfileInfoPage extends Block {
 					};
 				});
 
-				// this.setProps({
-				// 	ProfileFieldsList: new ProfileFieldsList({
-				// 		fields: profileFieldsClone,
-				// 	}) as ProfileFieldsList,
-				// });
+				this.setProps({
+					ProfileFieldsList: new ProfileFieldsList({
+						fields: profileFieldsClone,
+					}) as ProfileFieldsList,
+				});
+
+				renderDOM("#app", this);
 			} catch (err) {
 				console.log(err);
 			}

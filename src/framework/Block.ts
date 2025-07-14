@@ -261,8 +261,11 @@ abstract class Block {
 		if (!nextProps) {
 			return;
 		}
+		const { children, props, lists } = Block._getChildren(nextProps);
 
-		Object.assign(this._props, nextProps);
+		Object.assign(this._props, props);
+		Object.assign(this.children, children);
+		Object.assign(this.lists, lists);
 		this._eventBus.emit(Block.EVENTS.FLOW_CDU, this._props, nextProps);
 	};
 

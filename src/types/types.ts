@@ -23,3 +23,14 @@ export type ValidationResult = { valid: boolean; error?: string };
 export type HttpError = {
 	status?: number;
 };
+
+export type UserData = {
+	id: number;
+	first_name: string;
+	second_name: string;
+	display_name: string;
+	phone: string;
+	login: string;
+	avatar: string;
+	email: string;
+};
