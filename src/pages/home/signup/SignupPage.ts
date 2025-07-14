@@ -163,7 +163,7 @@ export default class SignupPage extends Block {
 						},
 					});
 
-					router.go("/signin");
+					router.go("/");
 				} catch (err) {
 					const error = err as HttpError;
 					if (error.status === 400) {
@@ -178,7 +178,7 @@ export default class SignupPage extends Block {
 
 	private handleSigninClick(e?: Event): void {
 		e?.preventDefault();
-		router.go("/signin");
+		router.go("/");
 	}
 
 	private handleFieldBlur(e?: Event) {

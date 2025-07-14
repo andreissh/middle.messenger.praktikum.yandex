@@ -84,7 +84,7 @@ export default class ProfileEditPage extends Block {
 
 	private handleBackClick(e?: Event): void {
 		e?.preventDefault();
-		router.go("/profile");
+		router.go("/settings");
 	}
 
 	private handleSaveClick(e?: Event): void {
@@ -110,7 +110,7 @@ export default class ProfileEditPage extends Block {
 							},
 						});
 
-						router.go("/profile");
+						router.go("/settings");
 					} catch (err) {
 						console.log(err);
 					}
@@ -145,7 +145,7 @@ export default class ProfileEditPage extends Block {
 					}) as ProfileFieldsList,
 				});
 
-				renderDOM("#app", this);
+				renderDOM("#app", this, true);
 			} catch (err) {
 				console.log(err);
 			}

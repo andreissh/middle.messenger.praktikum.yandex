@@ -22,10 +22,15 @@ export default class NotFoundPage extends Block {
 				class: "btn-secondary",
 				children: "Назад к чатам",
 				events: {
-					click: () => router.go("/chats"),
+					click: (e) => this.handleHomeClick(e),
 				},
 			}),
 		});
+	}
+
+	handleHomeClick(e?: Event): void {
+		e?.preventDefault();
+		router.go("/messenger");
 	}
 
 	render(): HTMLElement {

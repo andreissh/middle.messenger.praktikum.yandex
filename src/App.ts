@@ -3,8 +3,6 @@ import SigninPage from "./pages/home/signin/SigninPage";
 import SignupPage from "./pages/home/signup/SignupPage";
 import ChatsPage from "./pages/chats/ChatsPage";
 import ProfileInfoPage from "./pages/profile/profile-info/ProfileInfoPage";
-import ProfileEditPage from "./pages/profile/profile-edit/ProfileEditPage";
-import ProfileEditPassPage from "./pages/profile/profile-edit-pass/ProfileEditPassPage";
 import NotFoundPage from "./pages/not-found/NotFoundPage";
 import ServerErrorPage from "./pages/server-error/ServerErrorPage";
 
@@ -16,18 +14,19 @@ export default class App {
 	private _initRouter() {
 		router
 			.use("/", SigninPage)
-			.use("/signin", SigninPage)
-			.use("/signup", SignupPage)
-			.use("/chats", ChatsPage)
-			.use("/profile", ProfileInfoPage)
-			.use("/profile-edit", ProfileEditPage)
-			.use("/profile-pass-edit", ProfileEditPassPage)
+			.use("/sign-up", SignupPage)
+			.use("/messenger", ChatsPage)
+			.use("/settings", ProfileInfoPage)
 			.use("/404", NotFoundPage)
 			.use("/500", ServerErrorPage)
 			.start();
 
 		if (window.location.pathname === "/") {
-			router.go("/signin");
+			if (Boolean(localStorage.getItem("isSignedIn"))) {
+				router.go("/messenger");
+			} else {
+				router.go("/");
+			}
 		}
 	}
 }

@@ -95,7 +95,7 @@ export default class ChatsPage extends Block {
 
 	private handleProfileClick(e?: Event): void {
 		e?.preventDefault();
-		router.go("/profile");
+		router.go("/settings");
 	}
 
 	render(): HTMLElement {

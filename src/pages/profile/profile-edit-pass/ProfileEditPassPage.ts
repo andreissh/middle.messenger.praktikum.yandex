@@ -101,7 +101,7 @@ export default class ProfileEditPassPage extends Block {
 
 	private handleBackClick(e?: Event): void {
 		e?.preventDefault();
-		router.go("/profile");
+		router.go("/settings");
 	}
 
 	private handleFieldBlur(e?: Event): void {
@@ -144,14 +144,12 @@ export default class ProfileEditPassPage extends Block {
 							},
 						});
 
-						router.go("/profile");
+						router.go("/settings");
 					} catch (err) {
 						console.log(err);
 					}
 				};
 				setUserData();
-
-				router.go("/profile");
 			}
 		}
 	}

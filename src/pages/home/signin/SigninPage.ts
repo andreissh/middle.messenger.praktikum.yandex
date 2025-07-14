@@ -109,7 +109,8 @@ export default class SigninPage extends Block {
 						},
 					});
 
-					router.go("/chats");
+					localStorage.setItem("isSignedIn", "true");
+					router.go("/messenger");
 				} catch (err) {
 					const error = err as HttpError;
 					if (error.status === 400) {
@@ -124,7 +125,7 @@ export default class SigninPage extends Block {
 
 	private handleSignupClick(e?: Event): void {
 		e?.preventDefault();
-		router.go("/signup");
+		router.go("/sign-up");
 	}
 
 	componentDidMount() {

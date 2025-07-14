@@ -8,6 +8,8 @@ import backBtn from "@/assets/icons/back-btn.svg";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileFields } from "../utils/profileData";
 import "./profile-info.css";
+import ProfileEditPage from "../profile-edit/ProfileEditPage";
+import ProfileEditPassPage from "../profile-edit-pass/ProfileEditPassPage";
 
 const template = `
   <div class="profile-info">
@@ -92,17 +94,19 @@ export default class ProfileInfoPage extends Block {
 
 	private handleBackClick(e?: Event): void {
 		e?.preventDefault();
-		router.go("/chats");
+		router.go("/messenger");
 	}
 
 	private handleChangeDataClick(e?: Event): void {
 		e?.preventDefault();
-		router.go("/profile-edit");
+		const profileEditPage = new ProfileEditPage();
+		renderDOM("#app", profileEditPage);
 	}
 
 	private handleChangePassClick(e?: Event): void {
 		e?.preventDefault();
-		router.go("/profile-pass-edit");
+		const profileEditPassPage = new ProfileEditPassPage();
+		renderDOM("#app", profileEditPassPage);
 	}
 
 	private async handleLogoutClick(e?: Event): Promise<void> {
@@ -110,7 +114,8 @@ export default class ProfileInfoPage extends Block {
 		try {
 			await http.post("auth/logout");
 
-			router.go("/signin");
+			localStorage.setItem("isSignedIn", "false");
+			router.go("/");
 		} catch (err) {
 			const error = err as HttpError;
 			if (error) {
@@ -137,8 +142,9 @@ export default class ProfileInfoPage extends Block {
 						fields: profileFieldsClone,
 					}) as ProfileFieldsList,
 				});
+				console.log(this);
 
-				renderDOM("#app", this);
+				renderDOM("#app", this, true);
 			} catch (err) {
 				console.log(err);
 			}
