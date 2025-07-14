@@ -8,6 +8,7 @@ import backBtn from "@/assets/icons/back-btn.svg";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { passwordFields } from "../utils/profileData";
 import "./profile-edit-pass.css";
+import http from "@/api/http";
 
 const template = `
   <div class="profile-edit-pass">
@@ -128,6 +129,28 @@ export default class ProfileEditPassPage extends Block {
 			) as HTMLFormElement;
 			const data = getFormData(form);
 			if (data) {
+				const inputFields = document.querySelectorAll(".profile-field-input");
+				const reqBody = {};
+				passwordFields.forEach((field, i) => {
+					if (field.id !== "repeatPassword") {
+						reqBody[field.id] = inputFields[i].value ?? field.value;
+					}
+				});
+				const setUserData = async () => {
+					try {
+						await http.put("user/password", {
+							body: {
+								...reqBody,
+							},
+						});
+
+						router.go("/profile");
+					} catch (err) {
+						console.log(err);
+					}
+				};
+				setUserData();
+
 				router.go("/profile");
 			}
 		}
