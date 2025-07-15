@@ -95,8 +95,9 @@ export default class ProfileEditPage extends Block {
 		if (this.validator.validateForm()) {
 			const data = getFormData(form);
 			if (data) {
-				const inputFields = document.querySelectorAll(".profile-field-input");
-				const reqBody = {};
+				const inputFields: NodeListOf<HTMLInputElement> =
+					document.querySelectorAll(".profile-field-input");
+				const reqBody: Record<string, string> = {};
 				profileEditFields.forEach((field, i) => {
 					reqBody[field.id] = inputFields[i].value ?? field.value;
 				});
@@ -133,7 +134,7 @@ export default class ProfileEditPage extends Block {
 				profileEditFieldsClone = profileEditFieldsClone.map((field) => {
 					return {
 						...field,
-						value: userData[field.id] ?? field.value,
+						value: String(userData[field.id as keyof UserData]) ?? field.value,
 					};
 				});
 

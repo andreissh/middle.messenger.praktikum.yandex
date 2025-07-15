@@ -8,10 +8,10 @@ import ServerErrorPage from "./pages/server-error/ServerErrorPage";
 
 export default class App {
 	constructor() {
-		this._initRouter();
+		App._initRouter();
 	}
 
-	private _initRouter() {
+	private static _initRouter() {
 		router
 			.use("/", SigninPage)
 			.use("/sign-up", SignupPage)
@@ -22,7 +22,7 @@ export default class App {
 			.start();
 
 		if (window.location.pathname === "/") {
-			if (Boolean(localStorage.getItem("isSignedIn"))) {
+			if (localStorage.getItem("isSignedIn") === "true") {
 				router.go("/messenger");
 			} else {
 				router.go("/");

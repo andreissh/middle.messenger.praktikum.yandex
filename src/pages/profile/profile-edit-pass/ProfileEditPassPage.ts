@@ -127,8 +127,9 @@ export default class ProfileEditPassPage extends Block {
 			) as HTMLFormElement;
 			const data = getFormData(form);
 			if (data) {
-				const inputFields = document.querySelectorAll(".profile-field-input");
-				const reqBody = {};
+				const inputFields: NodeListOf<HTMLInputElement> =
+					document.querySelectorAll(".profile-field-input");
+				const reqBody: Record<string, string> = {};
 				passwordFields.forEach((field, i) => {
 					if (field.id !== "repeatPassword") {
 						reqBody[field.id] = inputFields[i].value ?? field.value;

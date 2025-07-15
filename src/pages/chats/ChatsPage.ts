@@ -125,14 +125,17 @@ export default class ChatsPage extends Block {
 
 	private handleCreateChatClick(e?: Event): void {
 		e?.preventDefault();
-		const modal = document.querySelector("#createChatModal");
+		const modal: HTMLElement | null =
+			document.querySelector("#createChatModal");
+		if (!modal) return;
 		modal.style.display = "block";
 
-		const input = document.querySelector("#createChatInput");
+		const input: HTMLInputElement | null =
+			document.querySelector("#createChatInput");
 		const submitBtn = document.querySelector(".create-chat-submit-btn");
 
 		submitBtn?.addEventListener("click", async () => {
-			if (!input.value) return;
+			if (!input || !input.value) return;
 
 			try {
 				const chat = await http.post("/chats", {
