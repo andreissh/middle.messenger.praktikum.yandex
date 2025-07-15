@@ -8,6 +8,7 @@
 	--bg-color-subtle: #fbfbfb;
 	--bg-color-muted: #efefef;
 	--bg-color-blue: #3369f3;
+	--bg-color-overlay: rgba(0, 0, 0, 0.5);
 
 	--border-color: #eaeaea;
 }
