@@ -92,7 +92,7 @@ export default class SignupPage extends Block {
 				events: {
 					blur: (e?: Event) => this.handleFieldBlur(e),
 				},
-			}) as LoginFields,
+			}),
 			SignupBtn: new Button({
 				id: "signup",
 				class: "btn",

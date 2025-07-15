@@ -1,9 +1,9 @@
 import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
+import Modal from "@/components/modal/Modal";
 import { router } from "@/routes/Router";
 import arrowIcon from "@/assets/icons/arrow-right.svg";
 import sendBtn from "@/assets/icons/back-btn.svg";
-import closeBtn from "@/assets/icons/close.png";
 import ChatList from "./components/chat-list/ChatList";
 import "./chats.css";
 
@@ -72,18 +72,7 @@ const template = `
 			</div>
 		</div>
     </main>
-	<div class="create-chat-modal-wrapper" style="display: none;">
-		<div class="create-chat-modal">
-			<button class="modal-close-btn">
-				<img src=${closeBtn} alt="close" />
-			</button>
-			<h2 class="create-chat-title">Создайте чат</h2>
-			<label class="create-chat-label">
-				<span>Название:</span>
-				<input type="text" id="createChatInput" class="create-chat-input" />
-			</label>
-		</div>
-	</div>
+	{{{ CreateChatModal }}}
   </div>
 `;
 
@@ -112,6 +101,16 @@ export default class ChatsPage extends Block {
 					click: (e?: Event) => this.handleCreateChatClick(e),
 				},
 			}),
+			CreateChatModal: new Modal({
+				id: "createChatModal",
+				title: "Создайте чат",
+				children: `
+					<label class="create-chat-label">
+						<span class="create-chat-label-text">Название:</span>
+						<input type="text" id="createChatInput" class="create-chat-input" />
+					</label>
+				`,
+			}),
 		});
 	}
 
@@ -122,13 +121,8 @@ export default class ChatsPage extends Block {
 
 	private handleCreateChatClick(e?: Event): void {
 		e?.preventDefault();
-		const modalWrapper = document.querySelector(".create-chat-modal-wrapper");
-		modalWrapper.style.display = "block";
-
-		const closeBtn = modalWrapper.querySelector(".modal-close-btn");
-		closeBtn.addEventListener("click", () => {
-			modalWrapper.style.display = "none";
-		});
+		const modal = document.querySelector("#createChatModal");
+		modal.style.display = "block";
 	}
 
 	render(): HTMLElement {
