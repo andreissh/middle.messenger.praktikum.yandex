@@ -6,6 +6,7 @@ import arrowIcon from "@/assets/icons/arrow-right.svg";
 import sendBtn from "@/assets/icons/back-btn.svg";
 import ChatList from "./components/chat-list/ChatList";
 import "./chats.css";
+import http from "@/api/http";
 
 type ChatConfig = {
 	name: string;
@@ -105,10 +106,13 @@ export default class ChatsPage extends Block {
 				id: "createChatModal",
 				title: "Создайте чат",
 				children: `
-					<label class="create-chat-label">
-						<span class="create-chat-label-text">Название:</span>
-						<input type="text" id="createChatInput" class="create-chat-input" />
-					</label>
+					<form>
+						<label class="create-chat-label">
+							<span class="create-chat-label-text">Название:</span>
+							<input type="text" id="createChatInput" class="create-chat-input" />
+						</label>
+						<button type="submit" class="btn create-chat-submit-btn">Создать</button>
+					</form>
 				`,
 			}),
 		});
@@ -123,6 +127,37 @@ export default class ChatsPage extends Block {
 		e?.preventDefault();
 		const modal = document.querySelector("#createChatModal");
 		modal.style.display = "block";
+
+		const input = document.querySelector("#createChatInput");
+		const submitBtn = document.querySelector(".create-chat-submit-btn");
+
+		submitBtn?.addEventListener("click", async () => {
+			if (!input.value) return;
+
+			try {
+				const chat = await http.post("/chats", {
+					body: {
+						title: input.value,
+					},
+				});
+				modal.style.display = "none";
+				console.log(chat);
+			} catch (err) {
+				console.log(err);
+			}
+		});
+	}
+
+	componentDidMount() {
+		const getChats = async () => {
+			try {
+				const chats = await http.get("/chats");
+				console.log(chats);
+			} catch (err) {
+				console.log(err);
+			}
+		};
+		getChats();
 	}
 
 	render(): HTMLElement {
