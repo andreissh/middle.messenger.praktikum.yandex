@@ -58,7 +58,7 @@
 	gap: 0.625rem;
 }
 
-.profile-edit-pass-links-item {
+.profile-edit-pass-btns-item {
 	padding-bottom: 0.625rem;
 	border-bottom: 1px solid var(--border-color);
 
@@ -67,7 +67,7 @@
 	}
 }
 
-.profile-edit-pass-links-item-link {
+.profile-edit-pass-btns-item-btn {
 	display: inline-block;
 	font-size: 13px;
 	line-height: 13px;
@@ -75,11 +75,11 @@
 	text-decoration: none;
 }
 
-.profile-edit-pass-links-item-link--danger {
+.profile-edit-pass-btns-item-btn--danger {
 	color: var(--text-color-danger);
 }
 
-.profile-edit-pass-links-container {
+.profile-edit-pass-btns-container {
 	display: flex;
 	justify-content: center;
 }

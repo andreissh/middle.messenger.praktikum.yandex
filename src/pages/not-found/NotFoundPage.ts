@@ -1,5 +1,5 @@
 import Block from "@/framework/Block";
-import Link from "@/components/btn/Link";
+import Button from "@/components/button/Button";
 import "./not-found.css";
 import { router } from "@/routes/Router";
 
@@ -8,7 +8,7 @@ const template = `
     <h1 class="not-found-header">404</h1>
     <p class="not-found-description">Не туда попали</p>
     <div class="not-found-goback-container">
-      {{{ HomeLink }}}
+      {{{ HomeBtn }}}
     </div>
   </div>
 `;
@@ -16,8 +16,7 @@ const template = `
 export default class NotFoundPage extends Block {
 	constructor() {
 		super("div", {
-			HomeLink: new Link({
-				href: "#",
+			HomeBtn: new Button({
 				id: "renderChatsBtn",
 				class: "btn-secondary",
 				children: "Назад к чатам",

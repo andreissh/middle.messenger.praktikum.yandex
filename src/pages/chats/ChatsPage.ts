@@ -1,5 +1,5 @@
 import Block from "@/framework/Block";
-import Link from "@/components/btn/Link";
+import Button from "@/components/button/Button";
 import { router } from "@/routes/Router";
 import arrowIcon from "@/assets/icons/arrow-right.svg";
 import sendBtn from "@/assets/icons/back-btn.svg";
@@ -39,7 +39,7 @@ const template = `
   <div class="chats-container">
     <aside class="chats-aside">
       <div class="chats-aside-top-section">
-        {{{ ProfileLink }}}
+        {{{ ProfileBtn }}}
         <input
           type="search"
           name="search"
@@ -48,6 +48,9 @@ const template = `
         />
       </div>
       {{{ ChatList }}}
+	   <div class="create-chat-btn-wrapper">
+	  	{{{ CreateChatBtn }}}
+	   </div>
     </aside>
     <main class="chats-main">
 		<div class="chats-main-content">
@@ -57,7 +60,6 @@ const template = `
 					отправить сообщение</span>
 			</div>
 			<div class="chats-main-content-footer">
-				{{{ CreateChatLink }}}
 				<input
 					type="text"
 					name="message"
@@ -88,8 +90,7 @@ const template = `
 export default class ChatsPage extends Block {
 	constructor() {
 		super("div", {
-			ProfileLink: new Link({
-				href: "#",
+			ProfileBtn: new Button({
 				id: "renderProfileInfoBtn",
 				class: "chats-aside-to-profile-btn",
 				children: `
@@ -99,13 +100,12 @@ export default class ChatsPage extends Block {
 				events: {
 					click: (e?: Event) => this.handleProfileClick(e),
 				},
-			}) as Link,
+			}),
 			arrowIcon,
 			ChatList: new ChatList({
 				chats,
-			}) as ChatList,
-			CreateChatLink: new Link({
-				href: "#",
+			}),
+			CreateChatBtn: new Button({
 				id: "createChatBtn",
 				class: "create-chat-btn",
 				events: {

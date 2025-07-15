@@ -5,8 +5,10 @@
 }
 
 .chats-aside {
+	display: flex;
+	flex-direction: column;
 	width: 310px;
-	padding: 0 0.675rem;
+	padding: 0 0.625rem;
 	border-right: 1px solid var(--border-color);
 }
 
@@ -101,6 +103,10 @@
 		width: 30px;
 		height: 30px;
 	}
+}
+
+.create-chat-btn-wrapper {
+	padding: 8px 0;
 }
 
 .create-chat-btn {

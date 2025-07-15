@@ -1,5 +1,5 @@
 import Block from "@/framework/Block";
-import Link from "@/components/btn/Link";
+import Button from "@/components/button/Button";
 import { router } from "@/routes/Router";
 import { InputProps } from "@/pages/profile/utils/profileData";
 import http from "@/api/http";
@@ -68,11 +68,11 @@ const template = `
       <form class="signup-form">
         {{{ LoginFields }}}
         <div class="signup-form-signup-btn-container">
-          {{{ SignupLink }}}
+          {{{ SignupBtn }}}
         </div>
       </form>
       <div class="signup-form-signin-btn-container">
-        {{{ SigninLink }}}
+        {{{ SigninBtn }}}
       </div>
     </div>
   </div>
@@ -93,24 +93,22 @@ export default class SignupPage extends Block {
 					blur: (e?: Event) => this.handleFieldBlur(e),
 				},
 			}) as LoginFields,
-			SignupLink: new Link({
-				href: "#",
+			SignupBtn: new Button({
 				id: "signup",
-				class: "btn renderSigninBtn",
+				class: "btn",
 				children: "Зарегистрироваться",
 				events: {
 					click: (e?: Event) => this.handleSignupClick(e),
 				},
-			}) as Link,
-			SigninLink: new Link({
-				href: "#",
+			}),
+			SigninBtn: new Button({
 				id: "signin",
-				class: "btn-secondary renderSigninBtn",
+				class: "btn-secondary",
 				children: "Войти",
 				events: {
 					click: (e?: Event) => this.handleSigninClick(e),
 				},
-			}) as Link,
+			}),
 		});
 
 		this.validator = this.initValidator();

@@ -1,5 +1,5 @@
 import Block from "@/framework/Block";
-import Link from "@/components/btn/Link";
+import Button from "@/components/button/Button";
 import { router } from "@/routes/Router";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
@@ -13,20 +13,20 @@ import renderDOM from "@/utils/renderDOM";
 
 const template = `
   <div class="profile-edit">
-    {{{ BackLink }}}
+    {{{ BackBtn }}}
     <div class="profile-edit-content-wrapper">
       <div class="profile-edit-content">
         <div class="profile-edit-avatar-block">
           <span class="profile-edit-avatar">
-            <img src="{{avatarImg}}" class="profile-edit-avatar-img" />
+            <img src="{{ avatarImg }}" class="profile-edit-avatar-img" />
           </span>
         </div>
         <form class="profile-edit-data-form">
           <div class="profile-edit-data-block">
             {{{ ProfileFieldsList }}}
           </div>
-          <div class="profile-edit-links-container">
-            {{{ SaveLink }}}
+          <div class="profile-edit-btns-container">
+            {{{ SaveBtn }}}
           </div>
         </form>
       </div>
@@ -39,8 +39,7 @@ export default class ProfileEditPage extends Block {
 
 	constructor() {
 		super("div", {
-			BackLink: new Link({
-				href: "#",
+			BackBtn: new Button({
 				id: "backBtn",
 				children: `
 					<div class="profile-edit-goback-block">
@@ -50,22 +49,21 @@ export default class ProfileEditPage extends Block {
 				events: {
 					click: (e?: Event) => this.handleBackClick(e),
 				},
-			}) as Link,
+			}),
 			ProfileFieldsList: new ProfileFieldsList({
 				fields: profileEditFields,
 				events: {
 					blur: (e?: Event) => this.handleFieldBlur(e),
 				},
-			}) as ProfileFieldsList,
-			SaveLink: new Link({
-				href: "#",
+			}),
+			SaveBtn: new Button({
 				id: "save",
 				class: "btn",
 				children: "Сохранить",
 				events: {
 					click: (e?: Event) => this.handleSaveClick(e),
 				},
-			}) as Link,
+			}),
 		});
 
 		this.validator = this.initValidator();

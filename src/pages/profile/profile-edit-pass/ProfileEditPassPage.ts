@@ -1,31 +1,31 @@
 import Block from "@/framework/Block";
-import Link from "@/components/btn/Link";
+import Button from "@/components/button/Button";
 import { router } from "@/routes/Router";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import { ValidationResult } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
+import http from "@/api/http";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { passwordFields } from "../utils/profileData";
 import "./profile-edit-pass.css";
-import http from "@/api/http";
 
 const template = `
   <div class="profile-edit-pass">
-    {{{ BackLink }}}
+    {{{ BackBtn }}}
     <div class="profile-edit-pass-content-wrapper">
       <div class="profile-edit-pass-content">
         <div class="profile-edit-pass-avatar-block">
           <span class="profile-edit-pass-avatar">
-            <img src="{{avatarImg}}" class="profile-edit-pass-avatar-img" />
+            <img src="{{ avatarImg }}" class="profile-edit-pass-avatar-img" />
           </span>
         </div>
         <form class="profile-edit-pass-data-form">
           <div class="profile-edit-pass-data-block">
             {{{ ProfileFieldsList }}}
           </div>
-          <div class="profile-edit-pass-links-container">
-            {{{ SaveLink }}}
+          <div class="profile-edit-pass-btns-container">
+            {{{ SaveBtn }}}
           </div>
         </form>
       </div>
@@ -38,8 +38,7 @@ export default class ProfileEditPassPage extends Block {
 
 	constructor() {
 		super("div", {
-			BackLink: new Link({
-				href: "#",
+			BackBtn: new Button({
 				id: "backBtn",
 				children: `
 					<div class="profile-edit-pass-goback-block">
@@ -49,22 +48,21 @@ export default class ProfileEditPassPage extends Block {
 				events: {
 					click: (e?: Event) => this.handleBackClick(e),
 				},
-			}) as Link,
+			}),
 			ProfileFieldsList: new ProfileFieldsList({
 				fields: passwordFields,
 				events: {
 					blur: (e?: Event) => this.handleFieldBlur(e),
 				},
-			}) as ProfileFieldsList,
-			SaveLink: new Link({
-				href: "#",
+			}),
+			SaveBtn: new Button({
 				id: "save",
 				class: "btn",
 				children: "Сохранить",
 				events: {
 					click: (e?: Event) => this.handleSaveClick(e),
 				},
-			}) as Link,
+			}),
 		});
 
 		this.validator = this.initValidator();

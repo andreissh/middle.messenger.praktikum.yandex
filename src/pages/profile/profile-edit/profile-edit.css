@@ -52,13 +52,13 @@
 	margin-bottom: 3.75rem;
 }
 
-.profile-edit-links-list {
+.profile-edit-btns-list {
 	display: flex;
 	flex-direction: column;
 	gap: 0.625rem;
 }
 
-.profile-edit-links-item {
+.profile-edit-btns-item {
 	padding-bottom: 0.625rem;
 	border-bottom: 1px solid var(--border-color);
 
@@ -67,7 +67,7 @@
 	}
 }
 
-.profile-edit-links-item-link {
+.profile-edit-btns-item-btn {
 	display: inline-block;
 	font-size: 13px;
 	line-height: 13px;
@@ -75,11 +75,11 @@
 	text-decoration: none;
 }
 
-.profile-edit-links-item-link--danger {
+.profile-edit-btns-item-btn--danger {
 	color: var(--text-color-danger);
 }
 
-.profile-edit-links-container {
+.profile-edit-btns-container {
 	display: flex;
 	justify-content: center;
 }
