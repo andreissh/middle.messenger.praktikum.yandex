@@ -3,13 +3,12 @@ import Button from "@/components/button/Button";
 import { router } from "@/routes/Router";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
+import { UserData } from "@/types/types";
+import http from "@/api/http";
 import backBtn from "@/assets/icons/back-btn.svg";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileEditFields } from "../utils/profileData";
 import "./profile-edit.css";
-import http from "@/api/http";
-import { UserData } from "@/types/types";
-import renderDOM from "@/utils/renderDOM";
 
 const template = `
   <div class="profile-edit">
@@ -141,10 +140,8 @@ export default class ProfileEditPage extends Block {
 				this.setProps({
 					ProfileFieldsList: new ProfileFieldsList({
 						fields: profileEditFieldsClone,
-					}) as ProfileFieldsList,
+					}),
 				});
-
-				renderDOM("#app", this, true);
 			} catch (err) {
 				console.log(err);
 			}

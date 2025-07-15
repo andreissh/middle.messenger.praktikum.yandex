@@ -2,11 +2,11 @@ import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
 import Modal from "@/components/modal/Modal";
 import { router } from "@/routes/Router";
+import http from "@/api/http";
 import arrowIcon from "@/assets/icons/arrow-right.svg";
 import sendBtn from "@/assets/icons/back-btn.svg";
 import ChatList from "./components/chat-list/ChatList";
 import "./chats.css";
-import http from "@/api/http";
 
 type ChatConfig = {
 	name: string;
@@ -138,29 +138,46 @@ export default class ChatsPage extends Block {
 			if (!input || !input.value) return;
 
 			try {
-				const chat = await http.post("/chats", {
+				await http.post("/chats", {
 					body: {
 						title: input.value,
 					},
 				});
 				modal.style.display = "none";
-				console.log(chat);
+				this.getChats();
 			} catch (err) {
 				console.log(err);
 			}
 		});
 	}
 
+	getChats = async () => {
+		try {
+			const newChats = [];
+			const userChats = await http.get("/chats");
+			console.log(userChats);
+
+			userChats.forEach((chat) => {
+				newChats.push({
+					name: chat.title,
+					text: chat?.last_message?.content ?? "",
+					time: chat?.last_message?.time ?? "",
+					count: chat.unread_count,
+				});
+			});
+
+			this.setProps({
+				ChatList: new ChatList({
+					chats: newChats,
+				}),
+			});
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	componentDidMount() {
-		const getChats = async () => {
-			try {
-				const chats = await http.get("/chats");
-				console.log(chats);
-			} catch (err) {
-				console.log(err);
-			}
-		};
-		getChats();
+		this.getChats();
 	}
 
 	render(): HTMLElement {

@@ -133,6 +133,10 @@ abstract class Block {
 	private _render(): void {
 		const block = this.render();
 
+		if (this._element && this._element.parentNode) {
+			this._element.replaceWith(block);
+		}
+
 		this._removeEvents();
 		this._element = block;
 		this._addEvents();

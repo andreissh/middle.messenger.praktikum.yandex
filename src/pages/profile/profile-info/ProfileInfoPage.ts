@@ -125,20 +125,16 @@ export default class ProfileInfoPage extends Block {
 				const userData = await http.get<UserData>("auth/user");
 				localStorage.setItem("userId", String(userData.id));
 				let profileFieldsClone = structuredClone(profileFields);
-				profileFieldsClone = profileFieldsClone.map((field) => {
-					return {
-						...field,
-						value: String(userData[field.id as keyof UserData]) ?? field.value,
-					};
-				});
+				profileFieldsClone = profileFieldsClone.map((field) => ({
+					...field,
+					value: String(userData[field.id as keyof UserData]) ?? field.value,
+				}));
 
 				this.setProps({
 					ProfileFieldsList: new ProfileFieldsList({
 						fields: profileFieldsClone,
-					}) as ProfileFieldsList,
+					}),
 				});
-
-				renderDOM("#app", this, true);
 			} catch (err) {
 				console.log(err);
 			}
