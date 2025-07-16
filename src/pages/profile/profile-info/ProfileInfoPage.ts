@@ -5,6 +5,7 @@ import http from "@/api/http";
 import renderDOM from "@/utils/renderDOM";
 import { HttpError, UserData } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
+import avatarImg from "@/assets/icons/avatar-img.svg";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileFields } from "../utils/profileData";
 import ProfileEditPage from "../profile-edit/ProfileEditPage";
@@ -17,9 +18,7 @@ const template = `
     <div class="profile-info-content-wrapper">
       <div class="profile-info-content">
         <div class="profile-info-avatar-block">
-          <span class="profile-info-avatar" name="avatar">
-            <img src="{{ avatarImg }}" class="profile-info-avatar-img" />
-          </span>
+          {{{ AvatarBtn }}}
           <span class="profile-info-username">Иван</span>
         </div>
         <div class="profile-info-data-block">
@@ -57,6 +56,17 @@ export default class ProfileInfoPage extends Block {
 					click: (e?: Event) => this.handleBackClick(e),
 				},
 			}),
+			AvatarBtn: new Button({
+				id: "avatarBtn",
+				children: `
+					<span class="profile-info-avatar" name="avatar">
+						<img src="${avatarImg}" class="profile-info-avatar-img" />
+					</span>
+				`,
+				events: {
+					click: (e?: Event) => this.handleAvatarClick(e),
+				},
+			}),
 			ProfileFieldsList: new ProfileFieldsList({
 				fields: profileFields,
 			}),
@@ -90,6 +100,11 @@ export default class ProfileInfoPage extends Block {
 	private handleBackClick(e?: Event): void {
 		e?.preventDefault();
 		router.go("/messenger");
+	}
+
+	private handleAvatarClick(e?: Event): void {
+		e?.preventDefault();
+		console.log("avatar clicked");
 	}
 
 	private handleChangeDataClick(e?: Event): void {
