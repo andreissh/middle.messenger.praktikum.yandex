@@ -5,7 +5,7 @@ import { router } from "@/routes/Router";
 import http from "@/api/http";
 import arrowIcon from "@/assets/icons/arrow-right.svg";
 import sendBtn from "@/assets/icons/back-btn.svg";
-import ChatList from "./components/chat-list/ChatList";
+import ChatList from "./components/chats-list/ChatsList";
 import "./chats.css";
 
 type ChatConfig = {

@@ -1,10 +1,10 @@
 import Block from "@/framework/Block";
-import "./chat-item.css";
 import ContextMenu from "@/components/context-menu/ContextMenu";
 import http from "@/api/http";
-import ChatList from "../chat-list/ChatList";
+import "./chats-item.css";
+import { router } from "@/routes/Router";
 
-export type ChatItemProps = {
+export type ChatsItemProps = {
 	id: number;
 	name: string;
 	text: string;
@@ -28,13 +28,14 @@ const template = `
   </li>
 `;
 
-export default class ChatItem extends Block {
+export default class ChatsItem extends Block {
 	private static currentOpenMenu: ContextMenu | null = null;
 
-	constructor(props: ChatItemProps) {
+	constructor(props: ChatsItemProps) {
 		super("div", {
 			...props,
 			events: {
+				click: (e?: Event) => this.handleChatItemClick(e),
 				contextmenu: (e?: Event) => this.handleContextMenu(e),
 			},
 		});
@@ -50,13 +51,26 @@ export default class ChatItem extends Block {
 		});
 	}
 
+	handleChatItemClick(e?: Event): void {
+		const chatItems = document.querySelectorAll(".chat-item");
+		let chatId;
+		chatItems.forEach((item) => {
+			if (item.contains(e.target)) {
+				chatId = item.id;
+			}
+		});
+		if (!chatId) return;
+
+		router.go(`/messenger/${chatId}`);
+	}
+
 	handleContextMenu(e: Event) {
 		e.preventDefault();
 		const mouseEvent = e as MouseEvent;
 
-		if (ChatItem.currentOpenMenu) {
-			ChatItem.currentOpenMenu.getContent().remove();
-			ChatItem.currentOpenMenu = null;
+		if (ChatsItem.currentOpenMenu) {
+			ChatsItem.currentOpenMenu.getContent().remove();
+			ChatsItem.currentOpenMenu = null;
 		}
 
 		this.contextMenu = new ContextMenu({
@@ -77,7 +91,7 @@ export default class ChatItem extends Block {
 			},
 		});
 
-		ChatItem.currentOpenMenu = this.contextMenu;
+		ChatsItem.currentOpenMenu = this.contextMenu;
 
 		document.body.appendChild(this.contextMenu.getContent());
 		this.positionContextMenu(mouseEvent.clientX, mouseEvent.clientY);
@@ -107,7 +121,7 @@ export default class ChatItem extends Block {
 		if (this.contextMenu) {
 			this.contextMenu.getContent().remove();
 			this.contextMenu = null;
-			ChatItem.currentOpenMenu = null;
+			ChatsItem.currentOpenMenu = null;
 		}
 	}
 

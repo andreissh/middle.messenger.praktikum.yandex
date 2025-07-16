@@ -1,7 +1,7 @@
 import { router } from "./routes/Router";
 import SigninPage from "./pages/home/signin/SigninPage";
 import SignupPage from "./pages/home/signup/SignupPage";
-import ChatsPage from "./pages/chats/ChatsPage";
+import ChatsPage from "./pages/chats/chats-page/ChatsPage";
 import ProfileInfoPage from "./pages/profile/profile-info/ProfileInfoPage";
 import NotFoundPage from "./pages/not-found/NotFoundPage";
 import ServerErrorPage from "./pages/server-error/ServerErrorPage";
