@@ -44,7 +44,10 @@ export default class HttpClient {
 		return new Promise<TResponse>((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
 			xhr.open(method, fullUrl);
-			xhr.setRequestHeader("Content-Type", "application/json");
+			const isFormData = body instanceof FormData;
+			if (!isFormData) {
+				xhr.setRequestHeader("Content-Type", "application/json");
+			}
 			xhr.withCredentials = true;
 
 			xhr.onload = () => {
@@ -79,7 +82,7 @@ export default class HttpClient {
 			};
 
 			if (body && method !== "GET") {
-				xhr.send(JSON.stringify(body));
+				xhr.send(isFormData ? (body as FormData) : JSON.stringify(body));
 			} else {
 				xhr.send();
 			}

@@ -104,7 +104,53 @@ export default class ProfileInfoPage extends Block {
 
 	private handleAvatarClick(e?: Event): void {
 		e?.preventDefault();
-		console.log("avatar clicked");
+
+		const fileInput = document.createElement("input");
+		fileInput.type = "file";
+		fileInput.accept =
+			"image/jpeg, image/jpg, image/png, image/gif, image/webp";
+
+		fileInput.onchange = (event: Event) => {
+			const file = (event.target as HTMLInputElement).files?.[0];
+			if (!file) return;
+
+			console.log("Selected file:", file);
+
+			const allowedTypes = [
+				"image/jpeg",
+				"image/jpg",
+				"image/png",
+				"image/gif",
+				"image/webp",
+			];
+			if (!allowedTypes.includes(file.type)) {
+				console.error("Недопустимый тип файла");
+				return;
+			}
+
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				const avatarImg = document.querySelector(
+					".profile-info-avatar-img"
+				) as HTMLImageElement;
+				if (avatarImg && e.target?.result) {
+					avatarImg.src = e.target.result as string;
+				}
+			};
+			reader.readAsDataURL(file);
+
+			const formData = new FormData();
+			formData.append("avatar", file);
+
+			http
+				.put("user/profile/avatar", {
+					body: formData,
+				})
+				.then((response) => console.log("Успешно:", response))
+				.catch((error) => console.error("Ошибка:", error));
+		};
+
+		fileInput.click();
 	}
 
 	private handleChangeDataClick(e?: Event): void {
