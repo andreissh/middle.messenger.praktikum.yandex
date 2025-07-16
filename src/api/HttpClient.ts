@@ -58,7 +58,7 @@ export default class HttpClient {
 					resolve(responseData as TResponse);
 				} else {
 					if (xhr.status === 401) {
-						router.go("/signin");
+						router.go("/");
 					}
 					if (xhr.status === 404) {
 						router.go("/404");

@@ -159,6 +159,7 @@ export default class ChatsPage extends Block {
 
 			userChats.forEach((chat) => {
 				newChats.push({
+					id: chat.id,
 					name: chat.title,
 					text: chat?.last_message?.content ?? "",
 					time: chat?.last_message?.time ?? "",

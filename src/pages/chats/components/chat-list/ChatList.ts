@@ -16,6 +16,9 @@ export default class ChatList extends Block {
 	constructor(props: ChatListProps) {
 		super("div", {
 			chats: props.chats.map((chat) => new ChatItem(chat)),
+			onDelete: (id) => {
+				console.log("Удалить чат с ID:", id);
+			},
 		});
 	}
 
