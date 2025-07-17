@@ -4,9 +4,10 @@ import Modal from "@/components/modal/Modal";
 import { router } from "@/routes/Router";
 import http from "@/api/http";
 import arrowIcon from "@/assets/icons/arrow-right.svg";
-import sendBtn from "@/assets/icons/back-btn.svg";
+import plusIcon from "@/assets/icons/plus.svg";
 import ChatList from "./components/chats-list/ChatsList";
-import "./chats.css";
+import ChatPage from "../chat-page/ChatPage";
+import "./chats-page.css";
 
 type ChatConfig = {
 	name: string;
@@ -54,24 +55,7 @@ const template = `
 	   </div>
     </aside>
     <main class="chats-main">
-		<div class="chats-main-content">
-			<div class="chats-main-content-header"></div>
-			<div class="chats-main-content-body">
-				<span class="chats-main-content-text-default">Выберите чат, чтобы
-					отправить сообщение</span>
-			</div>
-			<div class="chats-main-content-footer">
-				<input
-					type="text"
-					name="message"
-					class="message"
-					placeholder="Сообщение"
-				/>
-				<button class="message-send-btn" >
-					<img src=${sendBtn} alt="send" />
-				</button>
-			</div>
-		</div>
+		{{{ ChatPage }}}
     </main>
 	{{{ CreateChatModal }}}
   </div>
@@ -98,23 +82,27 @@ export default class ChatsPage extends Block {
 			CreateChatBtn: new Button({
 				id: "createChatBtn",
 				class: "create-chat-btn",
+				children: `
+					<img src=${plusIcon} alt="add chat" />
+				`,
 				events: {
 					click: (e?: Event) => this.handleCreateChatClick(e),
 				},
 			}),
+			ChatPage: new ChatPage({}),
 			CreateChatModal: new Modal({
 				id: "createChatModal",
 				title: "Создайте чат",
 				children: `
 					<form>
 						<label class="create-chat-label">
-							<span class="create-chat-label-text">Название:</span>
-							<input type="text" id="createChatInput" class="create-chat-input" />
+							<input type="text" id="createChatInput" class="create-chat-input" placeholder="Введите название" />
 						</label>
 						<button type="submit" class="btn create-chat-submit-btn">Создать</button>
 					</form>
 				`,
 			}),
+			test: true,
 		});
 	}
 

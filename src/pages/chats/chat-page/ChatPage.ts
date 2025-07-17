@@ -1,12 +1,35 @@
 import Block from "@/framework/Block";
 import ChatController from "@/api/ChatController";
+import sendBtn from "@/assets/icons/back-btn.svg";
+import avatarImg from "@/assets/icons/avatar-img.svg";
+import "./chat-page.css";
 
 const template = `
-  <div class="chat-page">
-    <div class="chat-messages" id="messages"></div>
-    <input type="text" class="message-input" />
-    <button class="send-btn">Отправить</button>
-  </div>
+	<div class="chat-content">
+		<div class="chat-header">
+			<span class="chat-avatar">
+				<img src=${avatarImg} alt="avatar" />
+			</span>
+			<h5 class="chat-title">chat name</h5>
+			<span class="chat-options"></span>
+		</div>
+		<div class="chat-body">
+			<span class="chat-text-default">Выберите чат, чтобы
+				отправить сообщение</span>
+		</div>
+		<div class="chat-footer">
+			<input
+				id="message"
+				type="text"
+				name="message"
+				class="message"
+				placeholder="Сообщение"
+			/>
+			<button class="chat-send-btn" >
+				<img src=${sendBtn} alt="send" />
+			</button>
+		</div>
+	</div>
 `;
 
 export default class ChatPage extends Block {
@@ -18,7 +41,7 @@ export default class ChatPage extends Block {
 		const chatId = Number(window.location.pathname.split("/").pop());
 
 		ChatController.connectToChat(chatId, (data) => {
-			const container = document.querySelector("#messages");
+			const container = document.querySelector(".chat-content");
 			if (!container) return;
 
 			const messages = Array.isArray(data) ? data.reverse() : [data];
@@ -30,8 +53,8 @@ export default class ChatPage extends Block {
 			});
 		});
 
-		const btn = document.querySelector(".send-btn");
-		const input = document.querySelector(".message-input");
+		const btn = document.querySelector(".chat-send-btn");
+		const input = document.querySelector("#message");
 
 		btn?.addEventListener("click", () => {
 			if (!input?.value) return;

@@ -102,7 +102,7 @@ export default class ProfileInfoPage extends Block {
 		router.go("/messenger");
 	}
 
-	private handleAvatarClick(e?: Event): void {
+	private async handleAvatarClick(e?: Event): Promise<void> {
 		e?.preventDefault();
 
 		const fileInput = document.createElement("input");
@@ -151,6 +151,27 @@ export default class ProfileInfoPage extends Block {
 		};
 
 		fileInput.click();
+
+		try {
+			const userData = await http.get("auth/user");
+			const avatar = userData.avatar;
+
+			this.setProps({
+				AvatarBtn: new Button({
+					id: "avatarBtn",
+					children: `
+						<span class="profile-info-avatar" name="avatar">
+							<img src="${avatar}" class="profile-info-avatar-img" />
+						</span>
+					`,
+					events: {
+						click: (e?: Event) => this.handleAvatarClick(e),
+					},
+				}),
+			});
+		} catch (err) {
+			console.log(err);
+		}
 	}
 
 	private handleChangeDataClick(e?: Event): void {
