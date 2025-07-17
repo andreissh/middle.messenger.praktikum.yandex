@@ -36,13 +36,8 @@ class Route {
 	}
 
 	render() {
-		if (!this._block) {
-			this._block = new this._blockClass();
-			renderDOM(this._props.rootQuery, this._block);
-		} else {
-			renderDOM(this._props.rootQuery, this._block);
-			this._block.show();
-		}
+		this._block = new this._blockClass();
+		renderDOM(this._props.rootQuery, this._block);
 	}
 }
 

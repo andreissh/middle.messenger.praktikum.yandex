@@ -63,6 +63,8 @@ const template = `
 
 export default class ChatsPage extends Block {
 	constructor() {
+		const chatId = Number(window.location.pathname.split("/").pop());
+
 		super("div", {
 			ProfileBtn: new Button({
 				id: "renderProfileInfoBtn",
@@ -89,7 +91,7 @@ export default class ChatsPage extends Block {
 					click: (e?: Event) => this.handleCreateChatClick(e),
 				},
 			}),
-			ChatPage: new ChatPage({}),
+			ChatPage: new ChatPage({ chatId }),
 			CreateChatModal: new Modal({
 				id: "createChatModal",
 				title: "Создайте чат",
@@ -155,30 +157,20 @@ export default class ChatsPage extends Block {
 				});
 			});
 
-			this.setProps({
+			const props = {
 				ChatList: new ChatList({
 					chats: newChats,
 				}),
-			});
+			};
+
+			this.setProps(props);
 		} catch (err) {
 			console.log(err);
 		}
 	};
 
-	getChatId = () => {
-		const chatId = Number(window.location.pathname.split("/").pop());
-		if (!chatId) return;
-
-		this.setProps({
-			ChatPage: new ChatPage({
-				chatId,
-			}),
-		});
-	};
-
 	componentDidMount() {
 		this.getChats();
-		this.getChatId();
 	}
 
 	render(): HTMLElement {
