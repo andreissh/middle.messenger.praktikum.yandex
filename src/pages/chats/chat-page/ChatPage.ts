@@ -6,29 +6,37 @@ import "./chat-page.css";
 
 const template = `
 	<div class="chat-content">
-		<div class="chat-header">
-			<span class="chat-avatar">
-				<img src=${avatarImg} alt="avatar" />
-			</span>
-			<h5 class="chat-title">chat name</h5>
-			<span class="chat-options"></span>
-		</div>
+		{{#if chatId}}
+			<div class="chat-header">
+				<span class="chat-avatar">
+					<img src=${avatarImg} alt="avatar" />
+				</span>
+				<h5 class="chat-title">chat name</h5>
+				<span class="chat-options"></span>
+			</div>
+		{{/if}}
 		<div class="chat-body">
-			<span class="chat-text-default">Выберите чат, чтобы
-				отправить сообщение</span>
+			{{#if chatId}}
+				<div class="chat-messages"></div>
+			{{else}}
+				<span class="chat-text-default">Выберите чат, чтобы
+					отправить сообщение</span>
+			{{/if}}
 		</div>
-		<div class="chat-footer">
-			<input
-				id="message"
-				type="text"
-				name="message"
-				class="message"
-				placeholder="Сообщение"
-			/>
-			<button class="chat-send-btn" >
-				<img src=${sendBtn} alt="send" />
-			</button>
-		</div>
+		{{#if chatId}}
+			<div class="chat-footer">
+				<input
+					id="message"
+					type="text"
+					name="message"
+					class="message"
+					placeholder="Сообщение"
+				/>
+				<button class="chat-send-btn" >
+					<img src=${sendBtn} alt="send" />
+				</button>
+			</div>
+		{{/if}}
 	</div>
 `;
 
@@ -38,18 +46,20 @@ export default class ChatPage extends Block {
 	}
 
 	componentDidMount() {
-		const chatId = Number(window.location.pathname.split("/").pop());
+		if (!this.props.chatId) return;
 
-		ChatController.connectToChat(chatId, (data) => {
-			const container = document.querySelector(".chat-content");
+		ChatController.connectToChat(this.props.chatId, (data) => {
+			const container = document.querySelector(".chat-body");
 			if (!container) return;
 
 			const messages = Array.isArray(data) ? data.reverse() : [data];
+			console.log(messages);
 
 			messages.forEach((msg) => {
-				const msgEl = document.createElement("div");
+				const container = document.querySelector(".chat-messages");
+				const msgEl = document.createElement("p");
 				msgEl.textContent = msg.content;
-				container.append(msgEl);
+				container?.append(msgEl);
 			});
 		});
 

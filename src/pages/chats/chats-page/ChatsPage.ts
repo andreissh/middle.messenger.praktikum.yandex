@@ -165,8 +165,20 @@ export default class ChatsPage extends Block {
 		}
 	};
 
+	getChatId = () => {
+		const chatId = Number(window.location.pathname.split("/").pop());
+		if (!chatId) return;
+
+		this.setProps({
+			ChatPage: new ChatPage({
+				chatId,
+			}),
+		});
+	};
+
 	componentDidMount() {
 		this.getChats();
+		this.getChatId();
 	}
 
 	render(): HTMLElement {

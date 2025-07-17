@@ -32,7 +32,12 @@ class Router {
 	}
 
 	_onRoute(pathname: string) {
-		const route = this.getRoute(pathname) || this.getRoute("/404");
+		let route;
+		if (pathname.includes("messenger")) {
+			route = this.getRoute("/messenger");
+		} else {
+			route = this.getRoute(pathname) || this.getRoute("/404");
+		}
 		if (!route) return;
 
 		if (this._currentRoute && this._currentRoute !== route) {
