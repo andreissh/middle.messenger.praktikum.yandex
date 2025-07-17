@@ -8,11 +8,25 @@ const template = `
 	<div class="chat-content">
 		{{#if chatId}}
 			<div class="chat-header">
-				<span class="chat-avatar">
-					<img src=${avatarImg} alt="avatar" />
-				</span>
-				<h5 class="chat-title">chat name</h5>
-				<span class="chat-options"></span>
+				<div class="chat-header-info">
+					<span class="chat-avatar">
+						<img src=${avatarImg} alt="avatar" />
+					</span>
+					<h5 class="chat-title">chat name</h5>
+				</div>
+				<div class="chat-options">
+					<button class="chat-options-btn" aria-label="Опции чата">
+						<svg width="4" height="20" viewBox="0 0 4 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<circle cx="2" cy="2" r="2" fill="#999"/>
+							<circle cx="2" cy="10" r="2" fill="#999"/>
+							<circle cx="2" cy="18" r="2" fill="#999"/>
+						</svg>
+					</button>
+					<div id="chatDropdown" class="chat-dropdown">
+						<button id="addUserBtn" class="chat-dropdown-item">Добавить пользователя</button>
+						<button id="removeUserBtn" class="chat-dropdown-item">Удалить пользователя</button>
+					</div>
+				</div>
 			</div>
 		{{/if}}
 		<div class="chat-body">
@@ -75,6 +89,35 @@ export default class ChatPage extends Block {
 			});
 
 			input.value = "";
+		});
+
+		const optionsBtn = document.querySelector(".chat-options-btn");
+		const dropdown = document.getElementById("chatDropdown");
+
+		optionsBtn?.addEventListener("click", (e) => {
+			e.stopPropagation();
+			dropdown?.classList.toggle("open");
+			dropdown!.style.display = dropdown!.classList.contains("open")
+				? "flex"
+				: "none";
+		});
+
+		document.addEventListener("click", (e) => {
+			if (
+				!dropdown?.contains(e.target as Node) &&
+				!optionsBtn?.contains(e.target as Node)
+			) {
+				dropdown?.classList.remove("open");
+				dropdown!.style.display = "none";
+			}
+		});
+
+		document.getElementById("addUserBtn")?.addEventListener("click", () => {
+			console.log("Добавить пользователя");
+		});
+
+		document.getElementById("removeUserBtn")?.addEventListener("click", () => {
+			console.log("Удалить пользователя");
 		});
 	}
 
