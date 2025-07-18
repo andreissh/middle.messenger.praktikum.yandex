@@ -9,7 +9,7 @@ type ContextMenuProps = {
 
 const contextMenuTemplate = `
   <div class="context-menu" style="left: {{x}}px; top: {{y}}px;">
-    <button class="context-menu__delete-btn">Удалить</button>
+    <button class="context-menu-delete-btn">Удалить</button>
   </div>
 `;
 
@@ -20,7 +20,7 @@ export default class ContextMenu extends Block {
 			events: {
 				click: (e: Event) => {
 					const target = e.target as HTMLElement;
-					if (target.classList.contains("context-menu__delete-btn")) {
+					if (target.classList.contains("context-menu-delete-btn")) {
 						props.onDelete();
 					}
 				},
