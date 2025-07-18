@@ -42,7 +42,9 @@ const template = `
   <div class="chats-container">
     <aside class="chats-aside">
       <div class="chats-aside-top-section">
-        {{{ ProfileBtn }}}
+		<div class="chats-profile-btn-wrapper">
+			{{{ ProfileBtn }}}
+		 </div>
         <input
           type="search"
           name="search"
