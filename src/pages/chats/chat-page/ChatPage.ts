@@ -15,7 +15,7 @@ const template = `
 					<span class="chat-avatar">
 						<img src=${avatarImg} alt="avatar" />
 					</span>
-					<h5 class="chat-title">chat name</h5>
+					<h5 class="chat-title">{{ title }}</h5>
 				</div>
 				<div class="chat-options">
 					<button class="chat-options-btn" aria-label="Опции чата">
@@ -188,11 +188,14 @@ export default class ChatPage extends Block {
 			const messages = Array.isArray(data) ? data.reverse() : [data];
 			console.log(messages);
 
+			const containerMsgs = document.querySelector(".chat-messages");
+			if (containerMsgs) {
+				containerMsgs.replaceChildren();
+			}
 			messages.forEach((msg) => {
-				const container = document.querySelector(".chat-messages");
 				const msgEl = document.createElement("p");
 				msgEl.textContent = msg.content;
-				container?.append(msgEl);
+				containerMsgs?.append(msgEl);
 			});
 		});
 

@@ -92,7 +92,7 @@ export default class ChatsPage extends Block {
 					click: (e?: Event) => this.handleCreateChatClick(e),
 				},
 			}),
-			ChatPage: new ChatPage({ chatId }),
+			ChatPage: new ChatPage({ chatId, title: "Название чата" }),
 			CreateChatModal: new Modal({
 				id: "createChatModal",
 				title: "Создайте чат",
@@ -146,6 +146,8 @@ export default class ChatsPage extends Block {
 		try {
 			const newChats = [];
 			const userChats = await http.get("/chats");
+			const chatId = Number(window.location.pathname.split("/").pop());
+			let title;
 			console.log(userChats);
 
 			userChats.forEach((chat) => {
@@ -156,6 +158,10 @@ export default class ChatsPage extends Block {
 					time: chat?.last_message?.time ?? "",
 					count: chat.unread_count,
 				});
+
+				if (chat.id === chatId) {
+					title = chat.title;
+				}
 			});
 
 			const props = {
@@ -163,9 +169,14 @@ export default class ChatsPage extends Block {
 					chats: newChats,
 					onRefresh: () => this.getChats(),
 				}),
+				ChatPage: new ChatPage({
+					chatId,
+					title,
+				}),
 			};
 
 			this.setProps(props);
+			props.ChatPage.dispatchComponentDidMount();
 		} catch (err) {
 			console.log(err);
 		}
