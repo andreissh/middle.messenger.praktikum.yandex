@@ -1,8 +1,9 @@
 import Block from "@/framework/Block";
 import ContextMenu from "@/components/context-menu/ContextMenu";
 import http from "@/api/http";
-import "./chats-item.css";
 import { router } from "@/routes/Router";
+import avatarImg from "@/assets/icons/avatar-img.svg";
+import "./chats-item.css";
 
 export type ChatsItemProps = {
 	id: number;
@@ -14,7 +15,9 @@ export type ChatsItemProps = {
 
 const template = `
   <li id="{{ id }}" class="chat-item">
-    <span class="chat-item-avatar"></span>
+    <span class="chat-item-avatar">
+		<img src=${avatarImg} alt="chatIcon" />
+	</span>
     <div class="chat-item-content-block">
       <h5 class="chat-item-header">{{ name }}</h5>
       <p class="chat-item-message">{{ text }}</p>

@@ -181,6 +181,11 @@ export default class ChatPage extends Block {
 	componentDidMount() {
 		if (!this.props.chatId) return;
 
+		const containerMsgs = document.querySelector(".chat-messages");
+		if (containerMsgs) {
+			containerMsgs.replaceChildren();
+		}
+
 		ChatController.connectToChat(this.props.chatId, (data) => {
 			const container = document.querySelector(".chat-body");
 			if (!container) return;
@@ -188,12 +193,13 @@ export default class ChatPage extends Block {
 			const messages = Array.isArray(data) ? data.reverse() : [data];
 			console.log(messages);
 
-			const containerMsgs = document.querySelector(".chat-messages");
-			if (containerMsgs) {
-				containerMsgs.replaceChildren();
-			}
 			messages.forEach((msg) => {
 				const msgEl = document.createElement("p");
+				if (msg.user_id === Number(localStorage.getItem("userId"))) {
+					msgEl.classList.add("my-messages");
+				} else {
+					msgEl.classList.add("users-messages");
+				}
 				msgEl.textContent = msg.content;
 				containerMsgs?.append(msgEl);
 			});
@@ -232,14 +238,6 @@ export default class ChatPage extends Block {
 				dropdown?.classList.remove("open");
 				dropdown!.style.display = "none";
 			}
-		});
-
-		document.getElementById("addUserBtn")?.addEventListener("click", () => {
-			console.log("Добавить пользователя");
-		});
-
-		document.getElementById("removeUserBtn")?.addEventListener("click", () => {
-			console.log("Удалить пользователя");
 		});
 	}
 

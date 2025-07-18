@@ -5,6 +5,7 @@ import { router } from "@/routes/Router";
 import http from "@/api/http";
 import arrowIcon from "@/assets/icons/arrow-right.svg";
 import plusIcon from "@/assets/icons/plus.svg";
+import formatChatDate from "@/utils/formatChatDate";
 import ChatsList from "./components/chats-list/ChatsList";
 import ChatPage from "../chat-page/ChatPage";
 import "./chats-page.css";
@@ -155,7 +156,7 @@ export default class ChatsPage extends Block {
 					id: chat.id,
 					name: chat.title,
 					text: chat?.last_message?.content ?? "",
-					time: chat?.last_message?.time ?? "",
+					time: formatChatDate(chat?.last_message?.time) ?? "",
 					count: chat.unread_count,
 				});
 
