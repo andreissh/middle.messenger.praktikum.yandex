@@ -1,4 +1,4 @@
-import { router } from "./routes/Router";
+import router from "./routes/Router";
 import SigninPage from "./pages/home/signin/SigninPage";
 import SignupPage from "./pages/home/signup/SignupPage";
 import ChatsPage from "./pages/chats/chats-page/ChatsPage";
@@ -7,8 +7,8 @@ import NotFoundPage from "./pages/not-found/NotFoundPage";
 import ServerErrorPage from "./pages/server-error/ServerErrorPage";
 
 export default class App {
-	constructor() {
-		App._initRouter();
+	static init() {
+		this._initRouter();
 	}
 
 	private static _initRouter() {

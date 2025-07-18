@@ -1,6 +1,6 @@
 import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
-import { router } from "@/routes/Router";
+import router from "@/routes/Router";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import { ValidationResult } from "@/types/types";

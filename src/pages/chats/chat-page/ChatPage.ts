@@ -141,12 +141,10 @@ export default class ChatPage extends Block {
 	}
 
 	handleRemoveUserClick(e?: Event) {
-		console.log("click");
 		e?.preventDefault();
 		const modal: HTMLElement | null =
 			document.querySelector("#removeUserModal");
 		if (!modal) return;
-		console.log(modal);
 		modal.style.display = "block";
 
 		const input: HTMLInputElement | null =
@@ -162,7 +160,6 @@ export default class ChatPage extends Block {
 						login: input.value,
 					},
 				});
-				console.log(userData);
 
 				await http.delete("chats/users", {
 					body: {

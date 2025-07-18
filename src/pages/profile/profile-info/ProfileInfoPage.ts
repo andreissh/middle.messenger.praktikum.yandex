@@ -1,6 +1,6 @@
 import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
-import { router } from "@/routes/Router";
+import router from "@/routes/Router";
 import http from "@/api/http";
 import renderDOM from "@/utils/renderDOM";
 import { HttpError, UserData } from "@/types/types";

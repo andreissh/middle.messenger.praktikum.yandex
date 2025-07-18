@@ -1,7 +1,7 @@
 import Block from "@/framework/Block";
 import ContextMenu from "@/components/context-menu/ContextMenu";
 import http from "@/api/http";
-import { router } from "@/routes/Router";
+import router from "@/routes/Router";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import "./chats-item.css";
 

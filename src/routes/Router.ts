@@ -3,9 +3,13 @@ import Route from "./Route";
 
 class Router {
 	private static __instance: Router;
+
 	private routes: Route[] = [];
+
 	private history: History = window.history;
+
 	private _currentRoute: Route | null = null;
+
 	private _rootQuery!: string;
 
 	constructor(rootQuery: string) {
@@ -24,9 +28,9 @@ class Router {
 	}
 
 	start() {
-		window.onpopstate = ((event: PopStateEvent) => {
+		window.onpopstate = (event: PopStateEvent) => {
 			this._onRoute((event.currentTarget as Window).location.pathname);
-		}).bind(this);
+		};
 
 		this._onRoute(window.location.pathname);
 	}
@@ -66,4 +70,5 @@ class Router {
 	}
 }
 
-export const router = new Router("#app");
+const router = new Router("#app");
+export default router;

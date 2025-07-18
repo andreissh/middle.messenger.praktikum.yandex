@@ -1,6 +1,5 @@
 import Block from "@/framework/Block";
-import { ChatsItemProps } from "../chats-item/ChatsItem";
-import ChatsItem from "../chats-item/ChatsItem";
+import ChatsItem, { ChatsItemProps } from "../chats-item/ChatsItem";
 import "./chats-list.css";
 
 type ChatsListProps = {

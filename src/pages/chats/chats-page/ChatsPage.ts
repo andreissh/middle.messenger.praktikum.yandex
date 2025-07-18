@@ -1,7 +1,7 @@
 import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
 import Modal from "@/components/modal/Modal";
-import { router } from "@/routes/Router";
+import router from "@/routes/Router";
 import http from "@/api/http";
 import arrowIcon from "@/assets/icons/arrow-right.svg";
 import plusIcon from "@/assets/icons/plus.svg";
@@ -123,7 +123,6 @@ export default class ChatsPage extends Block {
 			const userChats = await http.get("/chats");
 			const chatId = Number(window.location.pathname.split("/").pop());
 			let title;
-			console.log(userChats);
 
 			userChats.forEach((chat) => {
 				newChats.push({

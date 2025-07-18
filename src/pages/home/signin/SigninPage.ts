@@ -1,6 +1,6 @@
 import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
-import { router } from "@/routes/Router";
+import router from "@/routes/Router";
 import { InputProps } from "@/pages/profile/utils/profileData";
 import http from "@/api/http";
 import getFormData from "@/utils/getFormData";

@@ -1,4 +1,4 @@
-import { router } from "@/routes/Router";
+import router from "@/routes/Router";
 
 type HttpMethodName = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -69,11 +69,15 @@ export default class HttpClient {
 						router.go("/500");
 					}
 
-					reject({
-						status: xhr.status,
-						message: xhr.statusText,
-						data: responseData,
-					});
+					reject(
+						new Error(
+							JSON.stringify({
+								status: xhr.status,
+								message: xhr.statusText,
+								data: responseData,
+							})
+						)
+					);
 				}
 			};
 

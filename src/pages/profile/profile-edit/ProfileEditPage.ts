@@ -1,6 +1,6 @@
 import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
-import { router } from "@/routes/Router";
+import router from "@/routes/Router";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import { UserData } from "@/types/types";
@@ -209,12 +209,10 @@ export default class ProfileEditPage extends Block {
 			try {
 				const userData = await http.get<UserData>("auth/user");
 				let profileEditFieldsClone = structuredClone(profileEditFields);
-				profileEditFieldsClone = profileEditFieldsClone.map((field) => {
-					return {
-						...field,
-						value: String(userData[field.id as keyof UserData]) ?? field.value,
-					};
-				});
+				profileEditFieldsClone = profileEditFieldsClone.map((field) => ({
+					...field,
+					value: String(userData[field.id as keyof UserData]) ?? field.value,
+				}));
 
 				this.setProps({
 					ProfileFieldsList: new ProfileFieldsList({

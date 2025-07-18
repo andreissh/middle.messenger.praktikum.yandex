@@ -1,7 +1,7 @@
 import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
 import "./not-found.css";
-import { router } from "@/routes/Router";
+import router from "@/routes/Router";
 
 const template = `
   <div class="not-found-container">

@@ -2,6 +2,7 @@ import http from "@/api/http";
 
 class ChatController {
 	private socket: WebSocket | null = null;
+
 	private pingInterval: number | null = null;
 
 	async connectToChat(chatId: number, onMessage: (msg: any) => void) {

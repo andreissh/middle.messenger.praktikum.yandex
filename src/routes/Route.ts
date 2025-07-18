@@ -7,8 +7,11 @@ interface RouteProps {
 
 class Route {
 	private _pathname: string;
+
 	private _blockClass: new () => Block;
+
 	private _block: Block | null;
+
 	private _props: RouteProps;
 
 	constructor(pathname: string, view: new () => Block, props: RouteProps) {
