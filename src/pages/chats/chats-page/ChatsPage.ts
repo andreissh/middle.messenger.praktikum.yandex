@@ -10,34 +10,6 @@ import ChatsList from "./components/chats-list/ChatsList";
 import ChatPage from "../chat-page/ChatPage";
 import "./chats-page.css";
 
-type ChatConfig = {
-	name: string;
-	text: string;
-	time: string;
-	count: string;
-};
-
-const chats: ChatConfig[] = [
-	{
-		name: "Андрей",
-		text: "Изображение",
-		time: "12:49",
-		count: "2",
-	},
-	{
-		name: "Киноклуб",
-		text: "Вы: стикер",
-		time: "12:00",
-		count: "",
-	},
-	{
-		name: "Илья",
-		text: "Друзья, у меня для вас особенный выпуск новостей!...",
-		time: "15:12",
-		count: "4",
-	},
-];
-
 const template = `
   <div class="chats-container">
     <aside class="chats-aside">
@@ -82,7 +54,7 @@ export default class ChatsPage extends Block {
 			}),
 			arrowIcon,
 			ChatsList: new ChatsList({
-				chats,
+				chats: [],
 				onRefresh: null,
 			}),
 			CreateChatBtn: new Button({

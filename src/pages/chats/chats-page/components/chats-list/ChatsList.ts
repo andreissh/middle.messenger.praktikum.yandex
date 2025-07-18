@@ -9,13 +9,18 @@ type ChatsListProps = {
 
 const template = `
   <ul class="chat-list">
-    {{{ chats }}}
+	{{#if hasChats}}
+		{{{ chats }}}
+	{{ else }} 
+		<p>Список чатов пуст</p>
+	{{/if}}
   </ul>
 `;
 
 export default class ChatsList extends Block {
 	constructor(props: ChatsListProps) {
 		super("div", {
+			hasChats: props.chats.length > 0,
 			chats: props.chats.map(
 				(chat) => new ChatsItem({ ...chat, onRefresh: props.onRefresh })
 			),
