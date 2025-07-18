@@ -41,8 +41,9 @@ export default class Modal extends Block {
 
 	private handleCloseClick(e?: Event): void {
 		e?.preventDefault();
-		const modal: HTMLElement | null =
-			document.querySelector("#createChatModal");
+		const modal: HTMLElement | null = document.querySelector(
+			`#${this.props.id}`
+		);
 		if (!modal) return;
 		modal.style.display = "none";
 	}

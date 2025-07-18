@@ -3,6 +3,9 @@ import ChatController from "@/api/ChatController";
 import sendBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import "./chat-page.css";
+import Button from "@/components/button/Button";
+import Modal from "@/components/modal/Modal";
+import http from "@/api/http";
 
 const template = `
 	<div class="chat-content">
@@ -23,8 +26,8 @@ const template = `
 						</svg>
 					</button>
 					<div id="chatDropdown" class="chat-dropdown">
-						<button id="addUserBtn" class="chat-dropdown-item">Добавить пользователя</button>
-						<button id="removeUserBtn" class="chat-dropdown-item">Удалить пользователя</button>
+						{{{ AddUserBtn }}}
+						{{{ RemoveUserBtn }}}
 					</div>
 				</div>
 			</div>
@@ -51,12 +54,128 @@ const template = `
 				</button>
 			</div>
 		{{/if}}
+		{{{ AddUserModal }}}
+		{{{ RemoveUserModal }}}
 	</div>
 `;
 
 export default class ChatPage extends Block {
 	constructor(props: Record<string, unknown>) {
-		super("div", props);
+		super("div", {
+			...props,
+			AddUserBtn: new Button({
+				id: "addUserBtn",
+				class: "chat-dropdown-item",
+				children: `Добавить пользователя`,
+				events: {
+					click: (e?: Event) => this.handleAddUserClick(e),
+				},
+			}),
+			RemoveUserBtn: new Button({
+				id: "removeUserBtn",
+				class: "chat-dropdown-item",
+				children: `Удалить пользователя`,
+				events: {
+					click: (e?: Event) => this.handleRemoveUserClick(e),
+				},
+			}),
+			AddUserModal: new Modal({
+				id: "addUserModal",
+				title: "Добавьте пользователя",
+				children: `
+					<form>
+						<label class="add-user-label">
+							<input type="text" id="addUserInput" class="add-user-input" placeholder="Введите логин" />
+						</label>
+						<button type="submit" class="btn add-user-submit-btn">Добавить</button>
+					</form>
+				`,
+			}),
+			RemoveUserModal: new Modal({
+				id: "removeUserModal",
+				title: "Удалите пользователя",
+				children: `
+					<form>
+						<label class="remove-user-label">
+							<input type="text" id="removeUserInput" class="remove-user-input" placeholder="Введите логин" />
+						</label>
+						<button type="submit" class="btn remove-user-submit-btn">Удалить</button>
+					</form>
+				`,
+			}),
+		});
+	}
+
+	handleAddUserClick(e?: Event) {
+		e?.preventDefault();
+		const modal: HTMLElement | null = document.querySelector("#addUserModal");
+		if (!modal) return;
+		modal.style.display = "block";
+
+		const input: HTMLInputElement | null =
+			document.querySelector("#addUserInput");
+		const submitBtn = document.querySelector(".add-user-submit-btn");
+
+		submitBtn?.addEventListener("click", async () => {
+			if (!input || !input.value) return;
+
+			try {
+				const userData = await http.post("user/search", {
+					body: {
+						login: input.value,
+					},
+				});
+
+				await http.put("/chats/users", {
+					body: {
+						users: [userData[0].id],
+						chatId: this.props.chatId,
+					},
+				});
+
+				modal.style.display = "none";
+			} catch (err) {
+				console.log(err);
+			}
+		});
+	}
+
+	handleRemoveUserClick(e?: Event) {
+		console.log("click");
+		e?.preventDefault();
+		const modal: HTMLElement | null =
+			document.querySelector("#removeUserModal");
+		if (!modal) return;
+		console.log(modal);
+		modal.style.display = "block";
+
+		const input: HTMLInputElement | null =
+			document.querySelector("#removeUserInput");
+		const submitBtn = document.querySelector(".remove-user-submit-btn");
+
+		submitBtn?.addEventListener("click", async () => {
+			if (!input || !input.value) return;
+
+			try {
+				const userData = await http.post("user/search", {
+					body: {
+						login: input.value,
+					},
+				});
+				console.log(userData);
+
+				await http.delete("chats/users", {
+					body: {
+						users: [userData[0].id],
+						chatId: this.props.chatId,
+					},
+				});
+
+				modal.style.display = "none";
+			} catch (err) {
+				console.log(err);
+			}
+		});
 	}
 
 	componentDidMount() {
