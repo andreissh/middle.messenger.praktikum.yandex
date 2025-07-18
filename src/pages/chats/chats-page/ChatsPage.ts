@@ -5,7 +5,7 @@ import { router } from "@/routes/Router";
 import http from "@/api/http";
 import arrowIcon from "@/assets/icons/arrow-right.svg";
 import plusIcon from "@/assets/icons/plus.svg";
-import ChatList from "./components/chats-list/ChatsList";
+import ChatsList from "./components/chats-list/ChatsList";
 import ChatPage from "../chat-page/ChatPage";
 import "./chats-page.css";
 
@@ -49,7 +49,7 @@ const template = `
           placeholder="Поиск"
         />
       </div>
-      {{{ ChatList }}}
+      {{{ ChatsList }}}
 	   <div class="create-chat-btn-wrapper">
 	  	{{{ CreateChatBtn }}}
 	   </div>
@@ -78,8 +78,9 @@ export default class ChatsPage extends Block {
 				},
 			}),
 			arrowIcon,
-			ChatList: new ChatList({
+			ChatsList: new ChatsList({
 				chats,
+				onRefresh: null,
 			}),
 			CreateChatBtn: new Button({
 				id: "createChatBtn",
@@ -158,8 +159,9 @@ export default class ChatsPage extends Block {
 			});
 
 			const props = {
-				ChatList: new ChatList({
+				ChatsList: new ChatsList({
 					chats: newChats,
+					onRefresh: () => this.getChats(),
 				}),
 			};
 

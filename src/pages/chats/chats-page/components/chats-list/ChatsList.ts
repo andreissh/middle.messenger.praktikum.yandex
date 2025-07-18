@@ -16,10 +16,9 @@ const template = `
 export default class ChatsList extends Block {
 	constructor(props: ChatsListProps) {
 		super("div", {
-			chats: props.chats.map((chat) => new ChatsItem(chat)),
-			onDelete: (id) => {
-				console.log("Удалить чат с ID:", id);
-			},
+			chats: props.chats.map(
+				(chat) => new ChatsItem({ ...chat, onRefresh: props.onRefresh })
+			),
 		});
 	}
 

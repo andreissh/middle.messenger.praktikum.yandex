@@ -34,6 +34,11 @@ export default class ChatsItem extends Block {
 	constructor(props: ChatsItemProps) {
 		super("div", {
 			...props,
+			ContextMenu: new ContextMenu({
+				x: null,
+				y: null,
+				onDelete: null,
+			}),
 			events: {
 				click: (e?: Event) => this.handleChatItemClick(e),
 				contextmenu: (e?: Event) => this.handleContextMenu(e),
@@ -42,7 +47,8 @@ export default class ChatsItem extends Block {
 
 		document.addEventListener("click", (e) => {
 			const target = e.target as Node;
-			const isClickInsideMenu = this.contextMenu?.getContent().contains(target);
+			const isClickInsideMenu =
+				this.props.ContextMenu?.getContent().contains(target);
 			const isClickInsideChatItem = this.getContent().contains(target);
 
 			if (!isClickInsideMenu && !isClickInsideChatItem) {
@@ -50,6 +56,22 @@ export default class ChatsItem extends Block {
 			}
 		});
 	}
+
+	deleteChat = async () => {
+		console.log(`Удаление чата с ID: ${this.props.id}`);
+		try {
+			await http.delete("/chats", {
+				body: {
+					chatId: this.props.id,
+				},
+			});
+
+			this.closeContextMenu();
+			this.props.onRefresh();
+		} catch (err) {
+			console.log(err);
+		}
+	};
 
 	handleChatItemClick(e?: Event): void {
 		const chatItems = document.querySelectorAll(".chat-item");
@@ -73,34 +95,24 @@ export default class ChatsItem extends Block {
 			ChatsItem.currentOpenMenu = null;
 		}
 
-		this.contextMenu = new ContextMenu({
-			x: mouseEvent.clientX,
-			y: mouseEvent.clientY,
-			onDelete: async () => {
-				console.log(`Удаление чата с ID: ${this.props.id}`);
-				try {
-					await http.delete("/chats", {
-						body: {
-							chatId: this.props.id,
-						},
-					});
-					this.closeContextMenu();
-				} catch (err) {
-					console.log(err);
-				}
-			},
+		this.setProps({
+			ContextMenu: new ContextMenu({
+				x: mouseEvent.clientX,
+				y: mouseEvent.clientY,
+				onDelete: () => this.deleteChat(),
+			}),
 		});
 
-		ChatsItem.currentOpenMenu = this.contextMenu;
+		ChatsItem.currentOpenMenu = this.children.ContextMenu;
 
-		document.body.appendChild(this.contextMenu.getContent());
+		document.body.appendChild(this.children.ContextMenu.getContent());
 		this.positionContextMenu(mouseEvent.clientX, mouseEvent.clientY);
 	}
 
 	positionContextMenu(x: number, y: number) {
-		if (!this.contextMenu) return;
+		if (!this.children.ContextMenu) return;
 
-		const menuElement = this.contextMenu.getContent();
+		const menuElement = this.children.ContextMenu.getContent();
 		const menuWidth = menuElement.offsetWidth;
 		const menuHeight = menuElement.offsetHeight;
 		const windowWidth = window.innerWidth;
@@ -118,9 +130,9 @@ export default class ChatsItem extends Block {
 	}
 
 	closeContextMenu() {
-		if (this.contextMenu) {
-			this.contextMenu.getContent().remove();
-			this.contextMenu = null;
+		if (this.children.ContextMenu) {
+			this.children.ContextMenu.getContent().remove();
+			this.children.ContextMenu = null;
 			ChatsItem.currentOpenMenu = null;
 		}
 	}
