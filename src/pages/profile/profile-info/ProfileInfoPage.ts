@@ -110,67 +110,64 @@ export default class ProfileInfoPage extends Block {
 		fileInput.accept =
 			"image/jpeg, image/jpg, image/png, image/gif, image/webp";
 
-		fileInput.onchange = (event: Event) => {
-			const file = (event.target as HTMLInputElement).files?.[0];
-			if (!file) return;
-
-			console.log("Selected file:", file);
-
-			const allowedTypes = [
-				"image/jpeg",
-				"image/jpg",
-				"image/png",
-				"image/gif",
-				"image/webp",
-			];
-			if (!allowedTypes.includes(file.type)) {
-				console.error("Недопустимый тип файла");
-				return;
-			}
-
-			const reader = new FileReader();
-			reader.onload = (e) => {
-				const avatarImg = document.querySelector(
-					".profile-info-avatar-img"
-				) as HTMLImageElement;
-				if (avatarImg && e.target?.result) {
-					avatarImg.src = e.target.result as string;
-				}
+		const file = await new Promise<File | null>((resolve) => {
+			fileInput.onchange = (event: Event) => {
+				resolve((event.target as HTMLInputElement).files?.[0] || null);
 			};
-			reader.readAsDataURL(file);
+			fileInput.click();
+		});
 
-			const formData = new FormData();
-			formData.append("avatar", file);
+		if (!file) return;
 
-			http
-				.put("user/profile/avatar", {
-					body: formData,
-				})
-				.then((response) => console.log("Успешно:", response))
-				.catch((error) => console.error("Ошибка:", error));
+		console.log("Selected file:", file);
+
+		const allowedTypes = [
+			"image/jpeg",
+			"image/jpg",
+			"image/png",
+			"image/gif",
+			"image/webp",
+		];
+		if (!allowedTypes.includes(file.type)) {
+			console.error("Недопустимый тип файла");
+			return;
+		}
+
+		const reader = new FileReader();
+		reader.onload = (e) => {
+			const avatarImg = document.querySelector(
+				".profile-info-avatar-img"
+			) as HTMLImageElement;
+			if (avatarImg && e.target?.result) {
+				avatarImg.src = e.target.result as string;
+			}
 		};
-
-		fileInput.click();
+		reader.readAsDataURL(file);
 
 		try {
+			const formData = new FormData();
+			formData.append("avatar", file);
+			await http.put("user/profile/avatar", { body: formData });
+			console.log("Аватар успешно обновлен");
+
 			const userData = await http.get("auth/user");
-			const avatar = userData.avatar;
+			console.log("Обновленные данные:", userData);
 
 			this.setProps({
 				AvatarBtn: new Button({
 					id: "avatarBtn",
 					children: `
-						<span class="profile-info-avatar" name="avatar">
-							<img src="${avatar}" class="profile-info-avatar-img" />
-						</span>
-					`,
+                    <span class="profile-info-avatar" name="avatar">
+                        <img src="https://ya-praktikum.tech/api/v2/resources${userData.avatar}" class="profile-info-avatar-img" />
+                    </span>
+                `,
 					events: {
 						click: (e?: Event) => this.handleAvatarClick(e),
 					},
 				}),
 			});
-		} catch (err) {
-			console.log(err);
+		} catch (error) {
+			console.error("Ошибка при обновлении аватара:", error);
 		}
 	}
 
@@ -215,6 +212,17 @@ export default class ProfileInfoPage extends Block {
 				this.setProps({
 					ProfileFieldsList: new ProfileFieldsList({
 						fields: profileFieldsClone,
+					}),
+					AvatarBtn: new Button({
+						id: "avatarBtn",
+						children: `
+							<span class="profile-info-avatar" name="avatar">
+								<img src="https://ya-praktikum.tech/api/v2/resources${userData.avatar}" class="profile-info-avatar-img" />
+							</span>
+						`,
+						events: {
+							click: (e?: Event) => this.handleAvatarClick(e),
+						},
 					}),
 				});
 			} catch (err) {

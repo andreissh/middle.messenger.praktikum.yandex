@@ -33,7 +33,6 @@
 }
 
 .profile-info-avatar {
-	position: relative;
 	display: block;
 	width: 130px;
 	height: 130px;
@@ -43,9 +42,9 @@
 }
 
 .profile-info-avatar-img {
-	position: absolute;
-	top: calc(50% - 20px);
-	left: calc(50% - 20px);
+	width: 130px;
+	height: 130px;
+	border-radius: 50%;
 }
 
 .profile-info-data-block {
