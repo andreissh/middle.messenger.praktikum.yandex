@@ -49,7 +49,7 @@ export default class ChatsPage extends Block {
 					<img src="${arrowIcon}" alt="" />
 				`,
 				events: {
-					click: (e?: Event) => this.handleProfileClick(e),
+					click: (e?: Event) => ChatsPage.handleProfileClick(e),
 				},
 			}),
 			arrowIcon,
@@ -84,7 +84,7 @@ export default class ChatsPage extends Block {
 		});
 	}
 
-	private handleProfileClick(e?: Event): void {
+	private static handleProfileClick(e?: Event): void {
 		e?.preventDefault();
 		router.go("/settings");
 	}

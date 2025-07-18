@@ -12,13 +12,15 @@ class Router {
 
 	private _rootQuery!: string;
 
-	constructor(rootQuery: string) {
-		if (Router.__instance) {
-			return Router.__instance;
-		}
-
+	private constructor(rootQuery: string) {
 		this._rootQuery = rootQuery;
-		Router.__instance = this;
+	}
+
+	static getInstance(rootQuery: string): Router {
+		if (!Router.__instance) {
+			Router.__instance = new Router(rootQuery);
+		}
+		return Router.__instance;
 	}
 
 	use(pathname: string, block: new () => Block) {
@@ -70,5 +72,5 @@ class Router {
 	}
 }
 
-const router = new Router("#app");
+const router = Router.getInstance("#app");
 export default router;

@@ -53,7 +53,7 @@ export default class ProfileInfoPage extends Block {
 					</div>
 				`,
 				events: {
-					click: (e?: Event) => this.handleBackClick(e),
+					click: (e?: Event) => ProfileInfoPage.handleBackClick(e),
 				},
 			}),
 			AvatarBtn: new Button({
@@ -64,7 +64,7 @@ export default class ProfileInfoPage extends Block {
 					</span>
 				`,
 				events: {
-					click: (e?: Event) => this.handleAvatarClick(e),
+					click: (e?: Event) => ProfileInfoPage.handleAvatarClick(e),
 				},
 			}),
 			ProfileFieldsList: new ProfileFieldsList({
@@ -75,7 +75,7 @@ export default class ProfileInfoPage extends Block {
 				class: "profile-info-btns-item-btn",
 				children: "Изменить данные",
 				events: {
-					click: (e?: Event) => this.handleChangeDataClick(e),
+					click: (e?: Event) => ProfileInfoPage.handleChangeDataClick(e),
 				},
 			}),
 			ChangePasswordBtn: new Button({
@@ -83,7 +83,7 @@ export default class ProfileInfoPage extends Block {
 				class: "profile-info-btns-item-btn",
 				children: "Изменить пароль",
 				events: {
-					click: (e?: Event) => this.handleChangePassClick(e),
+					click: (e?: Event) => ProfileInfoPage.handleChangePassClick(e),
 				},
 			}),
 			LogoutBtn: new Button({
@@ -91,34 +91,34 @@ export default class ProfileInfoPage extends Block {
 				class: "profile-info-btns-item-btn profile-info-btns-item-btn--danger",
 				children: "Выйти",
 				events: {
-					click: (e?: Event) => this.handleLogoutClick(e),
+					click: (e?: Event) => ProfileInfoPage.handleLogoutClick(e),
 				},
 			}),
 		});
 	}
 
-	private handleBackClick(e?: Event): void {
+	private static handleBackClick(e?: Event): void {
 		e?.preventDefault();
 		router.go("/messenger");
 	}
 
-	private async handleAvatarClick(e?: Event): Promise<void> {
+	private static async handleAvatarClick(e?: Event): Promise<void> {
 		e?.preventDefault();
 	}
 
-	private handleChangeDataClick(e?: Event): void {
+	private static handleChangeDataClick(e?: Event): void {
 		e?.preventDefault();
 		const profileEditPage = new ProfileEditPage();
 		renderDOM("#app", profileEditPage);
 	}
 
-	private handleChangePassClick(e?: Event): void {
+	private static handleChangePassClick(e?: Event): void {
 		e?.preventDefault();
 		const profileEditPassPage = new ProfileEditPassPage();
 		renderDOM("#app", profileEditPassPage);
 	}
 
-	private async handleLogoutClick(e?: Event): Promise<void> {
+	private static async handleLogoutClick(e?: Event): Promise<void> {
 		e?.preventDefault();
 		try {
 			await http.post("auth/logout");

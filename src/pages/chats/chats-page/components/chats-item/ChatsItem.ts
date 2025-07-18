@@ -43,7 +43,7 @@ export default class ChatsItem extends Block {
 				onDelete: null,
 			}),
 			events: {
-				click: (e?: Event) => this.handleChatItemClick(e),
+				click: (e?: Event) => ChatsItem.handleChatItemClick(e),
 				contextmenu: (e?: Event) => this.handleContextMenu(e),
 			},
 		});
@@ -76,7 +76,7 @@ export default class ChatsItem extends Block {
 		}
 	};
 
-	handleChatItemClick(e?: Event): void {
+	private static handleChatItemClick(e?: Event): void {
 		const chatItems = document.querySelectorAll(".chat-item");
 		let chatId;
 		chatItems.forEach((item) => {

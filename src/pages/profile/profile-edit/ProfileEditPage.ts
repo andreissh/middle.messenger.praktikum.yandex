@@ -45,7 +45,7 @@ export default class ProfileEditPage extends Block {
 					</div>
 				`,
 				events: {
-					click: (e?: Event) => this.handleBackClick(e),
+					click: (e?: Event) => ProfileEditPage.handleBackClick(e),
 				},
 			}),
 			AvatarBtn: new Button({
@@ -89,7 +89,7 @@ export default class ProfileEditPage extends Block {
 		return new FormValidator(form, ".profile-field-item");
 	}
 
-	private handleBackClick(e?: Event): void {
+	private static handleBackClick(e?: Event): void {
 		e?.preventDefault();
 		router.go("/settings");
 	}
@@ -126,12 +126,12 @@ export default class ProfileEditPage extends Block {
 		}
 
 		const reader = new FileReader();
-		reader.onload = (e) => {
-			const avatarImg = document.querySelector(
+		reader.onload = (event) => {
+			const avatarImgEl = document.querySelector(
 				".profile-edit-avatar-img"
 			) as HTMLImageElement;
-			if (avatarImg && e.target?.result) {
-				avatarImg.src = e.target.result as string;
+			if (avatarImgEl && event.target?.result) {
+				avatarImgEl.src = event.target.result as string;
 			}
 		};
 		reader.readAsDataURL(file);
@@ -154,7 +154,7 @@ export default class ProfileEditPage extends Block {
 						</span>
 					`,
 					events: {
-						click: (e?: Event) => this.handleAvatarClick(e),
+						click: (event?: Event) => this.handleAvatarClick(event),
 					},
 				}),
 			});

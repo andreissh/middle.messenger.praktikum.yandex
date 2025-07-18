@@ -45,7 +45,7 @@ export default class ProfileEditPassPage extends Block {
 					</div>
 				`,
 				events: {
-					click: (e?: Event) => this.handleBackClick(e),
+					click: (e?: Event) => ProfileEditPassPage.handleBackClick(e),
 				},
 			}),
 			AvatarBtn: new Button({
@@ -56,7 +56,7 @@ export default class ProfileEditPassPage extends Block {
 					</span>
 				`,
 				events: {
-					click: (e?: Event) => this.handleAvatarClick(e),
+					click: (e?: Event) => ProfileEditPassPage.handleAvatarClick(e),
 				},
 			}),
 			ProfileFieldsList: new ProfileFieldsList({
@@ -107,12 +107,12 @@ export default class ProfileEditPassPage extends Block {
 		};
 	}
 
-	private handleBackClick(e?: Event): void {
+	private static handleBackClick(e?: Event): void {
 		e?.preventDefault();
 		router.go("/settings");
 	}
 
-	private handleAvatarClick(e?: Event): void {
+	private static handleAvatarClick(e?: Event): void {
 		e?.preventDefault();
 	}
 
