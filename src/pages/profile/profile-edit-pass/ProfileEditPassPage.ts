@@ -5,6 +5,7 @@ import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import { ValidationResult } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
+import avatarImg from "@/assets/icons/avatar-img.svg";
 import http from "@/api/http";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { passwordFields } from "../utils/profileData";
@@ -16,9 +17,7 @@ const template = `
     <div class="profile-edit-pass-content-wrapper">
       <div class="profile-edit-pass-content">
         <div class="profile-edit-pass-avatar-block">
-          <span class="profile-edit-pass-avatar">
-            <img src="{{ avatarImg }}" class="profile-edit-pass-avatar-img" />
-          </span>
+          {{{ AvatarBtn }}}
         </div>
         <form class="profile-edit-pass-data-form">
           <div class="profile-edit-pass-data-block">
@@ -47,6 +46,17 @@ export default class ProfileEditPassPage extends Block {
 				`,
 				events: {
 					click: (e?: Event) => this.handleBackClick(e),
+				},
+			}),
+			AvatarBtn: new Button({
+				id: "avatarBtn",
+				children: `
+					<span class="profile-edit-pass-avatar" name="avatar">
+						<img src="${avatarImg}" class="profile-edit-pass-avatar-img" />
+					</span>
+				`,
+				events: {
+					click: (e?: Event) => this.handleAvatarClick(e),
 				},
 			}),
 			ProfileFieldsList: new ProfileFieldsList({
@@ -102,6 +112,10 @@ export default class ProfileEditPassPage extends Block {
 		router.go("/settings");
 	}
 
+	private handleAvatarClick(e?: Event): void {
+		e?.preventDefault();
+	}
+
 	private handleFieldBlur(e?: Event): void {
 		if (!this.validator) return;
 
@@ -155,6 +169,28 @@ export default class ProfileEditPassPage extends Block {
 
 	componentDidMount(): void {
 		this.validator = this.initValidator();
+		const getUserData = async () => {
+			try {
+				const userData = await http.get<UserData>("auth/user");
+
+				this.setProps({
+					AvatarBtn: new Button({
+						id: "avatarBtn",
+						children: `
+							<span class="profile-edit-pass-avatar" name="avatar">
+								<img src="https://ya-praktikum.tech/api/v2/resources${userData.avatar}" class="profile-edit-pass-avatar-img" />
+							</span>
+						`,
+						events: {
+							click: (e?: Event) => this.handleAvatarClick(e),
+						},
+					}),
+				});
+			} catch (err) {
+				console.log(err);
+			}
+		};
+		getUserData();
 	}
 
 	render(): HTMLElement {

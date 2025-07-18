@@ -6,6 +6,7 @@ import FormValidator from "@/utils/FormValidator";
 import { UserData } from "@/types/types";
 import http from "@/api/http";
 import backBtn from "@/assets/icons/back-btn.svg";
+import avatarImg from "@/assets/icons/avatar-img.svg";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileEditFields } from "../utils/profileData";
 import "./profile-edit.css";
@@ -16,9 +17,7 @@ const template = `
     <div class="profile-edit-content-wrapper">
       <div class="profile-edit-content">
         <div class="profile-edit-avatar-block">
-          <span class="profile-edit-avatar">
-            <img src="{{ avatarImg }}" class="profile-edit-avatar-img" />
-          </span>
+          {{{ AvatarBtn }}}
         </div>
         <form class="profile-edit-data-form">
           <div class="profile-edit-data-block">
@@ -47,6 +46,17 @@ export default class ProfileEditPage extends Block {
 				`,
 				events: {
 					click: (e?: Event) => this.handleBackClick(e),
+				},
+			}),
+			AvatarBtn: new Button({
+				id: "avatarBtn",
+				children: `
+					<span class="profile-edit-avatar" name="avatar">
+						<img src="${avatarImg}" class="profile-edit-avatar-img" />
+					</span>
+				`,
+				events: {
+					click: (e?: Event) => this.handleAvatarClick(e),
 				},
 			}),
 			ProfileFieldsList: new ProfileFieldsList({
@@ -82,6 +92,75 @@ export default class ProfileEditPage extends Block {
 	private handleBackClick(e?: Event): void {
 		e?.preventDefault();
 		router.go("/settings");
+	}
+
+	private async handleAvatarClick(e?: Event): Promise<void> {
+		e?.preventDefault();
+
+		const fileInput = document.createElement("input");
+		fileInput.type = "file";
+		fileInput.accept =
+			"image/jpeg, image/jpg, image/png, image/gif, image/webp";
+
+		const file = await new Promise<File | null>((resolve) => {
+			fileInput.onchange = (event: Event) => {
+				resolve((event.target as HTMLInputElement).files?.[0] || null);
+			};
+			fileInput.click();
+		});
+
+		if (!file) return;
+
+		console.log("Selected file:", file);
+
+		const allowedTypes = [
+			"image/jpeg",
+			"image/jpg",
+			"image/png",
+			"image/gif",
+			"image/webp",
+		];
+		if (!allowedTypes.includes(file.type)) {
+			console.error("Недопустимый тип файла");
+			return;
+		}
+
+		const reader = new FileReader();
+		reader.onload = (e) => {
+			const avatarImg = document.querySelector(
+				".profile-edit-avatar-img"
+			) as HTMLImageElement;
+			if (avatarImg && e.target?.result) {
+				avatarImg.src = e.target.result as string;
+			}
+		};
+		reader.readAsDataURL(file);
+
+		try {
+			const formData = new FormData();
+			formData.append("avatar", file);
+			await http.put("user/profile/avatar", { body: formData });
+			console.log("Аватар успешно обновлен");
+
+			const userData = await http.get("auth/user");
+			console.log("Обновленные данные:", userData);
+
+			this.setProps({
+				AvatarBtn: new Button({
+					id: "avatarBtn",
+					children: `
+						<span class="profile-edit-avatar" name="avatar">
+							<img src="https://ya-praktikum.tech/api/v2/resources${userData.avatar}" class="profile-edit-avatar-img" />
+						</span>
+					`,
+					events: {
+						click: (e?: Event) => this.handleAvatarClick(e),
+					},
+				}),
+			});
+		} catch (error) {
+			console.error("Ошибка при обновлении аватара:", error);
+		}
 	}
 
 	private handleSaveClick(e?: Event): void {
@@ -140,6 +219,17 @@ export default class ProfileEditPage extends Block {
 				this.setProps({
 					ProfileFieldsList: new ProfileFieldsList({
 						fields: profileEditFieldsClone,
+					}),
+					AvatarBtn: new Button({
+						id: "avatarBtn",
+						children: `
+							<span class="profile-edit-avatar" name="avatar">
+								<img src="https://ya-praktikum.tech/api/v2/resources${userData.avatar}" class="profile-edit-avatar-img" />
+							</span>
+						`,
+						events: {
+							click: (e?: Event) => this.handleAvatarClick(e),
+						},
 					}),
 				});
 			} catch (err) {
