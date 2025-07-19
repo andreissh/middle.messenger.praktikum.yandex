@@ -6,7 +6,7 @@ import FormValidator from "@/utils/FormValidator";
 import { ValidationResult } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
-import http from "@/api/http";
+import http from "@/api/HttpClient";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { passwordFields } from "../utils/profileData";
 import "./profile-edit-pass.css";

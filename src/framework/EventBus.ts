@@ -22,7 +22,7 @@ export default class EventBus {
 		}
 
 		this.listeners[event] = this.listeners[event].filter(
-			(listener) => listener !== callback,
+			(listener) => listener !== callback
 		);
 	}
 
@@ -34,8 +34,10 @@ export default class EventBus {
 		this.listeners[event].forEach((listener) => {
 			try {
 				listener(...args);
-			} catch (error) {
-				console.error(`Ошибка в обработчике события ${event}:`, error);
+			} catch (err) {
+				throw new Error(`Ошибка в обработчике события ${event}:`, {
+					cause: err,
+				});
 			}
 		});
 	}

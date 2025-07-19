@@ -2,13 +2,13 @@ import Block from "@/framework/Block";
 import "./context-menu.css";
 
 type ContextMenuProps = {
-	x: number;
-	y: number;
-	onDelete: () => void;
+	x?: number;
+	y?: number;
+	onDelete?: () => void;
 };
 
 const contextMenuTemplate = `
-  <div class="context-menu" style="left: {{x}}px; top: {{y}}px;">
+  <div class="context-menu" style="left: {{ x }}px; top: {{ y }}px;">
     <button class="context-menu-delete-btn">Удалить</button>
   </div>
 `;
@@ -18,10 +18,12 @@ export default class ContextMenu extends Block {
 		super("div", {
 			...props,
 			events: {
-				click: (e: Event) => {
-					const target = e.target as HTMLElement;
+				click: (e?: Event) => {
+					const target = e?.target as HTMLElement;
 					if (target.classList.contains("context-menu-delete-btn")) {
-						props.onDelete();
+						if (props.onDelete) {
+							props.onDelete();
+						}
 					}
 				},
 			},

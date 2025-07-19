@@ -1,4 +1,5 @@
 import router from "@/routes/Router";
+import { baseUrl } from "@/utils/utils";
 
 type HttpMethodName = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -12,7 +13,7 @@ type HTTPMethod = <TResponse, TBody = unknown>(
 	options?: RequestOptions<TBody>
 ) => Promise<TResponse>;
 
-export default class HttpClient {
+class HttpClient {
 	private baseURL: string;
 
 	constructor(baseURL: string = "") {
@@ -101,3 +102,6 @@ export default class HttpClient {
 
 	delete: HTTPMethod = (url, options) => this._request("DELETE", url, options);
 }
+
+const http = new HttpClient(baseUrl);
+export default http;

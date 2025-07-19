@@ -4,13 +4,14 @@ import "./chats-list.css";
 
 type ChatsListProps = {
 	chats: ChatsItemProps[];
+	onRefresh?: () => void;
 };
 
 const template = `
   <ul class="chat-list">
 	{{#if hasChats}}
 		{{{ chats }}}
-	{{ else }} 
+	{{ else }}
 		<p>Список чатов пуст</p>
 	{{/if}}
   </ul>

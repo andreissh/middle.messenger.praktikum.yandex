@@ -2,10 +2,10 @@ import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
 import router from "@/routes/Router";
 import { InputProps } from "@/pages/profile/utils/profileData";
-import http from "@/api/http";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import { HttpError } from "@/types/types";
+import http from "@/api/HttpClient";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signin.css";
 

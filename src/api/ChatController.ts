@@ -1,17 +1,15 @@
-import http from "@/api/http";
+import { ChatsToken, UserData } from "@/types/types";
+import { baseWsUrl } from "@/utils/utils";
+import http from "./HttpClient";
 
 class ChatController {
 	private socket: WebSocket | null = null;
 
-	private pingInterval: number | null = null;
+	async connectToChat(chatId: number, onMessage: (msg: unknown) => void) {
+		const user = await http.get<UserData>("/auth/user");
+		const { token } = await http.post<ChatsToken>(`/chats/token/${chatId}`);
 
-	async connectToChat(chatId: number, onMessage: (msg: any) => void) {
-		const user = await http.get("/auth/user");
-		const { token } = await http.post(`/chats/token/${chatId}`);
-
-		const socket = new WebSocket(
-			`wss://ya-praktikum.tech/ws/chats/${user.id}/${chatId}/${token}`
-		);
+		const socket = new WebSocket(`${baseWsUrl}/${user.id}/${chatId}/${token}`);
 
 		this.socket = socket;
 
@@ -19,10 +17,6 @@ class ChatController {
 			console.log("WebSocket открыт");
 
 			this.send({ content: "0", type: "get old" });
-
-			this.pingInterval = window.setInterval(() => {
-				this.send({ type: "ping" });
-			}, 10000);
 		});
 
 		socket.addEventListener("message", (event) => {
@@ -32,17 +26,16 @@ class ChatController {
 					onMessage(data);
 				}
 			} catch (err) {
-				console.error("Ошибка при парсинге сообщения", err);
+				throw new Error("Ошибка при парсинге сообщения", { cause: err });
 			}
 		});
 
 		socket.addEventListener("close", () => {
 			console.log("WebSocket закрыт");
-			if (this.pingInterval) clearInterval(this.pingInterval);
 		});
 
 		socket.addEventListener("error", (e) => {
-			console.error("WebSocket ошибка соединения", e);
+			throw new Error("WebSocket ошибка соединения", { cause: e });
 		});
 	}
 
@@ -56,7 +49,6 @@ class ChatController {
 
 	close() {
 		this.socket?.close();
-		if (this.pingInterval) clearInterval(this.pingInterval);
 	}
 }
 

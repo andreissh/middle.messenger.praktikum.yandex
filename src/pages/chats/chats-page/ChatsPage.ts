@@ -2,13 +2,22 @@ import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
 import Modal from "@/components/modal/Modal";
 import router from "@/routes/Router";
-import http from "@/api/http";
 import arrowIcon from "@/assets/icons/arrow-right.svg";
 import plusIcon from "@/assets/icons/plus.svg";
 import formatChatDate from "@/utils/formatChatDate";
+import http from "@/api/HttpClient";
+import { UserChats } from "@/types/types";
 import ChatsList from "./components/chats-list/ChatsList";
 import ChatPage from "../chat-page/ChatPage";
 import "./chats-page.css";
+
+type UserChatListData = {
+	id: number;
+	name: string;
+	text: string;
+	time: string;
+	count: number;
+};
 
 const template = `
   <div class="chats-container">
@@ -55,7 +64,6 @@ export default class ChatsPage extends Block {
 			arrowIcon,
 			ChatsList: new ChatsList({
 				chats: [],
-				onRefresh: null,
 			}),
 			CreateChatBtn: new Button({
 				id: "createChatBtn",
@@ -98,10 +106,12 @@ export default class ChatsPage extends Block {
 
 		const input: HTMLInputElement | null =
 			document.querySelector("#createChatInput");
-		const submitBtn = document.querySelector(".create-chat-submit-btn");
+		const submitBtn: HTMLButtonElement | null = document.querySelector(
+			".create-chat-submit-btn"
+		);
 
 		submitBtn?.addEventListener("click", async () => {
-			if (!input || !input.value) return;
+			if (!input) return;
 
 			try {
 				await http.post("/chats", {
@@ -112,15 +122,15 @@ export default class ChatsPage extends Block {
 				modal.style.display = "none";
 				this.getChats();
 			} catch (err) {
-				console.log(err);
+				throw new Error("Ошибка при добавлении чата", { cause: err });
 			}
 		});
 	}
 
 	getChats = async () => {
 		try {
-			const newChats = [];
-			const userChats = await http.get("/chats");
+			const newChats: UserChatListData[] = [];
+			const userChats = await http.get<UserChats[]>("/chats");
 			const chatId = Number(window.location.pathname.split("/").pop());
 			let title;
 
@@ -128,8 +138,8 @@ export default class ChatsPage extends Block {
 				newChats.push({
 					id: chat.id,
 					name: chat.title,
-					text: chat?.last_message?.content ?? "",
-					time: formatChatDate(chat?.last_message?.time) ?? "",
+					text: chat.last_message.content ?? "",
+					time: formatChatDate(chat.last_message.time) ?? "",
 					count: chat.unread_count,
 				});
 
@@ -152,7 +162,7 @@ export default class ChatsPage extends Block {
 			this.setProps(props);
 			props.ChatPage.dispatchComponentDidMount();
 		} catch (err) {
-			console.log(err);
+			throw new Error("Ошибка при получении списка чатов", { cause: err });
 		}
 	};
 

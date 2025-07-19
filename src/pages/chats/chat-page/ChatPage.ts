@@ -2,10 +2,11 @@ import Block from "@/framework/Block";
 import ChatController from "@/api/ChatController";
 import sendBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
-import "./chat-page.css";
 import Button from "@/components/button/Button";
 import Modal from "@/components/modal/Modal";
-import http from "@/api/http";
+import http from "@/api/HttpClient";
+import { ChatsUsers, UserData } from "@/types/types";
+import "./chat-page.css";
 
 const template = `
 	<div class="chat-content">
@@ -114,28 +115,30 @@ export default class ChatPage extends Block {
 
 		const input: HTMLInputElement | null =
 			document.querySelector("#addUserInput");
-		const submitBtn = document.querySelector(".add-user-submit-btn");
+		const submitBtn: HTMLButtonElement | null = document.querySelector(
+			".add-user-submit-btn"
+		);
 
 		submitBtn?.addEventListener("click", async () => {
-			if (!input || !input.value) return;
+			if (!input) return;
 
 			try {
-				const userData = await http.post("user/search", {
+				const userData = await http.post<UserData[]>("user/search", {
 					body: {
 						login: input.value,
 					},
 				});
 
-				await http.put("/chats/users", {
+				await http.put<ChatsUsers>("/chats/users", {
 					body: {
 						users: [userData[0].id],
-						chatId: this.props.chatId,
+						chatId: this.props.chatId as number,
 					},
 				});
 
 				modal.style.display = "none";
 			} catch (err) {
-				console.log(err);
+				throw new Error("Ошибка при добавлении пользователя", { cause: err });
 			}
 		});
 	}
@@ -149,19 +152,21 @@ export default class ChatPage extends Block {
 
 		const input: HTMLInputElement | null =
 			document.querySelector("#removeUserInput");
-		const submitBtn = document.querySelector(".remove-user-submit-btn");
+		const submitBtn: HTMLButtonElement | null = document.querySelector(
+			".remove-user-submit-btn"
+		);
 
 		submitBtn?.addEventListener("click", async () => {
-			if (!input || !input.value) return;
+			if (!input) return;
 
 			try {
-				const userData = await http.post("user/search", {
+				const userData = await http.post<UserData[]>("user/search", {
 					body: {
 						login: input.value,
 					},
 				});
 
-				await http.delete("chats/users", {
+				await http.delete<ChatsUsers>("chats/users", {
 					body: {
 						users: [userData[0].id],
 						chatId: this.props.chatId,
@@ -170,7 +175,7 @@ export default class ChatPage extends Block {
 
 				modal.style.display = "none";
 			} catch (err) {
-				console.log(err);
+				throw new Error("Ошибка при удалении пользователя", { cause: err });
 			}
 		});
 	}
@@ -179,16 +184,15 @@ export default class ChatPage extends Block {
 		if (!this.props.chatId) return;
 
 		const containerMsgs = document.querySelector(".chat-messages");
-		if (containerMsgs) {
-			containerMsgs.replaceChildren();
-		}
+		if (!containerMsgs) return;
 
-		ChatController.connectToChat(this.props.chatId, (data) => {
+		containerMsgs.replaceChildren();
+
+		ChatController.connectToChat(this.props.chatId as number, (data) => {
 			const container = document.querySelector(".chat-body");
 			if (!container) return;
 
 			const messages = Array.isArray(data) ? data.reverse() : [data];
-			console.log(messages);
 
 			messages.forEach((msg) => {
 				const msgEl = document.createElement("p");
@@ -198,15 +202,16 @@ export default class ChatPage extends Block {
 					msgEl.classList.add("users-messages");
 				}
 				msgEl.textContent = msg.content;
-				containerMsgs?.append(msgEl);
+				containerMsgs.append(msgEl);
 			});
 		});
 
-		const btn = document.querySelector(".chat-send-btn");
-		const input = document.querySelector("#message");
+		const btn: HTMLButtonElement | null =
+			document.querySelector(".chat-send-btn");
+		const input: HTMLInputElement | null = document.querySelector("#message");
 
 		btn?.addEventListener("click", () => {
-			if (!input?.value) return;
+			if (!input) return;
 
 			ChatController.send({
 				type: "message",
@@ -216,24 +221,27 @@ export default class ChatPage extends Block {
 			input.value = "";
 		});
 
-		const optionsBtn = document.querySelector(".chat-options-btn");
+		const optionsBtn: HTMLButtonElement | null =
+			document.querySelector(".chat-options-btn");
 		const dropdown = document.getElementById("chatDropdown");
 
 		optionsBtn?.addEventListener("click", (e) => {
+			if (!dropdown) return;
 			e.stopPropagation();
-			dropdown?.classList.toggle("open");
-			dropdown!.style.display = dropdown!.classList.contains("open")
+			dropdown.classList.toggle("open");
+			dropdown.style.display = dropdown.classList.contains("open")
 				? "flex"
 				: "none";
 		});
 
 		document.addEventListener("click", (e) => {
+			if (!dropdown) return;
 			if (
-				!dropdown?.contains(e.target as Node) &&
-				!optionsBtn?.contains(e.target as Node)
+				dropdown.contains(e.target as Node) &&
+				optionsBtn?.contains(e.target as Node)
 			) {
-				dropdown?.classList.remove("open");
-				dropdown!.style.display = "none";
+				dropdown.classList.remove("open");
+				dropdown.style.display = "none";
 			}
 		});
 	}

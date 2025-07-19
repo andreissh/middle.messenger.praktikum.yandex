@@ -12,13 +12,13 @@ type ModalProps = {
 const template = `
 	<div id="{{ id }}" class="modal-wrapper" style="display: none;">
 		<div class="modal">
-            <div class="modal-header">
-                {{{ CloseBtn }}}
-                <h2>{{ title }}</h2>
-            </div>
-            <div class="modal-body>
-			    {{{ children }}}
-            </div>
+			<div class="modal-header">
+				{{{ CloseBtn }}}
+				<h2>{{ title }}</h2>
+			</div>
+			<div class="modal-body>
+				{{{ children }}}
+			</div>
 		</div>
 	</div>
 `;
@@ -30,8 +30,8 @@ export default class Modal extends Block {
 			CloseBtn: new Button({
 				class: "modal-close-btn",
 				children: `
-                    <img src=${closeBtn} alt="close" />
-                `,
+					<img src=${closeBtn} alt="close" />
+				`,
 				events: {
 					click: (e?: Event) => this.handleCloseClick(e),
 				},

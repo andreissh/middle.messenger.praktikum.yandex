@@ -1,8 +1,8 @@
 import Block from "@/framework/Block";
 import ContextMenu from "@/components/context-menu/ContextMenu";
-import http from "@/api/http";
 import router from "@/routes/Router";
 import avatarImg from "@/assets/icons/avatar-img.svg";
+import http from "@/api/HttpClient";
 import "./chats-item.css";
 
 export type ChatsItemProps = {
@@ -10,7 +10,8 @@ export type ChatsItemProps = {
 	name: string;
 	text: string;
 	time: string;
-	count: string;
+	count: number;
+	onRefresh?: () => void;
 };
 
 const template = `
@@ -37,11 +38,7 @@ export default class ChatsItem extends Block {
 	constructor(props: ChatsItemProps) {
 		super("div", {
 			...props,
-			ContextMenu: new ContextMenu({
-				x: null,
-				y: null,
-				onDelete: null,
-			}),
+			ContextMenu: new ContextMenu({}),
 			events: {
 				click: (e?: Event) => ChatsItem.handleChatItemClick(e),
 				contextmenu: (e?: Event) => this.handleContextMenu(e),
@@ -50,8 +47,9 @@ export default class ChatsItem extends Block {
 
 		document.addEventListener("click", (e) => {
 			const target = e.target as Node;
-			const isClickInsideMenu =
-				this.props.ContextMenu?.getContent().contains(target);
+			const isClickInsideMenu = this.children.ContextMenu
+				? this.children.ContextMenu.getContent().contains(target)
+				: false;
 			const isClickInsideChatItem = this.getContent().contains(target);
 
 			if (!isClickInsideMenu && !isClickInsideChatItem) {
@@ -61,7 +59,6 @@ export default class ChatsItem extends Block {
 	}
 
 	deleteChat = async () => {
-		console.log(`Удаление чата с ID: ${this.props.id}`);
 		try {
 			await http.delete("/chats", {
 				body: {
@@ -69,10 +66,12 @@ export default class ChatsItem extends Block {
 				},
 			});
 
+			console.log(`Удален чат с ID: ${this.props.id}`);
+
 			this.closeContextMenu();
 			this.props.onRefresh();
 		} catch (err) {
-			console.log(err);
+			throw new Error("Ошибка при удалении чата", { cause: err });
 		}
 	};
 
@@ -80,7 +79,7 @@ export default class ChatsItem extends Block {
 		const chatItems = document.querySelectorAll(".chat-item");
 		let chatId;
 		chatItems.forEach((item) => {
-			if (item.contains(e.target)) {
+			if (e?.target instanceof Node && item.contains(e.target)) {
 				chatId = item.id;
 			}
 		});
@@ -89,8 +88,8 @@ export default class ChatsItem extends Block {
 		router.go(`/messenger/${chatId}`);
 	}
 
-	handleContextMenu(e: Event) {
-		e.preventDefault();
+	handleContextMenu(e?: Event) {
+		e?.preventDefault();
 		const mouseEvent = e as MouseEvent;
 
 		if (ChatsItem.currentOpenMenu) {
