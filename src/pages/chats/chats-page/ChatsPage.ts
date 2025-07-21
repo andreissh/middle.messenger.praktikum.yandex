@@ -139,8 +139,10 @@ export default class ChatsPage extends Block {
 				newChats.push({
 					id: chat.id,
 					name: chat.title,
-					text: chat.last_message.content ?? "",
-					time: formatChatDate(chat.last_message.time) ?? "",
+					text: chat.last_message?.content ?? "",
+					time: chat.last_message
+						? formatChatDate(chat.last_message?.time) ?? ""
+						: "",
 					count: chat.unread_count,
 				});
 
@@ -163,10 +165,6 @@ export default class ChatsPage extends Block {
 			this.setProps(props);
 			props.ChatPage.dispatchComponentDidMount();
 		} catch (err) {
-			localStorage.setItem("isSignedIn", "false");
-			localStorage.removeItem("userId");
-			App.updateRoutes();
-			router.go("/");
 			throw new Error("Ошибка при получении списка чатов", { cause: err });
 		}
 	};
