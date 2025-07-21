@@ -150,7 +150,7 @@ export default class SignupPage extends Block {
 			const data = getFormData(form);
 			if (data) {
 				try {
-					await http.post("auth/signup", {
+					await http.post("/auth/signup", {
 						body: {
 							first_name: data.first_name,
 							second_name: data.second_name,

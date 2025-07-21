@@ -1,4 +1,4 @@
-export default function formatChatDate(dateString) {
+export default function formatChatDate(dateString: string) {
 	const date = new Date(dateString);
 	const now = new Date();
 
@@ -9,7 +9,7 @@ export default function formatChatDate(dateString) {
 		date.getDate()
 	);
 
-	const diffTime = now - date;
+	const diffTime = now.getTime() - date.getTime();
 	const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
 	const months = [

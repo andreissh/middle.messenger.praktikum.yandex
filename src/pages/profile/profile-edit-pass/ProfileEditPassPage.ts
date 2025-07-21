@@ -3,7 +3,7 @@ import Button from "@/components/button/Button";
 import router from "@/routes/Router";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
-import { ValidationResult } from "@/types/types";
+import { UserData, ValidationResult } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import http from "@/api/HttpClient";
@@ -151,7 +151,7 @@ export default class ProfileEditPassPage extends Block {
 				});
 				const setUserData = async () => {
 					try {
-						await http.put("user/password", {
+						await http.put("/user/password", {
 							body: {
 								...reqBody,
 							},
@@ -159,7 +159,7 @@ export default class ProfileEditPassPage extends Block {
 
 						router.go("/settings");
 					} catch (err) {
-						console.log(err);
+						throw new Error("Ошибка при смене пароля", { cause: err });
 					}
 				};
 				setUserData();
@@ -171,7 +171,7 @@ export default class ProfileEditPassPage extends Block {
 		this.validator = this.initValidator();
 		const getUserData = async () => {
 			try {
-				const userData = await http.get<UserData>("auth/user");
+				const userData = await http.get<UserData>("/auth/user");
 
 				this.setProps({
 					AvatarBtn: new Button({
@@ -182,12 +182,14 @@ export default class ProfileEditPassPage extends Block {
 							</span>
 						`,
 						events: {
-							click: (e?: Event) => this.handleAvatarClick(e),
+							click: (e?: Event) => ProfileEditPassPage.handleAvatarClick(e),
 						},
 					}),
 				});
 			} catch (err) {
-				console.log(err);
+				throw new Error("Ошибка при загрузке данных пользователя", {
+					cause: err,
+				});
 			}
 		};
 		getUserData();

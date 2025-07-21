@@ -111,8 +111,6 @@ export default class ProfileEditPage extends Block {
 
 		if (!file) return;
 
-		console.log("Selected file:", file);
-
 		const allowedTypes = [
 			"image/jpeg",
 			"image/jpg",
@@ -121,8 +119,7 @@ export default class ProfileEditPage extends Block {
 			"image/webp",
 		];
 		if (!allowedTypes.includes(file.type)) {
-			console.error("Недопустимый тип файла");
-			return;
+			throw new Error("Недопустимый тип файла");
 		}
 
 		const reader = new FileReader();
@@ -139,11 +136,9 @@ export default class ProfileEditPage extends Block {
 		try {
 			const formData = new FormData();
 			formData.append("avatar", file);
-			await http.put("user/profile/avatar", { body: formData });
-			console.log("Аватар успешно обновлен");
+			await http.put("/user/profile/avatar", { body: formData });
 
-			const userData = await http.get("auth/user");
-			console.log("Обновленные данные:", userData);
+			const userData = await http.get<UserData>("/auth/user");
 
 			this.setProps({
 				AvatarBtn: new Button({
@@ -158,8 +153,8 @@ export default class ProfileEditPage extends Block {
 					},
 				}),
 			});
-		} catch (error) {
-			console.error("Ошибка при обновлении аватара:", error);
+		} catch (err) {
+			throw new Error("Ошибка при обновлении аватара", { cause: err });
 		}
 	}
 
@@ -181,7 +176,7 @@ export default class ProfileEditPage extends Block {
 				});
 				const setUserData = async () => {
 					try {
-						await http.put<UserData>("user/profile", {
+						await http.put<UserData>("/user/profile", {
 							body: {
 								...reqBody,
 							},
@@ -189,7 +184,9 @@ export default class ProfileEditPage extends Block {
 
 						router.go("/settings");
 					} catch (err) {
-						console.log(err);
+						throw new Error("Ошибка при изменении данных пользователя", {
+							cause: err,
+						});
 					}
 				};
 				setUserData();
@@ -207,7 +204,7 @@ export default class ProfileEditPage extends Block {
 	componentDidMount() {
 		const getUserData = async () => {
 			try {
-				const userData = await http.get<UserData>("auth/user");
+				const userData = await http.get<UserData>("/auth/user");
 				let profileEditFieldsClone = structuredClone(profileEditFields);
 				profileEditFieldsClone = profileEditFieldsClone.map((field) => ({
 					...field,
@@ -231,7 +228,9 @@ export default class ProfileEditPage extends Block {
 					}),
 				});
 			} catch (err) {
-				console.log(err);
+				throw new Error("Ошибка при загрузке данных пользователя", {
+					cause: err,
+				});
 			}
 		};
 		getUserData();

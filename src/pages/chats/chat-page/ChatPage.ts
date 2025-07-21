@@ -123,7 +123,7 @@ export default class ChatPage extends Block {
 			if (!input) return;
 
 			try {
-				const userData = await http.post<UserData[]>("user/search", {
+				const userData = await http.post<UserData[]>("/user/search", {
 					body: {
 						login: input.value,
 					},
@@ -160,13 +160,13 @@ export default class ChatPage extends Block {
 			if (!input) return;
 
 			try {
-				const userData = await http.post<UserData[]>("user/search", {
+				const userData = await http.post<UserData[]>("/user/search", {
 					body: {
 						login: input.value,
 					},
 				});
 
-				await http.delete<ChatsUsers>("chats/users", {
+				await http.delete<ChatsUsers>("/chats/users", {
 					body: {
 						users: [userData[0].id],
 						chatId: this.props.chatId,

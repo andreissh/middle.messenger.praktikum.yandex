@@ -33,7 +33,7 @@ const template = `
 `;
 
 export default class ChatsItem extends Block {
-	private static currentOpenMenu: ContextMenu | null = null;
+	private static currentOpenMenu: Block | null = null;
 
 	constructor(props: ChatsItemProps) {
 		super("div", {
@@ -69,7 +69,9 @@ export default class ChatsItem extends Block {
 			console.log(`Удален чат с ID: ${this.props.id}`);
 
 			this.closeContextMenu();
-			this.props.onRefresh();
+			if (typeof this.props.onRefresh === "function") {
+				this.props.onRefresh();
+			}
 		} catch (err) {
 			throw new Error("Ошибка при удалении чата", { cause: err });
 		}
@@ -134,7 +136,7 @@ export default class ChatsItem extends Block {
 	closeContextMenu() {
 		if (this.children.ContextMenu) {
 			this.children.ContextMenu.getContent().remove();
-			this.children.ContextMenu = null;
+			this.children.ContextMenu = null as unknown as Block;
 			ChatsItem.currentOpenMenu = null;
 		}
 	}

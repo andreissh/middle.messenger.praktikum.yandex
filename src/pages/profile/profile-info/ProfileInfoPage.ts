@@ -2,7 +2,7 @@ import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
 import router from "@/routes/Router";
 import renderDOM from "@/utils/renderDOM";
-import { HttpError, UserData } from "@/types/types";
+import { UserData } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import http from "@/api/HttpClient";
@@ -121,22 +121,19 @@ export default class ProfileInfoPage extends Block {
 	private static async handleLogoutClick(e?: Event): Promise<void> {
 		e?.preventDefault();
 		try {
-			await http.post("auth/logout");
+			await http.post("/auth/logout");
 
 			localStorage.setItem("isSignedIn", "false");
 			router.go("/");
 		} catch (err) {
-			const error = err as HttpError;
-			if (error) {
-				console.error("Ошибка:", error);
-			}
+			throw new Error("Ошибка при выходе из системы", { cause: err });
 		}
 	}
 
 	componentDidMount() {
 		const getUserData = async () => {
 			try {
-				const userData = await http.get<UserData>("auth/user");
+				const userData = await http.get<UserData>("/auth/user");
 				localStorage.setItem("userId", String(userData.id));
 				let profileFieldsClone = structuredClone(profileFields);
 				profileFieldsClone = profileFieldsClone.map((field) => ({
@@ -156,12 +153,14 @@ export default class ProfileInfoPage extends Block {
 							</span>
 						`,
 						events: {
-							click: (e?: Event) => this.handleAvatarClick(e),
+							click: (e?: Event) => ProfileInfoPage.handleAvatarClick(e),
 						},
 					}),
 				});
 			} catch (err) {
-				console.log(err);
+				throw new Error("Ошибка при загрузке данных пользователя", {
+					cause: err,
+				});
 			}
 		};
 		getUserData();

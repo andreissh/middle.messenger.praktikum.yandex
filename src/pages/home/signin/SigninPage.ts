@@ -100,7 +100,7 @@ export default class SigninPage extends Block {
 			const data = getFormData(form);
 			if (data) {
 				try {
-					await http.post("auth/signin", {
+					await http.post("/auth/signin", {
 						body: {
 							login: data.login,
 							password: data.password,
