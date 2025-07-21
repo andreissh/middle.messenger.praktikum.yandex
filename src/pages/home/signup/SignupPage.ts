@@ -6,6 +6,7 @@ import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import { HttpError, ValidationResult } from "@/types/types";
 import http from "@/api/HttpClient";
+import App from "@/App";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signup.css";
 
@@ -150,7 +151,7 @@ export default class SignupPage extends Block {
 			const data = getFormData(form);
 			if (data) {
 				try {
-					await http.post("/auth/signup", {
+					const response: { id: number } = await http.post("/auth/signup", {
 						body: {
 							first_name: data.first_name,
 							second_name: data.second_name,
@@ -161,13 +162,16 @@ export default class SignupPage extends Block {
 						},
 					});
 
+					localStorage.setItem("isSignedIn", "true");
+					localStorage.setItem("userId", String(response.id));
+					App.updateRoutes();
 					router.go("/");
 				} catch (err) {
 					const error = err as HttpError;
 					if (error.status === 400) {
-						console.error("Неверный логин или пароль");
+						throw new Error("Неверный логин или пароль", { cause: err });
 					} else {
-						console.error("Ошибка:", error);
+						throw new Error("Ошибка при регистрации", { cause: err });
 					}
 				}
 			}

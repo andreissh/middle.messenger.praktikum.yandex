@@ -11,22 +11,28 @@ export default class App {
 		this._initRouter();
 	}
 
-	private static _initRouter() {
+	private static _setupRoutes() {
+		if (localStorage.getItem("isSignedIn") === "true") {
+			router.use("/", ChatsPage);
+		} else {
+			router.use("/", SigninPage);
+		}
+
 		router
-			.use("/", SigninPage)
 			.use("/sign-up", SignupPage)
 			.use("/messenger", ChatsPage)
 			.use("/settings", ProfileInfoPage)
 			.use("/404", NotFoundPage)
-			.use("/500", ServerErrorPage)
-			.start();
+			.use("/500", ServerErrorPage);
+	}
 
-		if (window.location.pathname === "/") {
-			if (localStorage.getItem("isSignedIn") === "true") {
-				router.go("/messenger");
-			} else {
-				router.go("/");
-			}
-		}
+	static _initRouter() {
+		this._setupRoutes();
+		router.start();
+	}
+
+	static updateRoutes() {
+		router.reset();
+		this._setupRoutes();
 	}
 }

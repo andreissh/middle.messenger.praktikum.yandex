@@ -70,6 +70,11 @@ class Router {
 	getRoute(pathname: string) {
 		return this.routes.find((route) => route.match(pathname));
 	}
+
+	reset() {
+		this.routes = [];
+		this._currentRoute = null;
+	}
 }
 
 const router = Router.getInstance("#app");

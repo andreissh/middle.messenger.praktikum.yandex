@@ -6,6 +6,7 @@ import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import { HttpError } from "@/types/types";
 import http from "@/api/HttpClient";
+import App from "@/App";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signin.css";
 
@@ -108,13 +109,16 @@ export default class SigninPage extends Block {
 					});
 
 					localStorage.setItem("isSignedIn", "true");
-					router.go("/messenger");
+					App.updateRoutes();
+					router.go("/");
 				} catch (err) {
 					const error = err as HttpError;
 					if (error.status === 400) {
-						console.error("Неверный логин или пароль");
+						throw new Error("Неверный логин или пароль", { cause: error });
 					} else {
-						console.error("Ошибка:", error);
+						throw new Error("Ошибка при авторизации пользователя", {
+							cause: error,
+						});
 					}
 				}
 			}

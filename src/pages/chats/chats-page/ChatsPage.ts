@@ -6,7 +6,8 @@ import arrowIcon from "@/assets/icons/arrow-right.svg";
 import plusIcon from "@/assets/icons/plus.svg";
 import formatChatDate from "@/utils/formatChatDate";
 import http from "@/api/HttpClient";
-import { UserChats } from "@/types/types";
+import { UserChats, UserData } from "@/types/types";
+import App from "@/App";
 import ChatsList from "./components/chats-list/ChatsList";
 import ChatPage from "../chat-page/ChatPage";
 import "./chats-page.css";
@@ -162,11 +163,31 @@ export default class ChatsPage extends Block {
 			this.setProps(props);
 			props.ChatPage.dispatchComponentDidMount();
 		} catch (err) {
+			localStorage.setItem("isSignedIn", "false");
+			localStorage.removeItem("userId");
+			App.updateRoutes();
+			router.go("/");
 			throw new Error("Ошибка при получении списка чатов", { cause: err });
 		}
 	};
 
 	componentDidMount() {
+		const getUserData = async () => {
+			try {
+				const userData = await http.get<UserData>("/auth/user");
+				localStorage.setItem("userId", String(userData.id));
+			} catch (err) {
+				localStorage.setItem("isSignedIn", "false");
+				localStorage.removeItem("userId");
+				App.updateRoutes();
+				router.go("/");
+				throw new Error("Ошибка при загрузке данных пользователя", {
+					cause: err,
+				});
+			}
+		};
+		getUserData();
+
 		this.getChats();
 	}
 

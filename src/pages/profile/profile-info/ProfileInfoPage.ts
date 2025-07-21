@@ -6,6 +6,7 @@ import { UserData } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import http from "@/api/HttpClient";
+import App from "@/App";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileFields } from "../utils/profileData";
 import ProfileEditPage from "../profile-edit/ProfileEditPage";
@@ -124,6 +125,8 @@ export default class ProfileInfoPage extends Block {
 			await http.post("/auth/logout");
 
 			localStorage.setItem("isSignedIn", "false");
+			localStorage.removeItem("userId");
+			App.updateRoutes();
 			router.go("/");
 		} catch (err) {
 			throw new Error("Ошибка при выходе из системы", { cause: err });
