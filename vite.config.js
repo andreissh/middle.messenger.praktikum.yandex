@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import handlebars from "vite-plugin-handlebars";
 import path from "path";
+import { viteSingleFile } from "vite-plugin-singlefile";
 
 export default defineConfig({
 	base: "./",
@@ -14,6 +15,7 @@ export default defineConfig({
 		handlebars({
 			partialsDirectory: path.resolve(__dirname, "src/components"),
 		}),
+		[viteSingleFile()],
 	],
 	build: {
 		rollupOptions: {
