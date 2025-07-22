@@ -16,6 +16,10 @@ export default defineConfig({
 			partialsDirectory: path.resolve(__dirname, "src/components"),
 		}),
 		[viteSingleFile()],
+		rewrite({
+			from: /^\/(sign-up|messenger|settings|404|500)/,
+			to: "/index.html",
+		}),
 	],
 	build: {
 		rollupOptions: {
