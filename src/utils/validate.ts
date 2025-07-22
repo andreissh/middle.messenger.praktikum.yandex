@@ -5,7 +5,7 @@ const patterns = {
 	second_name: /^[A-ZА-ЯЁ][a-zа-яё-]+$/u,
 	login: /^(?=.*[a-zA-Z])[a-zA-Z0-9_-]{3,20}$/,
 	email: /^[a-zA-Z0-9._-]+@[a-zA-Z]+\.[a-zA-Z]+$/,
-	password: /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,40}$/,
+	password: /^(?=.*[A-ZА-ЯЁ])(?=.*\d)[^\s]{8,40}$/u,
 	phone: /^\+?\d[\d\s\-()]{9,20}$/,
 	message: /^(?!\s*$).+/,
 };

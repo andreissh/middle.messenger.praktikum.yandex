@@ -7,6 +7,7 @@ import FormValidator from "@/utils/FormValidator";
 import { HttpError } from "@/types/types";
 import http from "@/api/HttpClient";
 import { IRouteManager } from "@/interfaces/IRouteManager";
+import Form from "@/components/form/Form";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signin.css";
 
@@ -31,12 +32,7 @@ const template = `
   <div class="signin-wrapper">
     <div class="signin-container">
       <h1 class="signin-header">Вход</h1>
-      <form class="signin-form">
-        {{{ fields }}}
-        <div class="signin-form-signin-btn-container">
-          {{{ SigninBtn }}}
-        </div>
-      </form>
+      {{{ SigninForm }}}
       <div class="signin-form-signup-btn-container">
         {{{ SignupBtn }}}
       </div>
@@ -49,20 +45,6 @@ export default class SigninPage extends Block {
 
 	constructor() {
 		super("div", {
-			fields: new LoginFields({
-				fields,
-				events: {
-					blur: (e?: Event) => this.handleFieldBlur(e),
-				},
-			}) as LoginFields,
-			SigninBtn: new Button({
-				id: "renderChatsBtn",
-				class: "btn",
-				children: "Войти",
-				events: {
-					click: (e?: Event) => this.handleSigninClick(e),
-				},
-			}),
 			SignupBtn: new Button({
 				id: "renderSignupBtn",
 				class: "btn-secondary",
@@ -71,6 +53,30 @@ export default class SigninPage extends Block {
 					click: (e?: Event) => SigninPage.handleSignupClick(e),
 				},
 			}),
+			SigninForm: new Form({
+				class: 'signin-form',
+				children: `
+				    {{{ fields }}}
+					<div class="signin-form-signin-btn-container">
+						{{{ SigninBtn }}}
+					</div>
+				`,
+				fields: new LoginFields({
+					fields,
+					events: {
+						blur: (e?: Event) => this.handleFieldBlur(e),
+					},
+				}),
+				SigninBtn: new Button({
+					id: "renderChatsBtn",
+					class: "btn",
+					children: "Войти",
+					type: "submit"
+				}),
+				events: {
+					onsubmit: (e?: Event) => this.handleSigninSubmit(e)
+				}
+			})
 		});
 
 		this.validator = this.initValidator();
@@ -98,7 +104,7 @@ export default class SigninPage extends Block {
 		this.validator.validateInput(input as HTMLInputElement);
 	}
 
-	private async handleSigninClick(e?: Event): Promise<void> {
+	private async handleSigninSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
 		const form = this.element?.querySelector(".signin-form") as HTMLFormElement;
 		if (!form) return;
@@ -138,6 +144,9 @@ export default class SigninPage extends Block {
 
 	componentDidMount() {
 		this.validator = this.initValidator();
+
+		const form: HTMLFormElement | null = document.querySelector(".signin-form");
+  		form?.addEventListener("submit", this.handleSigninSubmit.bind(this));
 	}
 
 	render(): HTMLElement {

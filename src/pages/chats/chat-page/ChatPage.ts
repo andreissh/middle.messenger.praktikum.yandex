@@ -43,16 +43,18 @@ const template = `
 		</div>
 		{{#if chatId}}
 			<div class="chat-footer">
-				<input
-					id="message"
-					type="text"
-					name="message"
-					class="message"
-					placeholder="Сообщение"
-				/>
-				<button class="chat-send-btn" >
-					<img src=${sendBtn} alt="send" />
-				</button>
+				<form>
+					<input
+						id="message"
+						type="text"
+						name="message"
+						class="message"
+						placeholder="Сообщение"
+					/>
+					<button type="submit" class="chat-send-btn" >
+						<img src=${sendBtn} alt="send" />
+					</button>
+				</form>
 			</div>
 		{{/if}}
 		{{{ AddUserModal }}}

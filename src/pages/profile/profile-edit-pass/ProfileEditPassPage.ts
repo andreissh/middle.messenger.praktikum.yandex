@@ -7,6 +7,7 @@ import { UserData, ValidationResult } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import http from "@/api/HttpClient";
+import { resourcesUrl } from "@/utils/utils";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { passwordFields } from "../utils/profileData";
 import "./profile-edit-pass.css";
@@ -178,7 +179,7 @@ export default class ProfileEditPassPage extends Block {
 						id: "avatarBtn",
 						children: `
 							<span class="profile-edit-pass-avatar" name="avatar">
-								<img src="https://ya-praktikum.tech/api/v2/resources${userData.avatar}" class="profile-edit-pass-avatar-img" />
+								<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-pass-avatar-img" />
 							</span>
 						`,
 						events: {

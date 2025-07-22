@@ -7,10 +7,11 @@ type ButtonProps = {
 	class?: string;
 	children?: Block | Block[] | string;
 	events?: EventsType;
+	type?: string;
 };
 
 const template = `
-  <button id="{{ id }}" class="{{ class }}">
+  <button type="{{ type }}" id="{{ id }}" class="{{ class }}">
     {{{ children }}}
   </button>
 `;

@@ -176,6 +176,11 @@ abstract class Block {
 			propsAndStubs[key] = `<div data-id="__l_${tmpId}"></div>`;
 		});
 
+		if (this._props.children) {
+			const compiled = Handlebars.compile(this._props.children)(propsAndStubs);
+			propsAndStubs.children = compiled;
+		}
+
 		const fragment = Block._createDocumentElement(
 			"template"
 		) as HTMLTemplateElement;

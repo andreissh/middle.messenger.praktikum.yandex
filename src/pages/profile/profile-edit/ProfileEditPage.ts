@@ -7,6 +7,7 @@ import { UserData } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import http from "@/api/HttpClient";
+import { resourcesUrl } from "@/utils/utils";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileEditFields } from "../utils/profileData";
 import "./profile-edit.css";
@@ -145,7 +146,7 @@ export default class ProfileEditPage extends Block {
 					id: "avatarBtn",
 					children: `
 						<span class="profile-edit-avatar" name="avatar">
-							<img src="https://ya-praktikum.tech/api/v2/resources${userData.avatar}" class="profile-edit-avatar-img" />
+							<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-avatar-img" />
 						</span>
 					`,
 					events: {
