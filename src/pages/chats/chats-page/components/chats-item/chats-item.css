@@ -49,7 +49,7 @@
 .chat-item-info-block {
 	display: flex;
 	flex-direction: column;
-	align-items: end;
+	align-items: flex-end;
 	gap: 10px;
 	width: 60px;
 }
