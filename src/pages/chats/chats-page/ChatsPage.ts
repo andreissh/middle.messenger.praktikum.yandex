@@ -7,7 +7,7 @@ import plusIcon from "@/assets/icons/plus.svg";
 import formatChatDate from "@/utils/formatChatDate";
 import http from "@/api/HttpClient";
 import { UserChats, UserData } from "@/types/types";
-import App from "@/App";
+import { IRouteManager } from "@/interfaces/IRouteManager";
 import ChatsList from "./components/chats-list/ChatsList";
 import ChatPage from "../chat-page/ChatPage";
 import "./chats-page.css";
@@ -91,6 +91,12 @@ export default class ChatsPage extends Block {
 			}),
 			test: true,
 		});
+	}
+
+	private static routeManager?: IRouteManager;
+
+	static setRouteManager(manager: IRouteManager) {
+		this.routeManager = manager;
 	}
 
 	private static handleProfileClick(e?: Event): void {
@@ -177,7 +183,7 @@ export default class ChatsPage extends Block {
 			} catch (err) {
 				localStorage.setItem("isSignedIn", "false");
 				localStorage.removeItem("userId");
-				App.updateRoutes();
+				ChatsPage.routeManager?.updateRoutes();
 				router.go("/");
 				throw new Error("Ошибка при загрузке данных пользователя", {
 					cause: err,

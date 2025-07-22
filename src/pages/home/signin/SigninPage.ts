@@ -6,7 +6,7 @@ import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import { HttpError } from "@/types/types";
 import http from "@/api/HttpClient";
-import App from "@/App";
+import { IRouteManager } from "@/interfaces/IRouteManager";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signin.css";
 
@@ -76,6 +76,12 @@ export default class SigninPage extends Block {
 		this.validator = this.initValidator();
 	}
 
+	private static routeManager?: IRouteManager;
+
+	static setRouteManager(manager: IRouteManager) {
+		this.routeManager = manager;
+	}
+
 	private initValidator(): FormValidator {
 		const form = this.element?.querySelector(".signin-form") as HTMLFormElement;
 		if (!form) {
@@ -109,7 +115,7 @@ export default class SigninPage extends Block {
 					});
 
 					localStorage.setItem("isSignedIn", "true");
-					App.updateRoutes();
+					SigninPage.routeManager?.updateRoutes();
 					router.go("/");
 				} catch (err) {
 					const error = err as HttpError;
