@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import handlebars from "vite-plugin-handlebars";
 import path from "path";
 import { viteSingleFile } from "vite-plugin-singlefile";
+import rewrite from "vite-plugin-rewrite";
 
 export default defineConfig({
 	base: "./",
