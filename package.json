@@ -29,7 +29,7 @@
 		"dev": "vite",
 		"build": "vite build",
 		"preview": "vite preview",
-		"start": "npm run build && serve dist",
+		"start": "npm run build && npx serve -s dist",
 		"lint": "eslint src/**/*.{ts,js}",
 		"lint:style": "stylelint src/**/*.css",
 		"typecheck": "tsc --noEmit",
