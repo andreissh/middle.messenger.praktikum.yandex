@@ -177,8 +177,19 @@ abstract class Block {
 		});
 
 		if (this._props.children) {
-			const compiled = Handlebars.compile(this._props.children)(propsAndStubs);
-			propsAndStubs.children = compiled;
+			const compileChildren = (children: string): string => {
+				let result = children;
+				Object.entries(this.children).forEach(([key, component]) => {
+					const temp = document.createElement("div");
+					const content = component.getContent().cloneNode(true);
+					temp.appendChild(content);
+					const regex = new RegExp(`\\{\\{\\{\\s*${key}\\s*}}}`, "g");
+					result = result.replace(regex, temp.innerHTML);
+				});
+				return result;
+			};
+
+			propsAndStubs.children = compileChildren(this._props.children as string);
 		}
 
 		const fragment = Block._createDocumentElement(

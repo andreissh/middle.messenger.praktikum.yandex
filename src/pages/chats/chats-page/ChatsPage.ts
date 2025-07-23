@@ -11,6 +11,7 @@ import { IRouteManager } from "@/interfaces/IRouteManager";
 import ChatsList from "./components/chats-list/ChatsList";
 import ChatPage from "../chat-page/ChatPage";
 import "./chats-page.css";
+import Form from "@/components/form/Form";
 
 type UserChatListData = {
 	id: number;
@@ -81,15 +82,18 @@ export default class ChatsPage extends Block {
 				id: "createChatModal",
 				title: "Создайте чат",
 				children: `
-					<form>
+					{{{ CreateChatForm }}}
+				`,
+				CreateChatForm: new Form({
+					class: "create-chat-form",
+					children: `
 						<label class="create-chat-label">
 							<input type="text" id="createChatInput" class="create-chat-input" placeholder="Введите название" />
 						</label>
 						<button type="submit" class="btn create-chat-submit-btn">Создать</button>
-					</form>
-				`,
+					`,
+				}),
 			}),
-			test: true,
 		});
 	}
 
@@ -110,28 +114,6 @@ export default class ChatsPage extends Block {
 			document.querySelector("#createChatModal");
 		if (!modal) return;
 		modal.style.display = "block";
-
-		const input: HTMLInputElement | null =
-			document.querySelector("#createChatInput");
-		const submitBtn: HTMLButtonElement | null = document.querySelector(
-			".create-chat-submit-btn"
-		);
-
-		submitBtn?.addEventListener("click", async () => {
-			if (!input) return;
-
-			try {
-				await http.post("/chats", {
-					body: {
-						title: input.value,
-					},
-				});
-				modal.style.display = "none";
-				this.getChats();
-			} catch (err) {
-				throw new Error("Ошибка при добавлении чата", { cause: err });
-			}
-		});
 	}
 
 	getChats = async () => {

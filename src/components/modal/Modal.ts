@@ -7,6 +7,7 @@ type ModalProps = {
 	id: string;
 	title?: string;
 	children?: Block | Block[] | string;
+	[key: string]: unknown;
 };
 
 const template = `
