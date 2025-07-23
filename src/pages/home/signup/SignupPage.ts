@@ -7,6 +7,7 @@ import FormValidator from "@/utils/FormValidator";
 import { HttpError, ValidationResult } from "@/types/types";
 import http from "@/api/HttpClient";
 import { IRouteManager } from "@/interfaces/IRouteManager";
+import Form from "@/components/form/Form";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signup.css";
 
@@ -66,12 +67,7 @@ const template = `
   <div class="signup-wrapper">
     <div class="signup-container">
       <h1 class="signup-header">Регистрация</h1>
-      <form class="signup-form">
-        {{{ LoginFields }}}
-        <div class="signup-form-signup-btn-container">
-          {{{ SignupBtn }}}
-        </div>
-      </form>
+      {{{ SignupForm }}}
       <div class="signup-form-signin-btn-container">
         {{{ SigninBtn }}}
       </div>
@@ -88,18 +84,28 @@ export default class SignupPage extends Block {
 
 	constructor() {
 		super("div", {
-			LoginFields: new LoginFields({
-				fields,
+			SignupForm: new Form({
+				class: "signup-form",
+				children: `
+				    {{{ LoginFields }}}
+					<div class="signup-form-signup-btn-container">
+						{{{ SignupBtn }}}
+					</div>
+				`,
+				LoginFields: new LoginFields({
+					fields,
+					events: {
+						blur: (e?: Event) => this.handleFieldBlur(e),
+					},
+				}),
+				SignupBtn: new Button({
+					id: "signup",
+					class: "btn",
+					children: "Зарегистрироваться",
+					type: "submit",
+				}),
 				events: {
-					blur: (e?: Event) => this.handleFieldBlur(e),
-				},
-			}),
-			SignupBtn: new Button({
-				id: "signup",
-				class: "btn",
-				children: "Зарегистрироваться",
-				events: {
-					click: (e?: Event) => this.handleSignupClick(e),
+					onsubmit: (e?: Event) => this.handleSignupSubmit(e),
 				},
 			}),
 			SigninBtn: new Button({
@@ -148,7 +154,7 @@ export default class SignupPage extends Block {
 		};
 	}
 
-	private async handleSignupClick(e?: Event): Promise<void> {
+	private async handleSignupSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
 		const form = this.element?.querySelector(".signup-form") as HTMLFormElement;
 		if (!form || !this.validator) return;

@@ -6,6 +6,7 @@ import Button from "@/components/button/Button";
 import Modal from "@/components/modal/Modal";
 import http from "@/api/HttpClient";
 import { ChatsUsers, UserData } from "@/types/types";
+import Form from "@/components/form/Form";
 import "./chat-page.css";
 
 const template = `
@@ -43,18 +44,7 @@ const template = `
 		</div>
 		{{#if chatId}}
 			<div class="chat-footer">
-				<form>
-					<input
-						id="message"
-						type="text"
-						name="message"
-						class="message"
-						placeholder="Сообщение"
-					/>
-					<button type="submit" class="chat-send-btn" >
-						<img src=${sendBtn} alt="send" />
-					</button>
-				</form>
+				{{{ SendMessageForm }}}
 			</div>
 		{{/if}}
 		{{{ AddUserModal }}}
@@ -80,6 +70,24 @@ export default class ChatPage extends Block {
 				children: `Удалить пользователя`,
 				events: {
 					click: (e?: Event) => this.handleRemoveUserClick(e),
+				},
+			}),
+			SendMessageForm: new Form({
+				class: "send-msg-form",
+				children: `
+					<input
+						id="message"
+						type="text"
+						name="message"
+						class="message"
+						placeholder="Сообщение"
+					/>
+					<button type="submit" class="chat-send-btn" >
+						<img src=${sendBtn} alt="send" />
+					</button>
+				`,
+				events: {
+					onsubmit: (e?: Event) => ChatPage.handleSendMessageSubmit(e),
 				},
 			}),
 			AddUserModal: new Modal({
@@ -180,6 +188,10 @@ export default class ChatPage extends Block {
 				throw new Error("Ошибка при удалении пользователя", { cause: err });
 			}
 		});
+	}
+
+	static handleSendMessageSubmit(e?: Event): void {
+		e?.preventDefault();
 	}
 
 	componentDidMount() {

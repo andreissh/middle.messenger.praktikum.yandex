@@ -8,6 +8,7 @@ import backBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import http from "@/api/HttpClient";
 import { resourcesUrl } from "@/utils/utils";
+import Form from "@/components/form/Form";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileEditFields } from "../utils/profileData";
 import "./profile-edit.css";
@@ -20,14 +21,7 @@ const template = `
         <div class="profile-edit-avatar-block">
           {{{ AvatarBtn }}}
         </div>
-        <form class="profile-edit-data-form">
-          <div class="profile-edit-data-block">
-            {{{ ProfileFieldsList }}}
-          </div>
-          <div class="profile-edit-btns-container">
-            {{{ SaveBtn }}}
-          </div>
-        </form>
+        {{{ ProfileEditForm }}}
       </div>
     </div>
   </div>
@@ -60,18 +54,30 @@ export default class ProfileEditPage extends Block {
 					click: (e?: Event) => this.handleAvatarClick(e),
 				},
 			}),
-			ProfileFieldsList: new ProfileFieldsList({
-				fields: profileEditFields,
+			ProfileEditForm: new Form({
+				class: "profile-edit-data-form",
+				children: `
+					<div class="profile-edit-data-block">
+						{{{ ProfileFieldsList }}}
+					</div>
+					<div class="profile-edit-btns-container">
+						{{{ SaveBtn }}}
+					</div>
+				`,
+				ProfileFieldsList: new ProfileFieldsList({
+					fields: profileEditFields,
+					events: {
+						blur: (e?: Event) => this.handleFieldBlur(e),
+					},
+				}),
+				SaveBtn: new Button({
+					id: "save",
+					class: "btn",
+					children: "Сохранить",
+					type: "submit",
+				}),
 				events: {
-					blur: (e?: Event) => this.handleFieldBlur(e),
-				},
-			}),
-			SaveBtn: new Button({
-				id: "save",
-				class: "btn",
-				children: "Сохранить",
-				events: {
-					click: (e?: Event) => this.handleSaveClick(e),
+					onsubmit: (e?: Event) => this.handleSaveSubmit(e),
 				},
 			}),
 		});
@@ -159,7 +165,7 @@ export default class ProfileEditPage extends Block {
 		}
 	}
 
-	private handleSaveClick(e?: Event): void {
+	private handleSaveSubmit(e?: Event): void {
 		e?.preventDefault();
 		const form = this.element?.querySelector(
 			".profile-edit-data-form"
@@ -213,8 +219,31 @@ export default class ProfileEditPage extends Block {
 				}));
 
 				this.setProps({
-					ProfileFieldsList: new ProfileFieldsList({
-						fields: profileEditFieldsClone,
+					ProfileEditForm: new Form({
+						class: "profile-edit-data-form",
+						children: `
+							<div class="profile-edit-data-block">
+								{{{ ProfileFieldsList }}}
+							</div>
+							<div class="profile-edit-btns-container">
+								{{{ SaveBtn }}}
+							</div>
+						`,
+						ProfileFieldsList: new ProfileFieldsList({
+							fields: profileEditFieldsClone,
+							events: {
+								blur: (e?: Event) => this.handleFieldBlur(e),
+							},
+						}),
+						SaveBtn: new Button({
+							id: "save",
+							class: "btn",
+							children: "Сохранить",
+							type: "submit",
+						}),
+						events: {
+							onsubmit: (e?: Event) => this.handleSaveSubmit(e),
+						},
 					}),
 					AvatarBtn: new Button({
 						id: "avatarBtn",

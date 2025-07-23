@@ -25,8 +25,8 @@ const template = `
     <aside class="chats-aside">
       <div class="chats-aside-top-section">
 		<div class="chats-profile-btn-wrapper">
-			{{{ ProfileBtn }}}
-		 </div>
+		  {{{ ProfileBtn }}}
+		</div>
         <input
           type="search"
           name="search"

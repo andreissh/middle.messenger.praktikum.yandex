@@ -8,6 +8,7 @@ import backBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import http from "@/api/HttpClient";
 import { resourcesUrl } from "@/utils/utils";
+import Form from "@/components/form/Form";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { passwordFields } from "../utils/profileData";
 import "./profile-edit-pass.css";
@@ -20,14 +21,7 @@ const template = `
         <div class="profile-edit-pass-avatar-block">
           {{{ AvatarBtn }}}
         </div>
-        <form class="profile-edit-pass-data-form">
-          <div class="profile-edit-pass-data-block">
-            {{{ ProfileFieldsList }}}
-          </div>
-          <div class="profile-edit-pass-btns-container">
-            {{{ SaveBtn }}}
-          </div>
-        </form>
+        {{{ ProfileEditPassForm }}}
       </div>
     </div>
   </div>
@@ -60,18 +54,30 @@ export default class ProfileEditPassPage extends Block {
 					click: (e?: Event) => ProfileEditPassPage.handleAvatarClick(e),
 				},
 			}),
-			ProfileFieldsList: new ProfileFieldsList({
-				fields: passwordFields,
+			ProfileEditPassForm: new Form({
+				class: "profile-edit-pass-data-form",
+				children: `
+				    <div class="profile-edit-pass-data-block">
+						{{{ ProfileFieldsList }}}
+					</div>
+					<div class="profile-edit-pass-btns-container">
+						{{{ SaveBtn }}}
+					</div>
+				`,
+				ProfileFieldsList: new ProfileFieldsList({
+					fields: passwordFields,
+					events: {
+						blur: (e?: Event) => this.handleFieldBlur(e),
+					},
+				}),
+				SaveBtn: new Button({
+					id: "save",
+					class: "btn",
+					children: "Сохранить",
+					type: "submit",
+				}),
 				events: {
-					blur: (e?: Event) => this.handleFieldBlur(e),
-				},
-			}),
-			SaveBtn: new Button({
-				id: "save",
-				class: "btn",
-				children: "Сохранить",
-				events: {
-					click: (e?: Event) => this.handleSaveClick(e),
+					onsubmit: (e?: Event) => this.handleSaveSubmit(e),
 				},
 			}),
 		});
@@ -128,7 +134,7 @@ export default class ProfileEditPassPage extends Block {
 		}
 	}
 
-	private handleSaveClick(e?: Event): void {
+	private handleSaveSubmit(e?: Event): void {
 		e?.preventDefault();
 		if (!this.validator) return;
 

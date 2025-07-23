@@ -16,6 +16,10 @@ export default class Form extends Block {
 	}
 
 	render(): HTMLElement {
-		return this.compile(template);
+		const form = this.compile(template);
+		if (this.props.events) {
+			form.addEventListener("submit", this.props.events.onsubmit);
+		}
+		return form;
 	}
 }

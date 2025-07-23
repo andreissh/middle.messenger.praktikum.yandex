@@ -54,7 +54,7 @@ export default class SigninPage extends Block {
 				},
 			}),
 			SigninForm: new Form({
-				class: 'signin-form',
+				class: "signin-form",
 				children: `
 				    {{{ fields }}}
 					<div class="signin-form-signin-btn-container">
@@ -71,12 +71,12 @@ export default class SigninPage extends Block {
 					id: "renderChatsBtn",
 					class: "btn",
 					children: "Войти",
-					type: "submit"
+					type: "submit",
 				}),
 				events: {
-					onsubmit: (e?: Event) => this.handleSigninSubmit(e)
-				}
-			})
+					onsubmit: (e?: Event) => this.handleSigninSubmit(e),
+				},
+			}),
 		});
 
 		this.validator = this.initValidator();
@@ -144,9 +144,6 @@ export default class SigninPage extends Block {
 
 	componentDidMount() {
 		this.validator = this.initValidator();
-
-		const form: HTMLFormElement | null = document.querySelector(".signin-form");
-  		form?.addEventListener("submit", this.handleSigninSubmit.bind(this));
 	}
 
 	render(): HTMLElement {

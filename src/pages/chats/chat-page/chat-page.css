@@ -113,6 +113,12 @@
 	border-top: 1px solid var(--border-color);
 }
 
+.send-msg-form {
+	display: flex;
+	flex: 1;
+	gap: 8px;
+}
+
 .message {
 	border: none;
 	outline: none;
@@ -132,6 +138,8 @@
 	background-color: transparent;
 	transform: rotate(180deg);
 	cursor: pointer;
+	height: 30px;
+	margin: auto 0;
 
 	& img {
 		width: 30px;
