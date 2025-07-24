@@ -24,6 +24,11 @@ export type HttpError = {
 	status?: number;
 };
 
+export type AuthData = {
+	login: string;
+	password: string;
+};
+
 export type UserData = {
 	id: number;
 	first_name: string;

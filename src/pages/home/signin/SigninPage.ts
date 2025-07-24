@@ -4,9 +4,9 @@ import router from "@/routes/Router";
 import { InputProps } from "@/pages/profile/utils/profileData";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
-import { HttpError } from "@/types/types";
-import http, { HttpStatus } from "@/api/HttpClient";
 import Form from "@/components/form/Form";
+import AuthService from "@/services/AuthService";
+import { AuthData } from "@/types/types";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signin.css";
 
@@ -103,28 +103,10 @@ export default class SigninPage extends Block {
 		if (!form) return;
 
 		if (this.validator && this.validator.validateForm()) {
-			const data = getFormData(form);
+			const data = getFormData(form) as AuthData;
 			if (data) {
-				try {
-					await http.post("/auth/signin", {
-						body: {
-							login: data.login,
-							password: data.password,
-						},
-					});
-
-					localStorage.setItem("isSignedIn", "true");
-					router.go("/messenger");
-				} catch (err) {
-					const error = err as HttpError;
-					if (error.status === HttpStatus.BadRequest) {
-						throw new Error("Неверный логин или пароль", { cause: error });
-					} else {
-						throw new Error("Ошибка при авторизации пользователя", {
-							cause: error,
-						});
-					}
-				}
+				await AuthService.signin(data);
+				router.go("/messenger");
 			}
 		}
 	}

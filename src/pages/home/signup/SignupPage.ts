@@ -4,9 +4,9 @@ import router from "@/routes/Router";
 import { InputProps } from "@/pages/profile/utils/profileData";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
-import { HttpError, ValidationResult } from "@/types/types";
-import http, { HttpStatus } from "@/api/HttpClient";
+import { ValidationResult } from "@/types/types";
 import Form from "@/components/form/Form";
+import AuthService from "@/services/AuthService";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signup.css";
 
@@ -155,29 +155,8 @@ export default class SignupPage extends Block {
 		if (this.validator.validateForm(this.customChecks)) {
 			const data = getFormData(form);
 			if (data) {
-				try {
-					const response: { id: number } = await http.post("/auth/signup", {
-						body: {
-							first_name: data.first_name,
-							second_name: data.second_name,
-							login: data.login,
-							email: data.email,
-							password: data.password,
-							phone: data.phone,
-						},
-					});
-
-					localStorage.setItem("isSignedIn", "true");
-					localStorage.setItem("userId", String(response.id));
-					router.go("/messenger");
-				} catch (err) {
-					const error = err as HttpError;
-					if (error.status === HttpStatus.BadRequest) {
-						throw new Error("Неверный логин или пароль", { cause: err });
-					} else {
-						throw new Error("Ошибка при регистрации", { cause: err });
-					}
-				}
+				await AuthService.signup(data);
+				router.go("/messenger");
 			}
 		}
 	}
