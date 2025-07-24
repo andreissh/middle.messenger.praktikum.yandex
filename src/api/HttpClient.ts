@@ -3,6 +3,18 @@ import { baseUrl } from "@/utils/utils";
 
 type HttpMethodName = "GET" | "POST" | "PUT" | "DELETE";
 
+export enum HttpStatus {
+	Ok = 200,
+	Created = 201,
+	NoContent = 204,
+	BadRequest = 400,
+	Unauthorized = 401,
+	Forbidden = 403,
+	NotFound = 404,
+	Conflict = 409,
+	InternalServerError = 500,
+}
+
 type RequestOptions<TBody = unknown> = {
 	params?: Record<string, string | number>;
 	body?: TBody;
@@ -61,10 +73,10 @@ class HttpClient {
 				if (xhr.status >= 200 && xhr.status < 300) {
 					resolve(responseData as TResponse);
 				} else {
-					if (xhr.status === 401) {
+					if (xhr.status === HttpStatus.Unauthorized) {
 						router.go("/");
 					}
-					if (xhr.status === 404) {
+					if (xhr.status === HttpStatus.NotFound) {
 						router.go("/404");
 					} else if (xhr.status >= 500) {
 						router.go("/500");

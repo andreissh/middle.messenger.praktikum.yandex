@@ -5,7 +5,7 @@ import { InputProps } from "@/pages/profile/utils/profileData";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import { HttpError, ValidationResult } from "@/types/types";
-import http from "@/api/HttpClient";
+import http, { HttpStatus } from "@/api/HttpClient";
 import Form from "@/components/form/Form";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signup.css";
@@ -172,7 +172,7 @@ export default class SignupPage extends Block {
 					router.go("/messenger");
 				} catch (err) {
 					const error = err as HttpError;
-					if (error.status === 400) {
+					if (error.status === HttpStatus.BadRequest) {
 						throw new Error("Неверный логин или пароль", { cause: err });
 					} else {
 						throw new Error("Ошибка при регистрации", { cause: err });

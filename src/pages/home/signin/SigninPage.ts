@@ -5,7 +5,7 @@ import { InputProps } from "@/pages/profile/utils/profileData";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import { HttpError } from "@/types/types";
-import http from "@/api/HttpClient";
+import http, { HttpStatus } from "@/api/HttpClient";
 import Form from "@/components/form/Form";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signin.css";
@@ -117,7 +117,7 @@ export default class SigninPage extends Block {
 					router.go("/messenger");
 				} catch (err) {
 					const error = err as HttpError;
-					if (error.status === 400) {
+					if (error.status === HttpStatus.BadRequest) {
 						throw new Error("Неверный логин или пароль", { cause: error });
 					} else {
 						throw new Error("Ошибка при авторизации пользователя", {
