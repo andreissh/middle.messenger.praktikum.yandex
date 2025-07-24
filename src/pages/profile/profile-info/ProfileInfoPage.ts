@@ -6,7 +6,6 @@ import { UserData } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import http from "@/api/HttpClient";
-import { IRouteManager } from "@/interfaces/IRouteManager";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileFields } from "../utils/profileData";
 import ProfileEditPage from "../profile-edit/ProfileEditPage";
@@ -98,12 +97,6 @@ export default class ProfileInfoPage extends Block {
 		});
 	}
 
-	private static routeManager?: IRouteManager;
-
-	static setRouteManager(manager: IRouteManager) {
-		this.routeManager = manager;
-	}
-
 	private static handleBackClick(e?: Event): void {
 		e?.preventDefault();
 		router.go("/messenger");
@@ -132,7 +125,6 @@ export default class ProfileInfoPage extends Block {
 
 			localStorage.setItem("isSignedIn", "false");
 			localStorage.removeItem("userId");
-			ProfileInfoPage.routeManager?.updateRoutes();
 			router.go("/");
 		} catch (err) {
 			throw new Error("Ошибка при выходе из системы", { cause: err });

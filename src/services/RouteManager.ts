@@ -16,13 +16,8 @@ class RouteManager implements IRouteManager {
 	}
 
 	private static setupRoutes() {
-		if (localStorage.getItem("isSignedIn") === "true") {
-			router.use("/", ChatsPage);
-		} else {
-			router.use("/", SigninPage);
-		}
-
 		router
+			.use("/", SigninPage)
 			.use("/sign-up", SignupPage)
 			.use("/messenger", ChatsPage)
 			.use("/settings", ProfileInfoPage)
