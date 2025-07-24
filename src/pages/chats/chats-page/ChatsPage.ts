@@ -7,8 +7,8 @@ import plusIcon from "@/assets/icons/plus.svg";
 import formatChatDate from "@/utils/formatChatDate";
 import http from "@/api/HttpClient";
 import { UserChats } from "@/types/types";
-import ChatsList from "./components/chats-list/ChatsList";
 import Form from "@/components/form/Form";
+import ChatsList from "./components/chats-list/ChatsList";
 import ChatPage from "../chat-page/ChatPage";
 import "./chats-page.css";
 
@@ -73,7 +73,7 @@ export default class ChatsPage extends Block {
 					<img src=${plusIcon} alt="add chat" />
 				`,
 				events: {
-					click: (e?: Event) => this.handleCreateChatClick(e),
+					click: (e?: Event) => ChatsPage.handleCreateChatClick(e),
 				},
 			}),
 			ChatPage: new ChatPage({ chatId, title: "Название чата" }),
@@ -104,7 +104,7 @@ export default class ChatsPage extends Block {
 		router.go("/settings");
 	}
 
-	private handleCreateChatClick(e?: Event): void {
+	private static handleCreateChatClick(e?: Event): void {
 		e?.preventDefault();
 		const modal: HTMLElement | null =
 			document.querySelector("#createChatModal");

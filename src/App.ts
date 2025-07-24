@@ -11,7 +11,7 @@ export default class App {
 		try {
 			const userData = await http.get<UserData>("/auth/user");
 			localStorage.setItem("userId", String(userData.id));
-			const pathname = window.location.pathname;
+			const { pathname } = window.location;
 			if (pathname !== "/") {
 				router.go(pathname);
 			} else {

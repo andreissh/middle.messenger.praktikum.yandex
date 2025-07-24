@@ -61,7 +61,7 @@ export default class ChatPage extends Block {
 				class: "chat-dropdown-item",
 				children: `Добавить пользователя`,
 				events: {
-					click: (e?: Event) => this.handleAddUserClick(e),
+					click: (e?: Event) => ChatPage.handleAddUserClick(e),
 				},
 			}),
 			RemoveUserBtn: new Button({
@@ -69,7 +69,7 @@ export default class ChatPage extends Block {
 				class: "chat-dropdown-item",
 				children: `Удалить пользователя`,
 				events: {
-					click: (e?: Event) => this.handleRemoveUserClick(e),
+					click: (e?: Event) => ChatPage.handleRemoveUserClick(e),
 				},
 			}),
 			SendMessageForm: new Form({
@@ -131,7 +131,7 @@ export default class ChatPage extends Block {
 		});
 	}
 
-	handleAddUserClick(e?: Event) {
+	private static handleAddUserClick(e?: Event) {
 		e?.preventDefault();
 		const modal: HTMLElement | null = document.querySelector("#addUserModal");
 		if (!modal) return;
@@ -167,7 +167,7 @@ export default class ChatPage extends Block {
 		}
 	}
 
-	handleRemoveUserClick(e?: Event) {
+	private static handleRemoveUserClick(e?: Event) {
 		e?.preventDefault();
 		const modal: HTMLElement | null =
 			document.querySelector("#removeUserModal");
