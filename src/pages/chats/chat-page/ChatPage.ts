@@ -94,25 +94,39 @@ export default class ChatPage extends Block {
 				id: "addUserModal",
 				title: "Добавьте пользователя",
 				children: `
-					<form>
+					{{{ AddUserForm }}}
+				`,
+				AddUserForm: new Form({
+					class: "add-user-form",
+					children: `
 						<label class="add-user-label">
 							<input type="text" id="addUserInput" class="add-user-input" placeholder="Введите логин" />
 						</label>
 						<button type="submit" class="btn add-user-submit-btn">Добавить</button>
-					</form>
-				`,
+					`,
+				}),
+				events: {
+					submit: (e?: Event) => this.handleAddUserSubmit(e),
+				},
 			}),
 			RemoveUserModal: new Modal({
 				id: "removeUserModal",
 				title: "Удалите пользователя",
 				children: `
-					<form>
+					{{{ RemoveUserForm }}}
+				`,
+				RemoveUserForm: new Form({
+					class: "remove-user-form",
+					children: `
 						<label class="remove-user-label">
 							<input type="text" id="removeUserInput" class="remove-user-input" placeholder="Введите логин" />
 						</label>
 						<button type="submit" class="btn remove-user-submit-btn">Удалить</button>
-					</form>
-				`,
+					`,
+				}),
+				events: {
+					submit: (e?: Event) => this.handleRemoveUserSubmit(e),
+				},
 			}),
 		});
 	}
@@ -122,35 +136,35 @@ export default class ChatPage extends Block {
 		const modal: HTMLElement | null = document.querySelector("#addUserModal");
 		if (!modal) return;
 		modal.style.display = "block";
+	}
 
+	private async handleAddUserSubmit(e?: Event): Promise<void> {
+		e?.preventDefault();
+
+		const modal: HTMLElement | null = document.querySelector("#addUserModal");
 		const input: HTMLInputElement | null =
 			document.querySelector("#addUserInput");
-		const submitBtn: HTMLButtonElement | null = document.querySelector(
-			".add-user-submit-btn"
-		);
+		if (!modal || !input) return;
 
-		submitBtn?.addEventListener("click", async () => {
-			if (!input) return;
+		try {
+			const userData = await http.post<UserData[]>("/user/search", {
+				body: {
+					login: input.value,
+				},
+			});
 
-			try {
-				const userData = await http.post<UserData[]>("/user/search", {
-					body: {
-						login: input.value,
-					},
-				});
+			await http.put<ChatsUsers>("/chats/users", {
+				body: {
+					users: [userData[0].id],
+					chatId: this.props.chatId as number,
+				},
+			});
 
-				await http.put<ChatsUsers>("/chats/users", {
-					body: {
-						users: [userData[0].id],
-						chatId: this.props.chatId as number,
-					},
-				});
-
-				modal.style.display = "none";
-			} catch (err) {
-				throw new Error("Ошибка при добавлении пользователя", { cause: err });
-			}
-		});
+			modal.style.display = "none";
+		} catch (err) {
+			modal.style.display = "none";
+			throw new Error("Ошибка при добавлении пользователя", { cause: err });
+		}
 	}
 
 	handleRemoveUserClick(e?: Event) {
@@ -159,35 +173,36 @@ export default class ChatPage extends Block {
 			document.querySelector("#removeUserModal");
 		if (!modal) return;
 		modal.style.display = "block";
+	}
 
+	private async handleRemoveUserSubmit(e?: Event): Promise<void> {
+		e?.preventDefault();
+
+		const modal: HTMLElement | null =
+			document.querySelector("#removeUserModal");
 		const input: HTMLInputElement | null =
 			document.querySelector("#removeUserInput");
-		const submitBtn: HTMLButtonElement | null = document.querySelector(
-			".remove-user-submit-btn"
-		);
+		if (!modal || !input) return;
 
-		submitBtn?.addEventListener("click", async () => {
-			if (!input) return;
+		try {
+			const userData = await http.post<UserData[]>("/user/search", {
+				body: {
+					login: input.value,
+				},
+			});
 
-			try {
-				const userData = await http.post<UserData[]>("/user/search", {
-					body: {
-						login: input.value,
-					},
-				});
+			await http.delete<ChatsUsers>("/chats/users", {
+				body: {
+					users: [userData[0].id],
+					chatId: this.props.chatId,
+				},
+			});
 
-				await http.delete<ChatsUsers>("/chats/users", {
-					body: {
-						users: [userData[0].id],
-						chatId: this.props.chatId,
-					},
-				});
-
-				modal.style.display = "none";
-			} catch (err) {
-				throw new Error("Ошибка при удалении пользователя", { cause: err });
-			}
-		});
+			modal.style.display = "none";
+		} catch (err) {
+			modal.style.display = "none";
+			throw new Error("Ошибка при удалении пользователя", { cause: err });
+		}
 	}
 
 	static handleSendMessageSubmit(e?: Event): void {
