@@ -8,14 +8,7 @@ import { IRouteManager } from "../interfaces/IRouteManager";
 import router from "../routes/Router";
 
 class RouteManager implements IRouteManager {
-	// eslint-disable-next-line class-methods-use-this
-	public updateRoutes() {
-		router.reset();
-		RouteManager.setupRoutes();
-		router.start();
-	}
-
-	private static setupRoutes() {
+	public setupRoutes() {
 		router
 			.use("/", SigninPage)
 			.use("/sign-up", SignupPage)
@@ -23,6 +16,12 @@ class RouteManager implements IRouteManager {
 			.use("/settings", ProfileInfoPage)
 			.use("/404", NotFoundPage)
 			.use("/500", ServerErrorPage);
+	}
+
+	public updateRoutes() {
+		router.reset();
+		this.setupRoutes();
+		router.start();
 	}
 }
 

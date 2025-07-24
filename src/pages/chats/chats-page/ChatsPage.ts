@@ -6,8 +6,7 @@ import arrowIcon from "@/assets/icons/arrow-right.svg";
 import plusIcon from "@/assets/icons/plus.svg";
 import formatChatDate from "@/utils/formatChatDate";
 import http from "@/api/HttpClient";
-import { UserChats, UserData } from "@/types/types";
-import { IRouteManager } from "@/interfaces/IRouteManager";
+import { UserChats } from "@/types/types";
 import ChatsList from "./components/chats-list/ChatsList";
 import Form from "@/components/form/Form";
 import ChatPage from "../chat-page/ChatPage";
@@ -100,12 +99,6 @@ export default class ChatsPage extends Block {
 		});
 	}
 
-	private static routeManager?: IRouteManager;
-
-	static setRouteManager(manager: IRouteManager) {
-		this.routeManager = manager;
-	}
-
 	private static handleProfileClick(e?: Event): void {
 		e?.preventDefault();
 		router.go("/settings");
@@ -186,22 +179,6 @@ export default class ChatsPage extends Block {
 	};
 
 	componentDidMount() {
-		const getUserData = async () => {
-			try {
-				const userData = await http.get<UserData>("/auth/user");
-				localStorage.setItem("userId", String(userData.id));
-			} catch (err) {
-				localStorage.setItem("isSignedIn", "false");
-				localStorage.removeItem("userId");
-				ChatsPage.routeManager?.updateRoutes();
-				router.go("/");
-				throw new Error("Ошибка при загрузке данных пользователя", {
-					cause: err,
-				});
-			}
-		};
-		getUserData();
-
 		this.getChats();
 	}
 
