@@ -77,7 +77,7 @@ export default class ProfileEditPage extends Block {
 					type: "submit",
 				}),
 				events: {
-					onsubmit: (e?: Event) => this.handleSaveSubmit(e),
+					submit: (e?: Event) => this.handleSaveSubmit(e),
 				},
 			}),
 		});
@@ -242,7 +242,7 @@ export default class ProfileEditPage extends Block {
 							type: "submit",
 						}),
 						events: {
-							onsubmit: (e?: Event) => this.handleSaveSubmit(e),
+							submit: (e?: Event) => this.handleSaveSubmit(e),
 						},
 					}),
 					AvatarBtn: new Button({

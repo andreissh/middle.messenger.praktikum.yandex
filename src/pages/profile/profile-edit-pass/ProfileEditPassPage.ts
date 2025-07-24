@@ -77,7 +77,7 @@ export default class ProfileEditPassPage extends Block {
 					type: "submit",
 				}),
 				events: {
-					onsubmit: (e?: Event) => this.handleSaveSubmit(e),
+					submit: (e?: Event) => this.handleSaveSubmit(e),
 				},
 			}),
 		});

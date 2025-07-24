@@ -87,7 +87,7 @@ export default class ChatPage extends Block {
 					</button>
 				`,
 				events: {
-					onsubmit: (e?: Event) => ChatPage.handleSendMessageSubmit(e),
+					submit: (e?: Event) => ChatPage.handleSendMessageSubmit(e),
 				},
 			}),
 			AddUserModal: new Modal({

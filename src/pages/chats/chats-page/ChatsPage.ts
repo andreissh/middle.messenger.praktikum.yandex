@@ -9,9 +9,9 @@ import http from "@/api/HttpClient";
 import { UserChats, UserData } from "@/types/types";
 import { IRouteManager } from "@/interfaces/IRouteManager";
 import ChatsList from "./components/chats-list/ChatsList";
+import Form from "@/components/form/Form";
 import ChatPage from "../chat-page/ChatPage";
 import "./chats-page.css";
-import Form from "@/components/form/Form";
 
 type UserChatListData = {
 	id: number;
@@ -93,6 +93,9 @@ export default class ChatsPage extends Block {
 						<button type="submit" class="btn create-chat-submit-btn">Создать</button>
 					`,
 				}),
+				events: {
+					submit: (e?: Event) => this.handleCreateChatSubmit(e),
+				},
 			}),
 		});
 	}
@@ -114,6 +117,31 @@ export default class ChatsPage extends Block {
 			document.querySelector("#createChatModal");
 		if (!modal) return;
 		modal.style.display = "block";
+	}
+
+	private async handleCreateChatSubmit(e?: Event): Promise<void> {
+		e?.preventDefault();
+
+		const modal: HTMLElement | null =
+			document.querySelector("#createChatModal");
+		const input: HTMLInputElement | null =
+			document.querySelector("#createChatInput");
+		if (!modal || !input) return;
+
+		try {
+			await http.post("/chats", {
+				body: {
+					title: input.value,
+				},
+			});
+
+			modal.style.display = "none";
+
+			this.getChats();
+		} catch (err) {
+			modal.style.display = "none";
+			throw new Error("Ошибка при добавлении чата", { cause: err });
+		}
 	}
 
 	getChats = async () => {

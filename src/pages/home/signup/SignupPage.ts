@@ -105,7 +105,7 @@ export default class SignupPage extends Block {
 					type: "submit",
 				}),
 				events: {
-					onsubmit: (e?: Event) => this.handleSignupSubmit(e),
+					submit: (e?: Event) => this.handleSignupSubmit(e),
 				},
 			}),
 			SigninBtn: new Button({

@@ -74,7 +74,7 @@ export default class SigninPage extends Block {
 					type: "submit",
 				}),
 				events: {
-					onsubmit: (e?: Event) => this.handleSigninSubmit(e),
+					submit: (e?: Event) => this.handleSigninSubmit(e),
 				},
 			}),
 		});
