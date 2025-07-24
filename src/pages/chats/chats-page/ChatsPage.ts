@@ -90,10 +90,10 @@ export default class ChatsPage extends Block {
 						</label>
 						<button type="submit" class="btn create-chat-submit-btn">Создать</button>
 					`,
+					events: {
+						submit: (e?: Event) => this.handleCreateChatSubmit(e),
+					},
 				}),
-				events: {
-					submit: (e?: Event) => this.handleCreateChatSubmit(e),
-				},
 			}),
 		});
 	}

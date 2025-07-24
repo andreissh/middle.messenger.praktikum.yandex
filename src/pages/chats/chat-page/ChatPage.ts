@@ -105,10 +105,10 @@ export default class ChatPage extends Block {
 						</label>
 						<button type="submit" class="btn add-user-submit-btn">Добавить</button>
 					`,
+					events: {
+						submit: (e?: Event) => this.handleAddUserSubmit(e),
+					},
 				}),
-				events: {
-					submit: (e?: Event) => this.handleAddUserSubmit(e),
-				},
 			}),
 			RemoveUserModal: new Modal({
 				id: "removeUserModal",
@@ -124,10 +124,10 @@ export default class ChatPage extends Block {
 						</label>
 						<button type="submit" class="btn remove-user-submit-btn">Удалить</button>
 					`,
+					events: {
+						submit: (e?: Event) => this.handleRemoveUserSubmit(e),
+					},
 				}),
-				events: {
-					submit: (e?: Event) => this.handleRemoveUserSubmit(e),
-				},
 			}),
 		});
 	}

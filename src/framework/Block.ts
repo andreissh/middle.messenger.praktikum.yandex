@@ -168,6 +168,20 @@ abstract class Block {
 		const propsAndStubs = { ...this._props };
 		const tmpId = Math.floor(100000 + Math.random() * 900000);
 
+		if (this._props.children) {
+			let childrenTemplate = this._props.children as string;
+
+			Object.entries(this.children).forEach(([key, component]) => {
+				const regex = new RegExp(`\\{\\{\\{\\s*${key}\\s*}}}`, "g");
+				childrenTemplate = childrenTemplate.replace(
+					regex,
+					`<div data-id="${component._id}"></div>`
+				);
+			});
+
+			propsAndStubs.children = childrenTemplate;
+		}
+
 		Object.entries(this.children).forEach(([key, child]) => {
 			propsAndStubs[key] = `<div data-id="${child._id}"></div>`;
 		});
@@ -175,22 +189,6 @@ abstract class Block {
 		Object.entries(this.lists).forEach(([key]) => {
 			propsAndStubs[key] = `<div data-id="__l_${tmpId}"></div>`;
 		});
-
-		if (this._props.children) {
-			const compileChildren = (children: string): string => {
-				let result = children;
-				Object.entries(this.children).forEach(([key, component]) => {
-					const temp = document.createElement("div");
-					const content = component.getContent().cloneNode(true);
-					temp.appendChild(content);
-					const regex = new RegExp(`\\{\\{\\{\\s*${key}\\s*}}}`, "g");
-					result = result.replace(regex, temp.innerHTML);
-				});
-				return result;
-			};
-
-			propsAndStubs.children = compileChildren(this._props.children as string);
-		}
 
 		const fragment = Block._createDocumentElement(
 			"template"
