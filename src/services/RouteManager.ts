@@ -8,7 +8,6 @@ import { IRouteManager } from "../interfaces/IRouteManager";
 import router from "../routes/Router";
 
 class RouteManager implements IRouteManager {
-	// eslint-disable-next-line class-methods-use-this
 	public setupRoutes() {
 		router
 			.use("/", SigninPage)

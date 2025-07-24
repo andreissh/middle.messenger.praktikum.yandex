@@ -78,3 +78,17 @@ export type DeleteChat = {
 		created_by: number;
 	};
 };
+
+export type UserProfileReq = {
+	first_name: string;
+	second_name: string;
+	display_name: string;
+	login: string;
+	email: string;
+	phone: string;
+};
+
+export type UserPassReq = {
+	oldPassword: string;
+	newPassword: string;
+};

@@ -1,3 +1,4 @@
+import { resourcesUrl } from "@/utils/utils";
 import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
 import router from "@/routes/Router";
@@ -5,7 +6,7 @@ import renderDOM from "@/utils/renderDOM";
 import { UserData } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
-import http from "@/api/HttpClient";
+import AuthService from "@/services/AuthService";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileFields } from "../utils/profileData";
 import ProfileEditPage from "../profile-edit/ProfileEditPage";
@@ -120,49 +121,36 @@ export default class ProfileInfoPage extends Block {
 
 	private static async handleLogoutClick(e?: Event): Promise<void> {
 		e?.preventDefault();
-		try {
-			await http.post("/auth/logout");
-
-			localStorage.setItem("isSignedIn", "false");
-			localStorage.removeItem("userId");
-			router.go("/");
-		} catch (err) {
-			throw new Error("Ошибка при выходе из системы", { cause: err });
-		}
+		AuthService.logout();
+		router.go("/");
 	}
 
 	componentDidMount() {
 		const getUserData = async () => {
-			try {
-				const userData = await http.get<UserData>("/auth/user");
-				localStorage.setItem("userId", String(userData.id));
-				let profileFieldsClone = structuredClone(profileFields);
-				profileFieldsClone = profileFieldsClone.map((field) => ({
-					...field,
-					value: String(userData[field.id as keyof UserData]) ?? field.value,
-				}));
+			const userData = await AuthService.userInfo();
+			localStorage.setItem("userId", String(userData.id));
+			let profileFieldsClone = structuredClone(profileFields);
+			profileFieldsClone = profileFieldsClone.map((field) => ({
+				...field,
+				value: String(userData[field.id as keyof UserData]) ?? field.value,
+			}));
 
-				this.setProps({
-					ProfileFieldsList: new ProfileFieldsList({
-						fields: profileFieldsClone,
-					}),
-					AvatarBtn: new Button({
-						id: "avatarBtn",
-						children: `
+			this.setProps({
+				ProfileFieldsList: new ProfileFieldsList({
+					fields: profileFieldsClone,
+				}),
+				AvatarBtn: new Button({
+					id: "avatarBtn",
+					children: `
 							<span class="profile-info-avatar" name="avatar">
-								<img src="https://ya-praktikum.tech/api/v2/resources${userData.avatar}" class="profile-info-avatar-img" />
+								<img src="${resourcesUrl}${userData.avatar}" class="profile-info-avatar-img" />
 							</span>
 						`,
-						events: {
-							click: (e?: Event) => ProfileInfoPage.handleAvatarClick(e),
-						},
-					}),
-				});
-			} catch (err) {
-				throw new Error("Ошибка при загрузке данных пользователя", {
-					cause: err,
-				});
-			}
+					events: {
+						click: (e?: Event) => ProfileInfoPage.handleAvatarClick(e),
+					},
+				}),
+			});
 		};
 		getUserData();
 	}

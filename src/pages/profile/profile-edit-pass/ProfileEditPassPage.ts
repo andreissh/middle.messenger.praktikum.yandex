@@ -3,12 +3,13 @@ import Button from "@/components/button/Button";
 import router from "@/routes/Router";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
-import { UserData, ValidationResult } from "@/types/types";
+import { UserPassReq, ValidationResult } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
-import http from "@/api/HttpClient";
 import { resourcesUrl } from "@/utils/utils";
 import Form from "@/components/form/Form";
+import AuthService from "@/services/AuthService";
+import UserService from "@/services/UserService";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { passwordFields } from "../utils/profileData";
 import "./profile-edit-pass.css";
@@ -134,7 +135,7 @@ export default class ProfileEditPassPage extends Block {
 		}
 	}
 
-	private handleSaveSubmit(e?: Event): void {
+	private async handleSaveSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
 		if (!this.validator) return;
 
@@ -150,26 +151,16 @@ export default class ProfileEditPassPage extends Block {
 			if (data) {
 				const inputFields: NodeListOf<HTMLInputElement> =
 					document.querySelectorAll(".profile-field-input");
-				const reqBody: Record<string, string> = {};
+				const reqBody: UserPassReq = {} as UserPassReq;
 				passwordFields.forEach((field, i) => {
 					if (field.id !== "repeatPassword") {
-						reqBody[field.id] = inputFields[i].value ?? field.value;
+						reqBody[field.id as keyof UserPassReq] =
+							inputFields[i].value ?? field.value;
 					}
 				});
-				const setUserData = async () => {
-					try {
-						await http.put("/user/password", {
-							body: {
-								...reqBody,
-							},
-						});
 
-						router.go("/settings");
-					} catch (err) {
-						throw new Error("Ошибка при смене пароля", { cause: err });
-					}
-				};
-				setUserData();
+				await UserService.changePass(reqBody);
+				router.go("/settings");
 			}
 		}
 	}
@@ -177,27 +168,21 @@ export default class ProfileEditPassPage extends Block {
 	componentDidMount(): void {
 		this.validator = this.initValidator();
 		const getUserData = async () => {
-			try {
-				const userData = await http.get<UserData>("/auth/user");
+			const userData = await AuthService.userInfo();
 
-				this.setProps({
-					AvatarBtn: new Button({
-						id: "avatarBtn",
-						children: `
+			this.setProps({
+				AvatarBtn: new Button({
+					id: "avatarBtn",
+					children: `
 							<span class="profile-edit-pass-avatar" name="avatar">
 								<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-pass-avatar-img" />
 							</span>
 						`,
-						events: {
-							click: (e?: Event) => ProfileEditPassPage.handleAvatarClick(e),
-						},
-					}),
-				});
-			} catch (err) {
-				throw new Error("Ошибка при загрузке данных пользователя", {
-					cause: err,
-				});
-			}
+					events: {
+						click: (e?: Event) => ProfileEditPassPage.handleAvatarClick(e),
+					},
+				}),
+			});
 		};
 		getUserData();
 	}

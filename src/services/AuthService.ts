@@ -1,16 +1,14 @@
 import http, { HttpStatus } from "@/api/HttpClient";
-import { HttpError } from "@/types/types";
+import { HttpError, UserData } from "@/types/types";
 
 class AuthService {
-	// eslint-disable-next-line class-methods-use-this
-	async signin(data: unknown) {
+	async signin(data: unknown): Promise<void> {
 		try {
 			await http.post("/auth/signin", {
 				body: data,
 			});
 
 			localStorage.setItem("isSignedIn", "true");
-			return true;
 		} catch (err) {
 			const error = err as HttpError;
 			if (error.status === HttpStatus.BadRequest) {
@@ -20,8 +18,7 @@ class AuthService {
 		}
 	}
 
-	// eslint-disable-next-line class-methods-use-this
-	async signup(data: unknown) {
+	async signup(data: unknown): Promise<void> {
 		try {
 			const response: { id: number } = await http.post("/auth/signup", {
 				body: data,
@@ -36,6 +33,28 @@ class AuthService {
 			} else {
 				throw new Error("Ошибка при регистрации", { cause: err });
 			}
+		}
+	}
+
+	async logout(): Promise<void> {
+		try {
+			await http.post("/auth/logout");
+
+			localStorage.setItem("isSignedIn", "false");
+			localStorage.removeItem("userId");
+		} catch (err) {
+			throw new Error("Ошибка при выходе из системы", { cause: err });
+		}
+	}
+
+	async userInfo(): Promise<UserData> {
+		try {
+			const response = await http.get<UserData>("/auth/user");
+			return response;
+		} catch (err) {
+			throw new Error("Ошибка при загрузке данных пользователя", {
+				cause: err,
+			});
 		}
 	}
 }

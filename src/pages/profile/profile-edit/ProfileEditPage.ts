@@ -3,12 +3,13 @@ import Button from "@/components/button/Button";
 import router from "@/routes/Router";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
-import { UserData } from "@/types/types";
+import { UserData, UserProfileReq } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
-import http from "@/api/HttpClient";
 import { resourcesUrl } from "@/utils/utils";
 import Form from "@/components/form/Form";
+import AuthService from "@/services/AuthService";
+import UserService from "@/services/UserService";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileEditFields } from "../utils/profileData";
 import "./profile-edit.css";
@@ -140,32 +141,27 @@ export default class ProfileEditPage extends Block {
 		};
 		reader.readAsDataURL(file);
 
-		try {
-			const formData = new FormData();
-			formData.append("avatar", file);
-			await http.put("/user/profile/avatar", { body: formData });
+		const formData = new FormData();
+		formData.append("avatar", file);
+		await UserService.changeAvatar(formData);
+		const userData = await AuthService.userInfo();
 
-			const userData = await http.get<UserData>("/auth/user");
-
-			this.setProps({
-				AvatarBtn: new Button({
-					id: "avatarBtn",
-					children: `
+		this.setProps({
+			AvatarBtn: new Button({
+				id: "avatarBtn",
+				children: `
 						<span class="profile-edit-avatar" name="avatar">
 							<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-avatar-img" />
 						</span>
 					`,
-					events: {
-						click: (event?: Event) => this.handleAvatarClick(event),
-					},
-				}),
-			});
-		} catch (err) {
-			throw new Error("Ошибка при обновлении аватара", { cause: err });
-		}
+				events: {
+					click: (event?: Event) => this.handleAvatarClick(event),
+				},
+			}),
+		});
 	}
 
-	private handleSaveSubmit(e?: Event): void {
+	private async handleSaveSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
 		const form = this.element?.querySelector(
 			".profile-edit-data-form"
@@ -177,26 +173,14 @@ export default class ProfileEditPage extends Block {
 			if (data) {
 				const inputFields: NodeListOf<HTMLInputElement> =
 					document.querySelectorAll(".profile-field-input");
-				const reqBody: Record<string, string> = {};
+				const reqBody: UserProfileReq = {} as UserProfileReq;
 				profileEditFields.forEach((field, i) => {
-					reqBody[field.id] = inputFields[i].value ?? field.value;
+					reqBody[field.id as keyof UserProfileReq] =
+						inputFields[i].value ?? field.value;
 				});
-				const setUserData = async () => {
-					try {
-						await http.put<UserData>("/user/profile", {
-							body: {
-								...reqBody,
-							},
-						});
 
-						router.go("/settings");
-					} catch (err) {
-						throw new Error("Ошибка при изменении данных пользователя", {
-							cause: err,
-						});
-					}
-				};
-				setUserData();
+				await UserService.changeProfile(reqBody);
+				router.go("/settings");
 			}
 		}
 	}
@@ -210,18 +194,17 @@ export default class ProfileEditPage extends Block {
 
 	componentDidMount() {
 		const getUserData = async () => {
-			try {
-				const userData = await http.get<UserData>("/auth/user");
-				let profileEditFieldsClone = structuredClone(profileEditFields);
-				profileEditFieldsClone = profileEditFieldsClone.map((field) => ({
-					...field,
-					value: String(userData[field.id as keyof UserData]) ?? field.value,
-				}));
+			const userData = await AuthService.userInfo();
+			let profileEditFieldsClone = structuredClone(profileEditFields);
+			profileEditFieldsClone = profileEditFieldsClone.map((field) => ({
+				...field,
+				value: String(userData[field.id as keyof UserData]) ?? field.value,
+			}));
 
-				this.setProps({
-					ProfileEditForm: new Form({
-						class: "profile-edit-data-form",
-						children: `
+			this.setProps({
+				ProfileEditForm: new Form({
+					class: "profile-edit-data-form",
+					children: `
 							<div class="profile-edit-data-block">
 								{{{ ProfileFieldsList }}}
 							</div>
@@ -229,39 +212,34 @@ export default class ProfileEditPage extends Block {
 								{{{ SaveBtn }}}
 							</div>
 						`,
-						ProfileFieldsList: new ProfileFieldsList({
-							fields: profileEditFieldsClone,
-							events: {
-								blur: (e?: Event) => this.handleFieldBlur(e),
-							},
-						}),
-						SaveBtn: new Button({
-							id: "save",
-							class: "btn",
-							children: "Сохранить",
-							type: "submit",
-						}),
+					ProfileFieldsList: new ProfileFieldsList({
+						fields: profileEditFieldsClone,
 						events: {
-							submit: (e?: Event) => this.handleSaveSubmit(e),
+							blur: (e?: Event) => this.handleFieldBlur(e),
 						},
 					}),
-					AvatarBtn: new Button({
-						id: "avatarBtn",
-						children: `
+					SaveBtn: new Button({
+						id: "save",
+						class: "btn",
+						children: "Сохранить",
+						type: "submit",
+					}),
+					events: {
+						submit: (e?: Event) => this.handleSaveSubmit(e),
+					},
+				}),
+				AvatarBtn: new Button({
+					id: "avatarBtn",
+					children: `
 							<span class="profile-edit-avatar" name="avatar">
-								<img src="https://ya-praktikum.tech/api/v2/resources${userData.avatar}" class="profile-edit-avatar-img" />
+								<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-avatar-img" />
 							</span>
 						`,
-						events: {
-							click: (e?: Event) => this.handleAvatarClick(e),
-						},
-					}),
-				});
-			} catch (err) {
-				throw new Error("Ошибка при загрузке данных пользователя", {
-					cause: err,
-				});
-			}
+					events: {
+						click: (e?: Event) => this.handleAvatarClick(e),
+					},
+				}),
+			});
 		};
 		getUserData();
 	}

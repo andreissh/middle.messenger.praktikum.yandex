@@ -9,6 +9,7 @@ module.exports = {
 	extends: ["airbnb-base", "airbnb-typescript/base", "prettier"],
 	rules: {
 		"no-underscore-dangle": "off",
+		"class-methods-use-this": "off",
 	},
 	ignorePatterns: ["dist/", "node_modules/", "*.config.*js"],
 	settings: {

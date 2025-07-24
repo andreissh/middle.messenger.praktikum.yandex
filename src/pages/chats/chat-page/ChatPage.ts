@@ -4,11 +4,10 @@ import sendBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import Button from "@/components/button/Button";
 import Modal from "@/components/modal/Modal";
-import http from "@/api/HttpClient";
-import { UserData } from "@/types/types";
 import Form from "@/components/form/Form";
-import "./chat-page.css";
 import ChatsService from "@/services/ChatsService";
+import UserService from "@/services/UserService";
+import "./chat-page.css";
 
 const template = `
 	<div class="chat-content">
@@ -147,18 +146,7 @@ export default class ChatPage extends Block {
 			document.querySelector("#addUserInput");
 		if (!modal || !input) return;
 
-		let userData;
-
-		try {
-			userData = await http.post<UserData[]>("/user/search", {
-				body: {
-					login: input.value,
-				},
-			});
-		} catch (err) {
-			throw new Error("Ошибка при поиске пользователя", { cause: err });
-		}
-
+		const userData = await UserService.search(input.value);
 		await ChatsService.addUser([userData[0].id], this.props.chatId as number);
 		modal.style.display = "none";
 	}
@@ -180,19 +168,11 @@ export default class ChatPage extends Block {
 			document.querySelector("#removeUserInput");
 		if (!modal || !input) return;
 
-		let userData;
-
-		try {
-			userData = await http.post<UserData[]>("/user/search", {
-				body: {
-					login: input.value,
-				},
-			});
-		} catch (err) {
-			throw new Error("Ошибка при поиске пользователя", { cause: err });
-		}
-
-		ChatsService.removeUser([userData[0].id], this.props.chatId as number);
+		const userData = await UserService.search(input.value);
+		await ChatsService.removeUser(
+			[userData[0].id],
+			this.props.chatId as number
+		);
 		modal.style.display = "none";
 	}
 
