@@ -68,3 +68,13 @@ export type UserChats = {
 		content: string;
 	};
 };
+
+export type DeleteChat = {
+	userId: number;
+	result: {
+		id: number;
+		title: string;
+		avatar: string;
+		created_by: number;
+	};
+};

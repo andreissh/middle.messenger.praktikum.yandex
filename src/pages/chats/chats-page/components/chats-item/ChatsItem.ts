@@ -2,7 +2,7 @@ import Block from "@/framework/Block";
 import ContextMenu from "@/components/context-menu/ContextMenu";
 import router from "@/routes/Router";
 import avatarImg from "@/assets/icons/avatar-img.svg";
-import http from "@/api/HttpClient";
+import ChatsService from "@/services/ChatsService";
 import "./chats-item.css";
 
 export type ChatsItemProps = {
@@ -59,21 +59,10 @@ export default class ChatsItem extends Block {
 	}
 
 	deleteChat = async () => {
-		try {
-			await http.delete("/chats", {
-				body: {
-					chatId: this.props.id,
-				},
-			});
-
-			console.log(`Удален чат с ID: ${this.props.id}`);
-
-			this.closeContextMenu();
-			if (typeof this.props.onRefresh === "function") {
-				this.props.onRefresh();
-			}
-		} catch (err) {
-			throw new Error("Ошибка при удалении чата", { cause: err });
+		ChatsService.deleteChat(this.props.id as number);
+		this.closeContextMenu();
+		if (typeof this.props.onRefresh === "function") {
+			this.props.onRefresh();
 		}
 	};
 

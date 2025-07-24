@@ -5,9 +5,10 @@ import avatarImg from "@/assets/icons/avatar-img.svg";
 import Button from "@/components/button/Button";
 import Modal from "@/components/modal/Modal";
 import http from "@/api/HttpClient";
-import { ChatsUsers, UserData } from "@/types/types";
+import { UserData } from "@/types/types";
 import Form from "@/components/form/Form";
 import "./chat-page.css";
+import ChatsService from "@/services/ChatsService";
 
 const template = `
 	<div class="chat-content">
@@ -146,25 +147,20 @@ export default class ChatPage extends Block {
 			document.querySelector("#addUserInput");
 		if (!modal || !input) return;
 
+		let userData;
+
 		try {
-			const userData = await http.post<UserData[]>("/user/search", {
+			userData = await http.post<UserData[]>("/user/search", {
 				body: {
 					login: input.value,
 				},
 			});
-
-			await http.put<ChatsUsers>("/chats/users", {
-				body: {
-					users: [userData[0].id],
-					chatId: this.props.chatId as number,
-				},
-			});
-
-			modal.style.display = "none";
 		} catch (err) {
-			modal.style.display = "none";
-			throw new Error("Ошибка при добавлении пользователя", { cause: err });
+			throw new Error("Ошибка при поиске пользователя", { cause: err });
 		}
+
+		await ChatsService.addUser([userData[0].id], this.props.chatId as number);
+		modal.style.display = "none";
 	}
 
 	private static handleRemoveUserClick(e?: Event) {
@@ -184,25 +180,20 @@ export default class ChatPage extends Block {
 			document.querySelector("#removeUserInput");
 		if (!modal || !input) return;
 
+		let userData;
+
 		try {
-			const userData = await http.post<UserData[]>("/user/search", {
+			userData = await http.post<UserData[]>("/user/search", {
 				body: {
 					login: input.value,
 				},
 			});
-
-			await http.delete<ChatsUsers>("/chats/users", {
-				body: {
-					users: [userData[0].id],
-					chatId: this.props.chatId,
-				},
-			});
-
-			modal.style.display = "none";
 		} catch (err) {
-			modal.style.display = "none";
-			throw new Error("Ошибка при удалении пользователя", { cause: err });
+			throw new Error("Ошибка при поиске пользователя", { cause: err });
 		}
+
+		ChatsService.removeUser([userData[0].id], this.props.chatId as number);
+		modal.style.display = "none";
 	}
 
 	static handleSendMessageSubmit(e?: Event): void {

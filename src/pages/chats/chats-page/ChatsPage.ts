@@ -5,9 +5,8 @@ import router from "@/routes/Router";
 import arrowIcon from "@/assets/icons/arrow-right.svg";
 import plusIcon from "@/assets/icons/plus.svg";
 import formatChatDate from "@/utils/formatChatDate";
-import http from "@/api/HttpClient";
-import { UserChats } from "@/types/types";
 import Form from "@/components/form/Form";
+import ChatsService from "@/services/ChatsService";
 import ChatsList from "./components/chats-list/ChatsList";
 import ChatPage from "../chat-page/ChatPage";
 import "./chats-page.css";
@@ -121,61 +120,47 @@ export default class ChatsPage extends Block {
 			document.querySelector("#createChatInput");
 		if (!modal || !input) return;
 
-		try {
-			await http.post("/chats", {
-				body: {
-					title: input.value,
-				},
-			});
+		await ChatsService.addChat(input.value);
 
-			modal.style.display = "none";
-
-			this.getChats();
-		} catch (err) {
-			modal.style.display = "none";
-			throw new Error("Ошибка при добавлении чата", { cause: err });
-		}
+		modal.style.display = "none";
+		this.getChats();
 	}
 
 	getChats = async () => {
-		try {
-			const newChats: UserChatListData[] = [];
-			const userChats = await http.get<UserChats[]>("/chats");
-			const chatId = Number(window.location.pathname.split("/").pop());
-			let title;
+		const userChats = await ChatsService.getChats();
+		const newChats: UserChatListData[] = [];
+		const chatId = Number(window.location.pathname.split("/").pop());
+		let title;
 
-			userChats.forEach((chat) => {
-				newChats.push({
-					id: chat.id,
-					name: chat.title,
-					text: chat.last_message?.content ?? "",
-					time: chat.last_message
-						? formatChatDate(chat.last_message?.time) ?? ""
-						: "",
-					count: chat.unread_count,
-				});
-
-				if (chat.id === chatId) {
-					title = chat.title;
-				}
+		userChats.forEach((chat) => {
+			newChats.push({
+				id: chat.id,
+				name: chat.title,
+				text: chat.last_message?.content ?? "",
+				time: chat.last_message
+					? formatChatDate(chat.last_message?.time) ?? ""
+					: "",
+				count: chat.unread_count,
 			});
 
-			const props = {
-				ChatsList: new ChatsList({
-					chats: newChats,
-					onRefresh: () => this.getChats(),
-				}),
-				ChatPage: new ChatPage({
-					chatId,
-					title,
-				}),
-			};
+			if (chat.id === chatId) {
+				title = chat.title;
+			}
+		});
 
-			this.setProps(props);
-			props.ChatPage.dispatchComponentDidMount();
-		} catch (err) {
-			throw new Error("Ошибка при получении списка чатов", { cause: err });
-		}
+		const props = {
+			ChatsList: new ChatsList({
+				chats: newChats,
+				onRefresh: () => this.getChats(),
+			}),
+			ChatPage: new ChatPage({
+				chatId,
+				title,
+			}),
+		};
+
+		this.setProps(props);
+		props.ChatPage.dispatchComponentDidMount();
 	};
 
 	componentDidMount() {
