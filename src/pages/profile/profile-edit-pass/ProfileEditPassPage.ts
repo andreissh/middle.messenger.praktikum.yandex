@@ -51,9 +51,6 @@ export default class ProfileEditPassPage extends Block {
 						<img src="${avatarImg}" class="profile-edit-pass-avatar-img" />
 					</span>
 				`,
-				events: {
-					click: (e?: Event) => ProfileEditPassPage.handleAvatarClick(e),
-				},
 			}),
 			ProfileEditPassForm: new Form({
 				class: "profile-edit-pass-data-form",
@@ -120,10 +117,6 @@ export default class ProfileEditPassPage extends Block {
 		router.go("/settings");
 	}
 
-	private static handleAvatarClick(e?: Event): void {
-		e?.preventDefault();
-	}
-
 	private handleFieldBlur(e?: Event): void {
 		if (!this.validator) return;
 
@@ -177,9 +170,6 @@ export default class ProfileEditPassPage extends Block {
 							<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-pass-avatar-img" />
 						</span>
 					`,
-					events: {
-						click: (e?: Event) => ProfileEditPassPage.handleAvatarClick(e),
-					},
 				}),
 			});
 

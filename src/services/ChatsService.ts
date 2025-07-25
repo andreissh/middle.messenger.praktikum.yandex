@@ -1,5 +1,11 @@
 import http from "@/api/HttpClient";
-import { ChatsToken, ChatsUsers, DeleteChat, UserChats } from "@/types/types";
+import {
+	ChatsToken,
+	ChatsUserList,
+	ChatsUsers,
+	DeleteChat,
+	UserChats,
+} from "@/types/types";
 
 class ChatsService {
 	async getChats(): Promise<UserChats[]> {
@@ -69,6 +75,19 @@ class ChatsService {
 			return response;
 		} catch (err) {
 			throw new Error("Ошибка при получении токена", { cause: err });
+		}
+	}
+
+	async getChatUsers(chatId: number): Promise<ChatsUserList[]> {
+		try {
+			const response = await http.get<ChatsUserList[]>(
+				`/chats/${chatId}/users`
+			);
+			return response;
+		} catch (err) {
+			throw new Error("Ошибка при получении списка участников чата", {
+				cause: err,
+			});
 		}
 	}
 }

@@ -47,21 +47,18 @@ const template = `
 
 export default class ChatsPage extends Block {
 	constructor() {
-		const chatId = Number(window.location.pathname.split("/").pop());
-
 		super("div", {
 			ProfileBtn: new Button({
 				id: "renderProfileInfoBtn",
 				class: "chats-aside-to-profile-btn",
 				children: `
 					<span class="chats-aside-to-profile-btn-text">Профиль</span>
-					<img src="${arrowIcon}" alt="" />
+					<img src="${arrowIcon}" alt="profile" />
 				`,
 				events: {
 					click: (e?: Event) => ChatsPage.handleProfileClick(e),
 				},
 			}),
-			arrowIcon,
 			ChatsList: new ChatsList({
 				chats: [],
 			}),
@@ -75,7 +72,7 @@ export default class ChatsPage extends Block {
 					click: (e?: Event) => ChatsPage.handleCreateChatClick(e),
 				},
 			}),
-			ChatPage: new ChatPage({ chatId, title: "Название чата" }),
+			ChatPage: new ChatPage({}),
 			CreateChatModal: new Modal({
 				id: "createChatModal",
 				title: "Создайте чат",
@@ -130,6 +127,13 @@ export default class ChatsPage extends Block {
 		const userChats = await ChatsService.getChats();
 		const newChats: UserChatListData[] = [];
 		const chatId = Number(window.location.pathname.split("/").pop());
+		const chatUsers: string[] = [];
+		if (chatId) {
+			const users = await ChatsService.getChatUsers(chatId);
+			users.forEach((user) => {
+				chatUsers.push(user.login);
+			});
+		}
 		let title;
 
 		userChats.forEach((chat) => {
@@ -156,6 +160,7 @@ export default class ChatsPage extends Block {
 			ChatPage: new ChatPage({
 				chatId,
 				title,
+				chatUsers,
 			}),
 		};
 

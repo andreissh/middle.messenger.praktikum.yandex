@@ -17,7 +17,12 @@ const template = `
 					<span class="chat-avatar">
 						<img src=${avatarImg} alt="avatar" />
 					</span>
-					<h5 class="chat-title">{{ title }}</h5>
+					<div>
+						<h5 class="chat-title">{{ title }}</h5>
+						<button class="chat-users-btn">
+							<span>Участников: {{ chatUsersCount }}</span>
+						</button>
+					</div>
 				</div>
 				<div class="chat-options">
 					<button class="chat-options-btn" aria-label="Опции чата">
@@ -49,6 +54,7 @@ const template = `
 		{{/if}}
 		{{{ AddUserModal }}}
 		{{{ RemoveUserModal }}}
+		{{{ ChatUsersModal }}}
 	</div>
 `;
 
@@ -56,6 +62,14 @@ export default class ChatPage extends Block {
 	constructor(props: Record<string, unknown>) {
 		super("div", {
 			...props,
+			chatUsersCount: props.chatUsers
+				? (props.chatUsers as string[]).length
+				: 0,
+			ChatUsersBtn: new Button({
+				children: `
+					<span>Участников: {{ chatUsersCount }}</span>
+				`,
+			}),
 			AddUserBtn: new Button({
 				id: "addUserBtn",
 				class: "chat-dropdown-item",
@@ -128,6 +142,13 @@ export default class ChatPage extends Block {
 					},
 				}),
 			}),
+			ChatUsersModal: new Modal({
+				id: "chatUsersModal",
+				title: "Участники чата",
+				children: `
+					<ul class="chat-users-list"></ul>
+				`,
+			}),
 		});
 	}
 
@@ -180,8 +201,35 @@ export default class ChatPage extends Block {
 		e?.preventDefault();
 	}
 
+	private addUsersToModal() {
+		const chatUsersList: HTMLElement | null =
+			document.querySelector(".chat-users-list");
+		if (!chatUsersList) return;
+		const users = this.lists.chatUsers as string[];
+		users.forEach((user) => {
+			const li = document.createElement("li");
+			li.textContent = user;
+			chatUsersList.appendChild(li);
+		});
+	}
+
+	private handleChatUsersClick() {
+		const chatUsersBtn: HTMLButtonElement | null =
+			document.querySelector(".chat-users-btn");
+		const chatUsersModal: HTMLElement | null =
+			document.querySelector("#chatUsersModal");
+		if (!chatUsersBtn || !chatUsersModal) return;
+
+		chatUsersBtn.addEventListener("click", () => {
+			chatUsersModal.style.display = "block";
+		});
+	}
+
 	componentDidMount() {
 		if (!this.props.chatId) return;
+
+		this.addUsersToModal();
+		this.handleChatUsersClick();
 
 		const containerMsgs = document.querySelector(".chat-messages");
 		if (!containerMsgs) return;
