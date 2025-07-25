@@ -7,7 +7,6 @@ import plusIcon from "@/assets/icons/plus.svg";
 import formatChatDate from "@/utils/formatChatDate";
 import Form from "@/components/form/Form";
 import ChatsService from "@/services/ChatsService";
-import AuthService from "@/services/AuthService";
 import ChatsList from "./components/chats-list/ChatsList";
 import ChatPage from "../chat-page/ChatPage";
 import "./chats-page.css";

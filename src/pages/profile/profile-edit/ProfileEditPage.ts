@@ -205,13 +205,13 @@ export default class ProfileEditPage extends Block {
 				ProfileEditForm: new Form({
 					class: "profile-edit-data-form",
 					children: `
-							<div class="profile-edit-data-block">
-								{{{ ProfileFieldsList }}}
-							</div>
-							<div class="profile-edit-btns-container">
-								{{{ SaveBtn }}}
-							</div>
-						`,
+						<div class="profile-edit-data-block">
+							{{{ ProfileFieldsList }}}
+						</div>
+						<div class="profile-edit-btns-container">
+							{{{ SaveBtn }}}
+						</div>
+					`,
 					ProfileFieldsList: new ProfileFieldsList({
 						fields: profileEditFieldsClone,
 						events: {
@@ -240,6 +240,8 @@ export default class ProfileEditPage extends Block {
 					},
 				}),
 			});
+
+			this.validator = this.initValidator();
 		};
 		getUserData();
 	}

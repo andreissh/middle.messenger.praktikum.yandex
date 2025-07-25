@@ -166,7 +166,6 @@ export default class ProfileEditPassPage extends Block {
 	}
 
 	componentDidMount(): void {
-		this.validator = this.initValidator();
 		const getUserData = async () => {
 			const userData = await AuthService.userInfo();
 
@@ -174,15 +173,17 @@ export default class ProfileEditPassPage extends Block {
 				AvatarBtn: new Button({
 					id: "avatarBtn",
 					children: `
-							<span class="profile-edit-pass-avatar" name="avatar">
-								<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-pass-avatar-img" />
-							</span>
-						`,
+						<span class="profile-edit-pass-avatar" name="avatar">
+							<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-pass-avatar-img" />
+						</span>
+					`,
 					events: {
 						click: (e?: Event) => ProfileEditPassPage.handleAvatarClick(e),
 					},
 				}),
 			});
+
+			this.validator = this.initValidator();
 		};
 		getUserData();
 	}
