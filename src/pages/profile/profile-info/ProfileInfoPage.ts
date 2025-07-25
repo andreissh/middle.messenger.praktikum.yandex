@@ -128,7 +128,6 @@ export default class ProfileInfoPage extends Block {
 	componentDidMount() {
 		const getUserData = async () => {
 			const userData = await AuthService.userInfo();
-			localStorage.setItem("userId", String(userData.id));
 			let profileFieldsClone = structuredClone(profileFields);
 			profileFieldsClone = profileFieldsClone.map((field) => ({
 				...field,

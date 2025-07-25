@@ -106,6 +106,8 @@ export default class SigninPage extends Block {
 			const data = getFormData(form) as AuthData;
 			if (data) {
 				await AuthService.signin(data);
+				const { id } = await AuthService.userInfo();
+				localStorage.setItem("userId", String(id));
 				router.go("/messenger");
 			}
 		}
