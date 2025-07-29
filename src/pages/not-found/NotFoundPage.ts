@@ -1,31 +1,35 @@
 import Block from "@/framework/Block";
-import Link from "@/components/btn/Link";
+import Button from "@/components/button/Button";
 import "./not-found.css";
-import { PageProps } from "@/types/types";
+import router from "@/routes/Router";
 
 const template = `
   <div class="not-found-container">
     <h1 class="not-found-header">404</h1>
     <p class="not-found-description">Не туда попали</p>
     <div class="not-found-goback-container">
-      {{{ HomeLink }}}
+      {{{ HomeBtn }}}
     </div>
   </div>
 `;
 
 export default class NotFoundPage extends Block {
-	constructor(props: PageProps) {
+	constructor() {
 		super("div", {
-			HomeLink: new Link({
-				href: "#",
+			HomeBtn: new Button({
 				id: "renderChatsBtn",
 				class: "btn-secondary",
 				children: "Назад к чатам",
 				events: {
-					click: () => props.onChangePage("ChatsPage"),
+					click: (e) => NotFoundPage.handleHomeClick(e),
 				},
 			}),
 		});
+	}
+
+	private static handleHomeClick(e?: Event): void {
+		e?.preventDefault();
+		router.go("/messenger");
 	}
 
 	render(): HTMLElement {

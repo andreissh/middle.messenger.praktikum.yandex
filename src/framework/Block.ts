@@ -133,6 +133,10 @@ abstract class Block {
 	private _render(): void {
 		const block = this.render();
 
+		if (this._element && this._element.parentNode) {
+			this._element.replaceWith(block);
+		}
+
 		this._removeEvents();
 		this._element = block;
 		this._addEvents();
@@ -163,6 +167,20 @@ abstract class Block {
 	protected compile(template: string): HTMLElement {
 		const propsAndStubs = { ...this._props };
 		const tmpId = Math.floor(100000 + Math.random() * 900000);
+
+		if (this._props.children) {
+			let childrenTemplate = this._props.children as string;
+
+			Object.entries(this.children).forEach(([key, component]) => {
+				const regex = new RegExp(`\\{\\{\\{\\s*${key}\\s*}}}`, "g");
+				childrenTemplate = childrenTemplate.replace(
+					regex,
+					`<div data-id="${component._id}"></div>`
+				);
+			});
+
+			propsAndStubs.children = childrenTemplate;
+		}
 
 		Object.entries(this.children).forEach(([key, child]) => {
 			propsAndStubs[key] = `<div data-id="${child._id}"></div>`;
@@ -235,7 +253,7 @@ abstract class Block {
 	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
 	public componentDidMount(_oldProps?: Props): void {}
 
-	protected dispatchComponentDidMount(): void {
+	public dispatchComponentDidMount(): void {
 		this._eventBus.emit(Block.EVENTS.FLOW_CDM);
 	}
 
@@ -261,8 +279,11 @@ abstract class Block {
 		if (!nextProps) {
 			return;
 		}
+		const { children, props, lists } = Block._getChildren(nextProps);
 
-		Object.assign(this._props, nextProps);
+		Object.assign(this._props, props);
+		Object.assign(this.children, children);
+		Object.assign(this.lists, lists);
 		this._eventBus.emit(Block.EVENTS.FLOW_CDU, this._props, nextProps);
 	};
 

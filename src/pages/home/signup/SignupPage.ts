@@ -1,9 +1,12 @@
 import Block from "@/framework/Block";
-import Link from "@/components/btn/Link";
-import { PageProps, ValidationResult } from "@/types/types";
+import Button from "@/components/button/Button";
+import router from "@/routes/Router";
+import { InputProps } from "@/pages/profile/utils/profileData";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
-import { InputProps } from "@/pages/profile/utils/profileData";
+import { ValidationResult } from "@/types/types";
+import Form from "@/components/form/Form";
+import AuthService from "@/services/AuthService";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signup.css";
 
@@ -63,14 +66,9 @@ const template = `
   <div class="signup-wrapper">
     <div class="signup-container">
       <h1 class="signup-header">Регистрация</h1>
-      <form class="signup-form">
-        {{{ LoginFields }}}
-        <div class="signup-form-signup-btn-container">
-          {{{ SignupLink }}}
-        </div>
-      </form>
+      {{{ SignupForm }}}
       <div class="signup-form-signin-btn-container">
-        {{{ SigninLink }}}
+        {{{ SigninBtn }}}
       </div>
     </div>
   </div>
@@ -83,33 +81,52 @@ export default class SignupPage extends Block {
 		password_repeat: () => this.checkPasswordsMatch(),
 	};
 
-	constructor(props: PageProps) {
+	constructor() {
 		super("div", {
-			LoginFields: new LoginFields({
-				fields,
+			SignupForm: new Form({
+				class: "signup-form",
+				children: `
+				    {{{ LoginFields }}}
+					<div class="signup-form-signup-btn-container">
+						{{{ SignupBtn }}}
+					</div>
+				`,
+				LoginFields: new LoginFields({
+					fields,
+					events: {
+						blur: (e?: Event) => this.handleFieldBlur(e),
+					},
+				}),
+				SignupBtn: new Button({
+					id: "signup",
+					class: "btn",
+					children: "Зарегистрироваться",
+					type: "submit",
+				}),
 				events: {
-					blur: (e?: Event) => this.handleFieldBlur(e as Event),
+					submit: (e?: Event) => this.handleSignupSubmit(e),
 				},
-			}) as LoginFields,
-			SignupLink: new Link({
-				href: "#",
-				id: "signup",
-				class: "btn renderSigninBtn",
-				children: "Зарегистрироваться",
-				events: {
-					click: (e?: Event) => this.handleSignup(e, props),
-				},
-			}) as Link,
-			SigninLink: new Link({
-				href: "#",
+			}),
+			SigninBtn: new Button({
 				id: "signin",
-				class: "btn-secondary renderSigninBtn",
+				class: "btn-secondary",
 				children: "Войти",
 				events: {
-					click: () => props.onChangePage("SigninPage"),
+					click: (e?: Event) => SignupPage.handleSigninClick(e),
 				},
-			}) as Link,
+			}),
 		});
+
+		this.validator = this.initValidator();
+	}
+
+	private initValidator(): FormValidator {
+		const form = this.element?.querySelector(".signup-form") as HTMLFormElement;
+		if (!form) {
+			throw new Error("Form not found for validator initialization");
+		}
+
+		return new FormValidator(form, ".login-field-item");
 	}
 
 	private checkPasswordsMatch(): ValidationResult {
@@ -130,7 +147,7 @@ export default class SignupPage extends Block {
 		};
 	}
 
-	private handleSignup(e: Event | undefined, props: PageProps): void {
+	private async handleSignupSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
 		const form = this.element?.querySelector(".signup-form") as HTMLFormElement;
 		if (!form || !this.validator) return;
@@ -138,21 +155,26 @@ export default class SignupPage extends Block {
 		if (this.validator.validateForm(this.customChecks)) {
 			const data = getFormData(form);
 			if (data) {
-				props.onChangePage("SigninPage");
+				await AuthService.signup(data);
+				router.go("/messenger");
 			}
 		}
 	}
 
-	private handleFieldBlur(e: Event) {
+	private static handleSigninClick(e?: Event): void {
+		e?.preventDefault();
+		router.go("/");
+	}
+
+	private handleFieldBlur(e?: Event) {
 		if (!this.validator) return;
-		this.validator.handleBlur(e, this.customChecks);
+		if (e) {
+			this.validator.handleBlur(e, this.customChecks);
+		}
 	}
 
 	componentDidMount() {
-		const form = this.element?.querySelector(".signup-form") as HTMLFormElement;
-		if (!form) return;
-
-		this.validator = new FormValidator(form, ".login-field-item");
+		this.validator = this.initValidator();
 	}
 
 	render(): HTMLElement {

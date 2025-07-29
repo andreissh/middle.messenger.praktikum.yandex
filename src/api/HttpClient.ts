@@ -1,4 +1,19 @@
+import router from "@/routes/Router";
+import { baseUrl } from "@/utils/utils";
+
 type HttpMethodName = "GET" | "POST" | "PUT" | "DELETE";
+
+export enum HttpStatus {
+	Ok = 200,
+	Created = 201,
+	NoContent = 204,
+	BadRequest = 400,
+	Unauthorized = 401,
+	Forbidden = 403,
+	NotFound = 404,
+	Conflict = 409,
+	InternalServerError = 500,
+}
 
 type RequestOptions<TBody = unknown> = {
 	params?: Record<string, string | number>;
@@ -10,7 +25,7 @@ type HTTPMethod = <TResponse, TBody = unknown>(
 	options?: RequestOptions<TBody>
 ) => Promise<TResponse>;
 
-export default class HttpClient {
+class HttpClient {
 	private baseURL: string;
 
 	constructor(baseURL: string = "") {
@@ -42,7 +57,11 @@ export default class HttpClient {
 		return new Promise<TResponse>((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
 			xhr.open(method, fullUrl);
-			xhr.setRequestHeader("Content-Type", "application/json");
+			const isFormData = body instanceof FormData;
+			if (!isFormData) {
+				xhr.setRequestHeader("Content-Type", "application/json");
+			}
+			xhr.withCredentials = true;
 
 			xhr.onload = () => {
 				const contentType = xhr.getResponseHeader("Content-Type") || "";
@@ -54,7 +73,24 @@ export default class HttpClient {
 				if (xhr.status >= 200 && xhr.status < 300) {
 					resolve(responseData as TResponse);
 				} else {
-					reject(new Error(`Request failed with status ${xhr.status}`));
+					if (xhr.status === HttpStatus.Unauthorized) {
+						router.go("/");
+					}
+					if (xhr.status === HttpStatus.NotFound) {
+						router.go("/404");
+					} else if (xhr.status >= 500) {
+						router.go("/500");
+					}
+
+					reject(
+						new Error(
+							JSON.stringify({
+								status: xhr.status,
+								message: xhr.statusText,
+								data: responseData,
+							})
+						)
+					);
 				}
 			};
 
@@ -63,7 +99,7 @@ export default class HttpClient {
 			};
 
 			if (body && method !== "GET") {
-				xhr.send(JSON.stringify(body));
+				xhr.send(isFormData ? (body as FormData) : JSON.stringify(body));
 			} else {
 				xhr.send();
 			}
@@ -78,3 +114,6 @@ export default class HttpClient {
 
 	delete: HTTPMethod = (url, options) => this._request("DELETE", url, options);
 }
+
+const http = new HttpClient(baseUrl);
+export default http;

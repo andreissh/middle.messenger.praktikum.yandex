@@ -1,23 +1,23 @@
 import Block from "@/framework/Block";
 import { EventsType } from "@/types/types";
-import "./btn.css";
+import "./button.css";
 
-type LinkProps = {
-	href: string;
+type ButtonProps = {
 	id?: string;
 	class?: string;
 	children?: Block | Block[] | string;
 	events?: EventsType;
+	type?: string;
 };
 
 const template = `
-  <a href="{{ href }}" id="{{ id }}" class="{{ class }}">
+  <button type="{{ type }}" id="{{ id }}" class="{{ class }}">
     {{{ children }}}
-  </a>
+  </button>
 `;
 
-export default class Link extends Block {
-	constructor(props: LinkProps) {
+export default class Button extends Block {
+	constructor(props: ButtonProps) {
 		super("div", props);
 	}
 

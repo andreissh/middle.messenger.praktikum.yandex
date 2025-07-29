@@ -1,31 +1,35 @@
 import Block from "@/framework/Block";
-import Link from "@/components/btn/Link";
+import Button from "@/components/button/Button";
 import "./server-error.css";
-import { PageProps } from "@/types/types";
+import router from "@/routes/Router";
 
 const template = `
   <div class="server-error-container">
     <h1 class="server-error-header">500</h1>
     <p class="server-error-description">Мы уже фиксим</p>
     <div class="server-error-goback-container">
-      {{{ HomeLink }}}
+      {{{ HomeBtn }}}
     </div>
   </div>
 `;
 
 export default class ServerErrorPage extends Block {
-	constructor(props: PageProps) {
+	constructor() {
 		super("div", {
-			HomeLink: new Link({
-				href: "#",
+			HomeBtn: new Button({
 				id: "renderChatsBtn",
 				class: "btn-secondary",
 				children: "Назад к чатам",
 				events: {
-					click: () => props.onChangePage("ChatsPage"),
+					click: (e) => ServerErrorPage.handleHomeClick(e),
 				},
 			}),
 		});
+	}
+
+	private static handleHomeClick(e?: Event): void {
+		e?.preventDefault();
+		router.go("/messenger");
 	}
 
 	render(): HTMLElement {

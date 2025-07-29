@@ -1,31 +1,28 @@
 import Block from "@/framework/Block";
-import Link from "@/components/btn/Link";
-import backBtn from "@/assets/icons/back-btn.svg";
-import { PageProps, ValidationResult } from "@/types/types";
+import Button from "@/components/button/Button";
+import router from "@/routes/Router";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
+import { UserPassReq, ValidationResult } from "@/types/types";
+import backBtn from "@/assets/icons/back-btn.svg";
+import avatarImg from "@/assets/icons/avatar-img.svg";
+import { resourcesUrl } from "@/utils/utils";
+import Form from "@/components/form/Form";
+import AuthService from "@/services/AuthService";
+import UserService from "@/services/UserService";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { passwordFields } from "../utils/profileData";
 import "./profile-edit-pass.css";
 
 const template = `
   <div class="profile-edit-pass">
-    {{{ BackLink }}}
+    {{{ BackBtn }}}
     <div class="profile-edit-pass-content-wrapper">
       <div class="profile-edit-pass-content">
         <div class="profile-edit-pass-avatar-block">
-          <span class="profile-edit-pass-avatar">
-            <img src="{{avatarImg}}" class="profile-edit-pass-avatar-img" />
-          </span>
+          {{{ AvatarBtn }}}
         </div>
-        <form class="profile-edit-pass-data-form">
-          <div class="profile-edit-pass-data-block">
-            {{{ ProfileFieldsList }}}
-          </div>
-          <div class="profile-edit-pass-links-container">
-            {{{ SaveLink }}}
-          </div>
-        </form>
+        {{{ ProfileEditPassForm }}}
       </div>
     </div>
   </div>
@@ -34,10 +31,9 @@ const template = `
 export default class ProfileEditPassPage extends Block {
 	private validator?: FormValidator;
 
-	constructor(props: PageProps) {
+	constructor() {
 		super("div", {
-			BackLink: new Link({
-				href: "#",
+			BackBtn: new Button({
 				id: "backBtn",
 				children: `
 					<div class="profile-edit-pass-goback-block">
@@ -45,25 +41,57 @@ export default class ProfileEditPassPage extends Block {
 					</div>
 				`,
 				events: {
-					click: () => props.onChangePage("ProfileInfoPage"),
+					click: (e?: Event) => ProfileEditPassPage.handleBackClick(e),
 				},
-			}) as Link,
-			ProfileFieldsList: new ProfileFieldsList({
-				fields: passwordFields,
+			}),
+			AvatarBtn: new Button({
+				id: "avatarBtn",
+				children: `
+					<span class="profile-edit-pass-avatar" name="avatar">
+						<img src="${avatarImg}" class="profile-edit-pass-avatar-img" />
+					</span>
+				`,
+			}),
+			ProfileEditPassForm: new Form({
+				class: "profile-edit-pass-data-form",
+				children: `
+				    <div class="profile-edit-pass-data-block">
+						{{{ ProfileFieldsList }}}
+					</div>
+					<div class="profile-edit-pass-btns-container">
+						{{{ SaveBtn }}}
+					</div>
+				`,
+				ProfileFieldsList: new ProfileFieldsList({
+					fields: passwordFields,
+					events: {
+						blur: (e?: Event) => this.handleFieldBlur(e),
+					},
+				}),
+				SaveBtn: new Button({
+					id: "save",
+					class: "btn",
+					children: "Сохранить",
+					type: "submit",
+				}),
 				events: {
-					blur: (e?: Event) => this.handleFieldBlur(e as Event),
+					submit: (e?: Event) => this.handleSaveSubmit(e),
 				},
-			}) as ProfileFieldsList,
-			SaveLink: new Link({
-				href: "#",
-				id: "save",
-				class: "btn",
-				children: "Сохранить",
-				events: {
-					click: (e?: Event) => this.handleSave(e, props),
-				},
-			}) as Link,
+			}),
 		});
+
+		this.validator = this.initValidator();
+	}
+
+	private initValidator(): FormValidator {
+		const form = this.element?.querySelector(
+			".profile-edit-pass-data-form"
+		) as HTMLFormElement;
+		if (!form) {
+			throw new Error("Form not found for validator initialization");
+		}
+
+		return new FormValidator(form, ".profile-field-item");
 	}
 
 	private checkPasswordsMatch(): ValidationResult {
@@ -84,10 +112,15 @@ export default class ProfileEditPassPage extends Block {
 		};
 	}
 
-	private handleFieldBlur(e: Event): void {
+	private static handleBackClick(e?: Event): void {
+		e?.preventDefault();
+		router.go("/settings");
+	}
+
+	private handleFieldBlur(e?: Event): void {
 		if (!this.validator) return;
 
-		const input = e.target as HTMLInputElement;
+		const input = e?.target as HTMLInputElement;
 		if (input.name === "repeatPassword") {
 			this.validator.validateInput(input, () => this.checkPasswordsMatch());
 		} else {
@@ -95,7 +128,7 @@ export default class ProfileEditPassPage extends Block {
 		}
 	}
 
-	private handleSave(e: Event | undefined, props: PageProps): void {
+	private async handleSaveSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
 		if (!this.validator) return;
 
@@ -109,18 +142,40 @@ export default class ProfileEditPassPage extends Block {
 			) as HTMLFormElement;
 			const data = getFormData(form);
 			if (data) {
-				props.onChangePage("ProfileInfoPage");
+				const inputFields: NodeListOf<HTMLInputElement> =
+					document.querySelectorAll(".profile-field-input");
+				const reqBody: UserPassReq = {} as UserPassReq;
+				passwordFields.forEach((field, i) => {
+					if (field.id !== "repeatPassword") {
+						reqBody[field.id as keyof UserPassReq] =
+							inputFields[i].value ?? field.value;
+					}
+				});
+
+				await UserService.changePass(reqBody);
+				router.go("/settings");
 			}
 		}
 	}
 
 	componentDidMount(): void {
-		const form = this.element?.querySelector(
-			".profile-edit-pass-data-form"
-		) as HTMLFormElement;
-		if (!form) return;
+		const getUserData = async () => {
+			const userData = await AuthService.userInfo();
 
-		this.validator = new FormValidator(form, ".profile-field-item");
+			this.setProps({
+				AvatarBtn: new Button({
+					id: "avatarBtn",
+					children: `
+						<span class="profile-edit-pass-avatar" name="avatar">
+							<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-pass-avatar-img" />
+						</span>
+					`,
+				}),
+			});
+
+			this.validator = this.initValidator();
+		};
+		getUserData();
 	}
 
 	render(): HTMLElement {

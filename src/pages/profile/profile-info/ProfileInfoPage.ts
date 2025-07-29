@@ -1,35 +1,40 @@
+import { resourcesUrl } from "@/utils/utils";
 import Block from "@/framework/Block";
-import Link from "@/components/btn/Link";
+import Button from "@/components/button/Button";
+import router from "@/routes/Router";
+import renderDOM from "@/utils/renderDOM";
+import { UserData } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
-import { PageProps } from "@/types/types";
+import avatarImg from "@/assets/icons/avatar-img.svg";
+import AuthService from "@/services/AuthService";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileFields } from "../utils/profileData";
+import ProfileEditPage from "../profile-edit/ProfileEditPage";
+import ProfileEditPassPage from "../profile-edit-pass/ProfileEditPassPage";
 import "./profile-info.css";
 
 const template = `
   <div class="profile-info">
-    {{{ BackLink }}}
+    {{{ BackBtn }}}
     <div class="profile-info-content-wrapper">
       <div class="profile-info-content">
         <div class="profile-info-avatar-block">
-          <span class="profile-info-avatar" name="avatar">
-            <img src="{{avatarImg}}" class="profile-info-avatar-img" />
-          </span>
+          {{{ AvatarBtn }}}
           <span class="profile-info-username">Иван</span>
         </div>
         <div class="profile-info-data-block">
           {{{ ProfileFieldsList }}}
         </div>
-        <div class="profile-info-links-block">
-          <ul class="profile-info-links-list">
-            <li class="profile-info-links-item">
-              {{{ ChangeDataLink }}}
+        <div class="profile-info-btns-block">
+          <ul class="profile-info-btns-list">
+            <li class="profile-info-btns-item">
+              {{{ ChangeDataBtn }}}
             </li>
-            <li class="profile-info-links-item">
-              {{{ ChangePasswordLink }}}
+            <li class="profile-info-btns-item">
+              {{{ ChangePasswordBtn }}}
             </li>
-            <li class="profile-info-links-item">
-              {{{ LogoutLink }}}
+            <li class="profile-info-btns-item">
+              {{{ LogoutBtn }}}
             </li>
           </ul>
         </div>
@@ -39,10 +44,9 @@ const template = `
 `;
 
 export default class ProfileInfoPage extends Block {
-	constructor(props: PageProps) {
+	constructor() {
 		super("div", {
-			BackLink: new Link({
-				href: "#",
+			BackBtn: new Button({
 				id: "backBtn",
 				children: `
 					<div class="profile-info-goback-block">
@@ -50,41 +54,104 @@ export default class ProfileInfoPage extends Block {
 					</div>
 				`,
 				events: {
-					click: () => props.onChangePage("ChatsPage"),
+					click: (e?: Event) => ProfileInfoPage.handleBackClick(e),
 				},
-			}) as Link,
+			}),
+			AvatarBtn: new Button({
+				id: "avatarBtn",
+				children: `
+					<span class="profile-info-avatar" name="avatar">
+						<img src="${avatarImg}" class="profile-info-avatar-img" />
+					</span>
+				`,
+				events: {
+					click: (e?: Event) => ProfileInfoPage.handleAvatarClick(e),
+				},
+			}),
 			ProfileFieldsList: new ProfileFieldsList({
 				fields: profileFields,
-			}) as ProfileFieldsList,
-			ChangeDataLink: new Link({
-				href: "#",
+			}),
+			ChangeDataBtn: new Button({
 				id: "renderProfileEditBtn",
-				class: "profile-info-links-item-link",
+				class: "profile-info-btns-item-btn",
 				children: "Изменить данные",
 				events: {
-					click: () => props.onChangePage("ProfileEditPage"),
+					click: (e?: Event) => ProfileInfoPage.handleChangeDataClick(e),
 				},
-			}) as Link,
-			ChangePasswordLink: new Link({
-				href: "#",
+			}),
+			ChangePasswordBtn: new Button({
 				id: "renderProfileEditPassBtn",
-				class: "profile-info-links-item-link",
+				class: "profile-info-btns-item-btn",
 				children: "Изменить пароль",
 				events: {
-					click: () => props.onChangePage("ProfileEditPassPage"),
+					click: (e?: Event) => ProfileInfoPage.handleChangePassClick(e),
 				},
-			}) as Link,
-			LogoutLink: new Link({
-				href: "#",
+			}),
+			LogoutBtn: new Button({
 				id: "renderSigninBtn",
-				class:
-					"profile-info-links-item-link profile-info-links-item-link--danger",
+				class: "profile-info-btns-item-btn profile-info-btns-item-btn--danger",
 				children: "Выйти",
 				events: {
-					click: () => props.onChangePage("SigninPage"),
+					click: (e?: Event) => ProfileInfoPage.handleLogoutClick(e),
 				},
-			}) as Link,
+			}),
 		});
+	}
+
+	private static handleBackClick(e?: Event): void {
+		e?.preventDefault();
+		router.go("/messenger");
+	}
+
+	private static async handleAvatarClick(e?: Event): Promise<void> {
+		e?.preventDefault();
+	}
+
+	private static handleChangeDataClick(e?: Event): void {
+		e?.preventDefault();
+		const profileEditPage = new ProfileEditPage();
+		renderDOM("#app", profileEditPage);
+	}
+
+	private static handleChangePassClick(e?: Event): void {
+		e?.preventDefault();
+		const profileEditPassPage = new ProfileEditPassPage();
+		renderDOM("#app", profileEditPassPage);
+	}
+
+	private static async handleLogoutClick(e?: Event): Promise<void> {
+		e?.preventDefault();
+		AuthService.logout();
+		router.go("/");
+	}
+
+	componentDidMount() {
+		const getUserData = async () => {
+			const userData = await AuthService.userInfo();
+			let profileFieldsClone = structuredClone(profileFields);
+			profileFieldsClone = profileFieldsClone.map((field) => ({
+				...field,
+				value: String(userData[field.id as keyof UserData]) ?? field.value,
+			}));
+
+			this.setProps({
+				ProfileFieldsList: new ProfileFieldsList({
+					fields: profileFieldsClone,
+				}),
+				AvatarBtn: new Button({
+					id: "avatarBtn",
+					children: `
+							<span class="profile-info-avatar" name="avatar">
+								<img src="${resourcesUrl}${userData.avatar}" class="profile-info-avatar-img" />
+							</span>
+						`,
+					events: {
+						click: (e?: Event) => ProfileInfoPage.handleAvatarClick(e),
+					},
+				}),
+			});
+		};
+		getUserData();
 	}
 
 	render(): HTMLElement {

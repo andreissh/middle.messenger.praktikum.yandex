@@ -1,31 +1,28 @@
 import Block from "@/framework/Block";
-import Link from "@/components/btn/Link";
-import backBtn from "@/assets/icons/back-btn.svg";
-import { PageProps } from "@/types/types";
+import Button from "@/components/button/Button";
+import router from "@/routes/Router";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
+import { UserData, UserProfileReq } from "@/types/types";
+import backBtn from "@/assets/icons/back-btn.svg";
+import avatarImg from "@/assets/icons/avatar-img.svg";
+import { resourcesUrl } from "@/utils/utils";
+import Form from "@/components/form/Form";
+import AuthService from "@/services/AuthService";
+import UserService from "@/services/UserService";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileEditFields } from "../utils/profileData";
 import "./profile-edit.css";
 
 const template = `
   <div class="profile-edit">
-    {{{ BackLink }}}
+    {{{ BackBtn }}}
     <div class="profile-edit-content-wrapper">
       <div class="profile-edit-content">
         <div class="profile-edit-avatar-block">
-          <span class="profile-edit-avatar">
-            <img src="{{avatarImg}}" class="profile-edit-avatar-img" />
-          </span>
+          {{{ AvatarBtn }}}
         </div>
-        <form class="profile-edit-data-form">
-          <div class="profile-edit-data-block">
-            {{{ ProfileFieldsList }}}
-          </div>
-          <div class="profile-edit-links-container">
-            {{{ SaveLink }}}
-          </div>
-        </form>
+        {{{ ProfileEditForm }}}
       </div>
     </div>
   </div>
@@ -34,10 +31,9 @@ const template = `
 export default class ProfileEditPage extends Block {
 	private validator?: FormValidator;
 
-	constructor(props: PageProps) {
+	constructor() {
 		super("div", {
-			BackLink: new Link({
-				href: "#",
+			BackBtn: new Button({
 				id: "backBtn",
 				children: `
 					<div class="profile-edit-goback-block">
@@ -45,28 +41,127 @@ export default class ProfileEditPage extends Block {
 					</div>
 				`,
 				events: {
-					click: () => props.onChangePage("ProfileInfoPage"),
+					click: (e?: Event) => ProfileEditPage.handleBackClick(e),
 				},
-			}) as Link,
-			ProfileFieldsList: new ProfileFieldsList({
-				fields: profileEditFields,
+			}),
+			AvatarBtn: new Button({
+				id: "avatarBtn",
+				children: `
+					<span class="profile-edit-avatar" name="avatar">
+						<img src="${avatarImg}" class="profile-edit-avatar-img" />
+					</span>
+				`,
 				events: {
-					blur: (e?: Event) => this.handleFieldBlur(e as Event),
+					click: (e?: Event) => this.handleAvatarClick(e),
 				},
-			}) as ProfileFieldsList,
-			SaveLink: new Link({
-				href: "#",
-				id: "save",
-				class: "btn",
-				children: "Сохранить",
+			}),
+			ProfileEditForm: new Form({
+				class: "profile-edit-data-form",
+				children: `
+					<div class="profile-edit-data-block">
+						{{{ ProfileFieldsList }}}
+					</div>
+					<div class="profile-edit-btns-container">
+						{{{ SaveBtn }}}
+					</div>
+				`,
+				ProfileFieldsList: new ProfileFieldsList({
+					fields: profileEditFields,
+					events: {
+						blur: (e?: Event) => this.handleFieldBlur(e),
+					},
+				}),
+				SaveBtn: new Button({
+					id: "save",
+					class: "btn",
+					children: "Сохранить",
+					type: "submit",
+				}),
 				events: {
-					click: (e?: Event) => this.handleSave(e, props),
+					submit: (e?: Event) => this.handleSaveSubmit(e),
 				},
-			}) as Link,
+			}),
+		});
+
+		this.validator = this.initValidator();
+	}
+
+	private initValidator(): FormValidator {
+		const form = this.element?.querySelector(
+			".profile-edit-data-form"
+		) as HTMLFormElement;
+		if (!form) {
+			throw new Error("Form not found for validator initialization");
+		}
+
+		return new FormValidator(form, ".profile-field-item");
+	}
+
+	private static handleBackClick(e?: Event): void {
+		e?.preventDefault();
+		router.go("/settings");
+	}
+
+	private async handleAvatarClick(e?: Event): Promise<void> {
+		e?.preventDefault();
+
+		const fileInput = document.createElement("input");
+		fileInput.type = "file";
+		fileInput.accept =
+			"image/jpeg, image/jpg, image/png, image/gif, image/webp";
+
+		const file = await new Promise<File | null>((resolve) => {
+			fileInput.onchange = (event: Event) => {
+				resolve((event.target as HTMLInputElement).files?.[0] || null);
+			};
+			fileInput.click();
+		});
+
+		if (!file) return;
+
+		const allowedTypes = [
+			"image/jpeg",
+			"image/jpg",
+			"image/png",
+			"image/gif",
+			"image/webp",
+		];
+		if (!allowedTypes.includes(file.type)) {
+			throw new Error("Недопустимый тип файла");
+		}
+
+		const reader = new FileReader();
+		reader.onload = (event) => {
+			const avatarImgEl = document.querySelector(
+				".profile-edit-avatar-img"
+			) as HTMLImageElement;
+			if (avatarImgEl && event.target?.result) {
+				avatarImgEl.src = event.target.result as string;
+			}
+		};
+		reader.readAsDataURL(file);
+
+		const formData = new FormData();
+		formData.append("avatar", file);
+		await UserService.changeAvatar(formData);
+		const userData = await AuthService.userInfo();
+
+		this.setProps({
+			AvatarBtn: new Button({
+				id: "avatarBtn",
+				children: `
+						<span class="profile-edit-avatar" name="avatar">
+							<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-avatar-img" />
+						</span>
+					`,
+				events: {
+					click: (event?: Event) => this.handleAvatarClick(event),
+				},
+			}),
 		});
 	}
 
-	private handleSave(e: Event | undefined, props: PageProps): void {
+	private async handleSaveSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
 		const form = this.element?.querySelector(
 			".profile-edit-data-form"
@@ -76,23 +171,79 @@ export default class ProfileEditPage extends Block {
 		if (this.validator.validateForm()) {
 			const data = getFormData(form);
 			if (data) {
-				props.onChangePage("ProfileInfoPage");
+				const inputFields: NodeListOf<HTMLInputElement> =
+					document.querySelectorAll(".profile-field-input");
+				const reqBody: UserProfileReq = {} as UserProfileReq;
+				profileEditFields.forEach((field, i) => {
+					reqBody[field.id as keyof UserProfileReq] =
+						inputFields[i].value ?? field.value;
+				});
+
+				await UserService.changeProfile(reqBody);
+				router.go("/settings");
 			}
 		}
 	}
 
-	private handleFieldBlur(e: Event): void {
+	private handleFieldBlur(e?: Event): void {
 		if (!this.validator) return;
-		this.validator.handleBlur(e);
+		if (e) {
+			this.validator.handleBlur(e);
+		}
 	}
 
 	componentDidMount() {
-		const form = this.element?.querySelector(
-			".profile-edit-data-form"
-		) as HTMLFormElement;
-		if (!form) return;
+		const getUserData = async () => {
+			const userData = await AuthService.userInfo();
+			let profileEditFieldsClone = structuredClone(profileEditFields);
+			profileEditFieldsClone = profileEditFieldsClone.map((field) => ({
+				...field,
+				value: String(userData[field.id as keyof UserData]) ?? field.value,
+			}));
 
-		this.validator = new FormValidator(form, ".profile-field-item");
+			this.setProps({
+				ProfileEditForm: new Form({
+					class: "profile-edit-data-form",
+					children: `
+						<div class="profile-edit-data-block">
+							{{{ ProfileFieldsList }}}
+						</div>
+						<div class="profile-edit-btns-container">
+							{{{ SaveBtn }}}
+						</div>
+					`,
+					ProfileFieldsList: new ProfileFieldsList({
+						fields: profileEditFieldsClone,
+						events: {
+							blur: (e?: Event) => this.handleFieldBlur(e),
+						},
+					}),
+					SaveBtn: new Button({
+						id: "save",
+						class: "btn",
+						children: "Сохранить",
+						type: "submit",
+					}),
+					events: {
+						submit: (e?: Event) => this.handleSaveSubmit(e),
+					},
+				}),
+				AvatarBtn: new Button({
+					id: "avatarBtn",
+					children: `
+							<span class="profile-edit-avatar" name="avatar">
+								<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-avatar-img" />
+							</span>
+						`,
+					events: {
+						click: (e?: Event) => this.handleAvatarClick(e),
+					},
+				}),
+			});
+
+			this.validator = this.initValidator();
+		};
+		getUserData();
 	}
 
 	render(): HTMLElement {

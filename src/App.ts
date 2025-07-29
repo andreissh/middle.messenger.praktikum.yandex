@@ -1,78 +1,37 @@
-import SigninPage from "./pages/home/signin/SigninPage";
-import SignupPage from "./pages/home/signup/SignupPage";
-import ChatsPage from "./pages/chats/ChatsPage";
-import ProfileInfoPage from "./pages/profile/profile-info/ProfileInfoPage";
-import ProfileEditPage from "./pages/profile/profile-edit/ProfileEditPage";
-import ProfileEditPassPage from "./pages/profile/profile-edit-pass/ProfileEditPassPage";
-import NotFoundPage from "./pages/not-found/NotFoundPage";
-import ServerErrorPage from "./pages/server-error/ServerErrorPage";
-import { PageConstructor, PageName } from "./types/types";
-
-type AppState = {
-	currentPage: PageName;
-};
+import http from "./api/HttpClient";
+import { IRouteManager } from "./interfaces/IRouteManager";
+import router from "./routes/Router";
+import RouteManager from "./services/RouteManager";
+import { UserData } from "./types/types";
 
 export default class App {
-	private _state: AppState;
+	private static routeManager: IRouteManager = new RouteManager();
 
-	private _rootElementId: string;
-
-	private _pageConstructors: Record<PageName, PageConstructor>;
-
-	constructor() {
-		this._state = {
-			currentPage: "SigninPage",
-		};
-		this._rootElementId = "app";
-
-		this._pageConstructors = {
-			SigninPage,
-			SignupPage,
-			ChatsPage,
-			ProfileInfoPage,
-			ProfileEditPage,
-			ProfileEditPassPage,
-			NotFoundPage,
-			ServerErrorPage,
-		};
-	}
-
-	private _render(): void {
-		const rootElement = document.getElementById(this._rootElementId);
-		if (!rootElement) {
-			console.error(`Element with id '${this._rootElementId}' not found`);
-			return;
-		}
-
-		const PageComponent = this._pageConstructors[this._state.currentPage];
-		if (!PageComponent) {
-			console.error(
-				`No constructor found for page: ${this._state.currentPage}`
-			);
-			return;
-		}
-
-		const pageInstance = new PageComponent({
-			onChangePage: (pageName) => this.changePage(pageName),
-		});
-		const newContent = pageInstance.getContent();
-
-		const newRootElement = document.createElement("div");
-		newRootElement.id = this._rootElementId;
-		newRootElement.appendChild(newContent);
-		rootElement.replaceWith(newRootElement);
-
-		if (typeof pageInstance.componentDidMount === "function") {
-			pageInstance.componentDidMount();
+	private static async checkAuth() {
+		try {
+			const userData = await http.get<UserData>("/auth/user");
+			localStorage.setItem("userId", String(userData.id));
+			const { pathname } = window.location;
+			if (pathname !== "/") {
+				router.go(pathname);
+			} else {
+				router.go("/messenger");
+			}
+		} catch (err) {
+			router.go("/");
+			throw new Error("Ошибка при загрузке данных пользователя", {
+				cause: err,
+			});
 		}
 	}
 
-	public render(): void {
-		this._render();
+	static init() {
+		this.routeManager.setupRoutes();
+		App.checkAuth();
+		router.start();
 	}
 
-	public changePage(page: PageName): void {
-		this._state.currentPage = page;
-		this._render();
+	static getRouteManager(): IRouteManager {
+		return this.routeManager;
 	}
 }

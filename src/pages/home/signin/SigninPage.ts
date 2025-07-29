@@ -1,9 +1,12 @@
 import Block from "@/framework/Block";
-import Link from "@/components/btn/Link";
-import { PageProps } from "@/types/types";
+import Button from "@/components/button/Button";
+import router from "@/routes/Router";
+import { InputProps } from "@/pages/profile/utils/profileData";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
-import { InputProps } from "@/pages/profile/utils/profileData";
+import Form from "@/components/form/Form";
+import AuthService from "@/services/AuthService";
+import { AuthData } from "@/types/types";
 import LoginFields from "../components/login-fields/LoginFields";
 import "./signin.css";
 
@@ -28,14 +31,9 @@ const template = `
   <div class="signin-wrapper">
     <div class="signin-container">
       <h1 class="signin-header">Вход</h1>
-      <form class="signin-form">
-        {{{ fields }}}
-        <div class="signin-form-signin-btn-container">
-          {{{ SigninLink }}}
-        </div>
-      </form>
+      {{{ SigninForm }}}
       <div class="signin-form-signup-btn-container">
-        {{{ SignupLink }}}
+        {{{ SignupBtn }}}
       </div>
     </div>
   </div>
@@ -44,61 +42,84 @@ const template = `
 export default class SigninPage extends Block {
 	private validator?: FormValidator;
 
-	constructor(props: PageProps) {
+	constructor() {
 		super("div", {
-			fields: new LoginFields({
-				fields,
-				events: {
-					blur: (e?: Event) => this.handleFieldBlur(e as Event),
-				},
-			}) as LoginFields,
-			SigninLink: new Link({
-				href: "#",
-				id: "renderChatsBtn",
-				class: "btn",
-				children: "Войти",
-				events: {
-					click: (e?: Event) => this.handleSigninClick(e, props),
-				},
-			}) as Link,
-			SignupLink: new Link({
-				href: "#",
+			SignupBtn: new Button({
 				id: "renderSignupBtn",
 				class: "btn-secondary",
 				children: "Нет аккаунта?",
 				events: {
-					click: () => props.onChangePage("SignupPage"),
+					click: (e?: Event) => SigninPage.handleSignupClick(e),
 				},
-			}) as Link,
+			}),
+			SigninForm: new Form({
+				class: "signin-form",
+				children: `
+				    {{{ fields }}}
+					<div class="signin-form-signin-btn-container">
+						{{{ SigninBtn }}}
+					</div>
+				`,
+				fields: new LoginFields({
+					fields,
+					events: {
+						blur: (e?: Event) => this.handleFieldBlur(e),
+					},
+				}),
+				SigninBtn: new Button({
+					id: "renderChatsBtn",
+					class: "btn",
+					children: "Войти",
+					type: "submit",
+				}),
+				events: {
+					submit: (e?: Event) => this.handleSigninSubmit(e),
+				},
+			}),
 		});
+
+		this.validator = this.initValidator();
 	}
 
-	private handleFieldBlur(e: Event) {
-		const input = (e.target as HTMLElement).closest("input.login-field-input");
+	private initValidator(): FormValidator {
+		const form = this.element?.querySelector(".signin-form") as HTMLFormElement;
+		if (!form) {
+			throw new Error("Form not found for validator initialization");
+		}
+		return new FormValidator(form, ".login-field-item");
+	}
+
+	private handleFieldBlur(e?: Event): void {
+		const input = (e?.target as HTMLElement).closest("input.login-field-input");
 
 		if (!this.validator || !input) return;
 
 		this.validator.validateInput(input as HTMLInputElement);
 	}
 
-	private handleSigninClick(e: Event | undefined, props: PageProps) {
+	private async handleSigninSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
 		const form = this.element?.querySelector(".signin-form") as HTMLFormElement;
 		if (!form) return;
 
 		if (this.validator && this.validator.validateForm()) {
-			const data = getFormData(form);
+			const data = getFormData(form) as AuthData;
 			if (data) {
-				props.onChangePage("ChatsPage");
+				await AuthService.signin(data);
+				const { id } = await AuthService.userInfo();
+				localStorage.setItem("userId", String(id));
+				router.go("/messenger");
 			}
 		}
 	}
 
-	componentDidMount() {
-		const form = this.element?.querySelector(".signin-form") as HTMLFormElement;
-		if (!form) return;
+	private static handleSignupClick(e?: Event): void {
+		e?.preventDefault();
+		router.go("/sign-up");
+	}
 
-		this.validator = new FormValidator(form, ".login-field-item");
+	componentDidMount() {
+		this.validator = this.initValidator();
 	}
 
 	render(): HTMLElement {

@@ -18,7 +18,14 @@ const template = `
 export default class ProfileFieldsList extends Block {
 	constructor(props: ProfileFieldsProps) {
 		super("div", {
-			fields: props.fields.map((field) => new ProfileField(field)),
+			fields: props.fields.map(
+				(field) =>
+					new ProfileField({
+						...field,
+						events: props.events,
+						label: field.label,
+					})
+			),
 		});
 	}
 

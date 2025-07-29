@@ -5,9 +5,13 @@
 	--text-color-blue: #3369f3;
 	--text-color-danger: #ff0000;
 
+	--bg-color-white: #fff;
 	--bg-color-subtle: #fbfbfb;
 	--bg-color-muted: #efefef;
+	--bg-color-grey: #e8e8e8;
+	--bg-color-lightblue: #e4edfd;
 	--bg-color-blue: #3369f3;
+	--bg-color-overlay: rgba(0, 0, 0, 0.5);
 
 	--border-color: #eaeaea;
 }
@@ -52,6 +56,13 @@ li {
 }
 
 input {
+	padding: 0;
+}
+
+button {
+	border: none;
+	background: none;
+	outline: none;
 	padding: 0;
 }
 
