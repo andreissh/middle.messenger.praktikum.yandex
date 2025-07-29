@@ -154,7 +154,7 @@ export default class ChatPage extends Block {
 
 	private static handleAddUserClick(e?: Event) {
 		e?.preventDefault();
-		const modal: HTMLElement | null = document.querySelector("#addUserModal");
+		const modal = document.querySelector<HTMLElement>("#addUserModal");
 		if (!modal) return;
 		modal.style.display = "block";
 	}
@@ -162,9 +162,8 @@ export default class ChatPage extends Block {
 	private async handleAddUserSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
 
-		const modal: HTMLElement | null = document.querySelector("#addUserModal");
-		const input: HTMLInputElement | null =
-			document.querySelector("#addUserInput");
+		const modal = document.querySelector<HTMLElement>("#addUserModal");
+		const input = document.querySelector<HTMLInputElement>("#addUserInput");
 		if (!modal || !input) return;
 
 		const userData = await UserService.search(input.value);
@@ -174,8 +173,7 @@ export default class ChatPage extends Block {
 
 	private static handleRemoveUserClick(e?: Event) {
 		e?.preventDefault();
-		const modal: HTMLElement | null =
-			document.querySelector("#removeUserModal");
+		const modal = document.querySelector<HTMLElement>("#removeUserModal");
 		if (!modal) return;
 		modal.style.display = "block";
 	}
@@ -183,10 +181,8 @@ export default class ChatPage extends Block {
 	private async handleRemoveUserSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
 
-		const modal: HTMLElement | null =
-			document.querySelector("#removeUserModal");
-		const input: HTMLInputElement | null =
-			document.querySelector("#removeUserInput");
+		const modal = document.querySelector<HTMLElement>("#removeUserModal");
+		const input = document.querySelector<HTMLInputElement>("#removeUserInput");
 		if (!modal || !input) return;
 
 		const userData = await UserService.search(input.value);
@@ -202,8 +198,8 @@ export default class ChatPage extends Block {
 	}
 
 	private addUsersToModal() {
-		const chatUsersList: HTMLElement | null =
-			document.querySelector(".chat-users-list");
+		const chatUsersList =
+			document.querySelector<HTMLElement>(".chat-users-list");
 		if (!chatUsersList) return;
 		const users = this.lists.chatUsers as string[];
 		users.forEach((user) => {
@@ -214,10 +210,10 @@ export default class ChatPage extends Block {
 	}
 
 	private handleChatUsersClick() {
-		const chatUsersBtn: HTMLButtonElement | null =
-			document.querySelector(".chat-users-btn");
-		const chatUsersModal: HTMLElement | null =
-			document.querySelector("#chatUsersModal");
+		const chatUsersBtn =
+			document.querySelector<HTMLButtonElement>(".chat-users-btn");
+		const chatUsersModal =
+			document.querySelector<HTMLElement>("#chatUsersModal");
 		if (!chatUsersBtn || !chatUsersModal) return;
 
 		chatUsersBtn.addEventListener("click", () => {
@@ -254,9 +250,8 @@ export default class ChatPage extends Block {
 			});
 		});
 
-		const btn: HTMLButtonElement | null =
-			document.querySelector(".chat-send-btn");
-		const input: HTMLInputElement | null = document.querySelector("#message");
+		const btn = document.querySelector<HTMLButtonElement>(".chat-send-btn");
+		const input = document.querySelector<HTMLInputElement>("#message");
 
 		btn?.addEventListener("click", () => {
 			if (!input) return;
@@ -269,8 +264,8 @@ export default class ChatPage extends Block {
 			input.value = "";
 		});
 
-		const optionsBtn: HTMLButtonElement | null =
-			document.querySelector(".chat-options-btn");
+		const optionsBtn =
+			document.querySelector<HTMLButtonElement>(".chat-options-btn");
 		const dropdown = document.getElementById("chatDropdown");
 
 		optionsBtn?.addEventListener("click", (e) => {

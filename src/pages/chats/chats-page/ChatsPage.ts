@@ -102,8 +102,7 @@ export default class ChatsPage extends Block {
 
 	private static handleCreateChatClick(e?: Event): void {
 		e?.preventDefault();
-		const modal: HTMLElement | null =
-			document.querySelector("#createChatModal");
+		const modal = document.querySelector<HTMLElement>("#createChatModal");
 		if (!modal) return;
 		modal.style.display = "block";
 	}
@@ -111,10 +110,8 @@ export default class ChatsPage extends Block {
 	private async handleCreateChatSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
 
-		const modal: HTMLElement | null =
-			document.querySelector("#createChatModal");
-		const input: HTMLInputElement | null =
-			document.querySelector("#createChatInput");
+		const modal = document.querySelector<HTMLElement>("#createChatModal");
+		const input = document.querySelector<HTMLInputElement>("#createChatInput");
 		if (!modal || !input) return;
 
 		await ChatsService.addChat(input.value);
