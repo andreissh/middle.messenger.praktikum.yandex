@@ -3,10 +3,7 @@ import ChatController from "@/api/ChatController";
 import sendBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import Button from "@/components/button/Button";
-import Modal from "@/components/modal/Modal";
 import Form from "@/components/form/Form";
-import ChatsService from "@/services/ChatsService";
-import UserService from "@/services/UserService";
 import "./chat-page.css";
 
 const template = `
@@ -52,9 +49,6 @@ const template = `
 				{{{ SendMessageForm }}}
 			</div>
 		{{/if}}
-		{{{ AddUserModal }}}
-		{{{ RemoveUserModal }}}
-		{{{ ChatUsersModal }}}
 	</div>
 `;
 
@@ -104,51 +98,6 @@ export default class ChatPage extends Block {
 					submit: (e?: Event) => ChatPage.handleSendMessageSubmit(e),
 				},
 			}),
-			AddUserModal: new Modal({
-				id: "addUserModal",
-				title: "Добавьте пользователя",
-				children: `
-					{{{ AddUserForm }}}
-				`,
-				AddUserForm: new Form({
-					class: "add-user-form",
-					children: `
-						<label class="add-user-label">
-							<input type="text" id="addUserInput" class="add-user-input" placeholder="Введите логин" />
-						</label>
-						<button type="submit" class="btn add-user-submit-btn">Добавить</button>
-					`,
-					events: {
-						submit: (e?: Event) => this.handleAddUserSubmit(e),
-					},
-				}),
-			}),
-			RemoveUserModal: new Modal({
-				id: "removeUserModal",
-				title: "Удалите пользователя",
-				children: `
-					{{{ RemoveUserForm }}}
-				`,
-				RemoveUserForm: new Form({
-					class: "remove-user-form",
-					children: `
-						<label class="remove-user-label">
-							<input type="text" id="removeUserInput" class="remove-user-input" placeholder="Введите логин" />
-						</label>
-						<button type="submit" class="btn remove-user-submit-btn">Удалить</button>
-					`,
-					events: {
-						submit: (e?: Event) => this.handleRemoveUserSubmit(e),
-					},
-				}),
-			}),
-			ChatUsersModal: new Modal({
-				id: "chatUsersModal",
-				title: "Участники чата",
-				children: `
-					<ul class="chat-users-list"></ul>
-				`,
-			}),
 		});
 	}
 
@@ -159,38 +108,11 @@ export default class ChatPage extends Block {
 		modal.style.display = "block";
 	}
 
-	private async handleAddUserSubmit(e?: Event): Promise<void> {
-		e?.preventDefault();
-
-		const modal = document.querySelector<HTMLElement>("#addUserModal");
-		const input = document.querySelector<HTMLInputElement>("#addUserInput");
-		if (!modal || !input) return;
-
-		const userData = await UserService.search(input.value);
-		await ChatsService.addUser([userData[0].id], this.props.chatId as number);
-		modal.style.display = "none";
-	}
-
 	private static handleRemoveUserClick(e?: Event) {
 		e?.preventDefault();
 		const modal = document.querySelector<HTMLElement>("#removeUserModal");
 		if (!modal) return;
 		modal.style.display = "block";
-	}
-
-	private async handleRemoveUserSubmit(e?: Event): Promise<void> {
-		e?.preventDefault();
-
-		const modal = document.querySelector<HTMLElement>("#removeUserModal");
-		const input = document.querySelector<HTMLInputElement>("#removeUserInput");
-		if (!modal || !input) return;
-
-		const userData = await UserService.search(input.value);
-		await ChatsService.removeUser(
-			[userData[0].id],
-			this.props.chatId as number
-		);
-		modal.style.display = "none";
 	}
 
 	static handleSendMessageSubmit(e?: Event): void {
@@ -202,11 +124,13 @@ export default class ChatPage extends Block {
 			document.querySelector<HTMLElement>(".chat-users-list");
 		if (!chatUsersList) return;
 		const users = this.lists.chatUsers as string[];
-		users.forEach((user) => {
-			const li = document.createElement("li");
-			li.textContent = user;
-			chatUsersList.appendChild(li);
-		});
+		if (!chatUsersList.hasChildNodes()) {
+			users.forEach((user) => {
+				const li = document.createElement("li");
+				li.textContent = user;
+				chatUsersList.appendChild(li);
+			});
+		}
 	}
 
 	private handleChatUsersClick() {

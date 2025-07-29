@@ -7,6 +7,7 @@ import plusIcon from "@/assets/icons/plus.svg";
 import formatChatDate from "@/utils/formatChatDate";
 import Form from "@/components/form/Form";
 import ChatsService from "@/services/ChatsService";
+import UserService from "@/services/UserService";
 import ChatsList from "./components/chats-list/ChatsList";
 import ChatPage from "../chat-page/ChatPage";
 import "./chats-page.css";
@@ -20,29 +21,32 @@ type UserChatListData = {
 };
 
 const template = `
-  <div class="chats-container">
-    <aside class="chats-aside">
-      <div class="chats-aside-top-section">
-		<div class="chats-profile-btn-wrapper">
-		  {{{ ProfileBtn }}}
-		</div>
-        <input
-          type="search"
-          name="search"
-          class="chats-aside-search"
-          placeholder="Поиск"
-        />
-      </div>
-      {{{ ChatsList }}}
-	   <div class="create-chat-btn-wrapper">
-	  	{{{ CreateChatBtn }}}
-	   </div>
-    </aside>
-    <main class="chats-main">
-		{{{ ChatPage }}}
-    </main>
-	{{{ CreateChatModal }}}
-  </div>
+	<div class="chats-container">
+		<aside class="chats-aside">
+			<div class="chats-aside-top-section">
+				<div class="chats-profile-btn-wrapper">
+					{{{ ProfileBtn }}}
+				</div>
+				<input
+				type="search"
+				name="search"
+				class="chats-aside-search"
+				placeholder="Поиск"
+				/>
+			</div>
+			{{{ ChatsList }}}
+			<div class="create-chat-btn-wrapper">
+				{{{ CreateChatBtn }}}
+			</div>
+		</aside>
+		<main class="chats-main">
+			{{{ ChatPage }}}
+		</main>
+		{{{ CreateChatModal }}}
+		{{{ AddUserModal }}}
+		{{{ RemoveUserModal }}}
+		{{{ ChatUsersModal }}}
+	</div>
 `;
 
 export default class ChatsPage extends Block {
@@ -92,6 +96,51 @@ export default class ChatsPage extends Block {
 					},
 				}),
 			}),
+			AddUserModal: new Modal({
+				id: "addUserModal",
+				title: "Добавьте пользователя",
+				children: `
+					{{{ AddUserForm }}}
+				`,
+				AddUserForm: new Form({
+					class: "add-user-form",
+					children: `
+						<label class="add-user-label">
+							<input type="text" id="addUserInput" class="add-user-input" placeholder="Введите логин" />
+						</label>
+						<button type="submit" class="btn add-user-submit-btn">Добавить</button>
+					`,
+					events: {
+						submit: (e?: Event) => this.handleAddUserSubmit(e),
+					},
+				}),
+			}),
+			RemoveUserModal: new Modal({
+				id: "removeUserModal",
+				title: "Удалите пользователя",
+				children: `
+					{{{ RemoveUserForm }}}
+				`,
+				RemoveUserForm: new Form({
+					class: "remove-user-form",
+					children: `
+						<label class="remove-user-label">
+							<input type="text" id="removeUserInput" class="remove-user-input" placeholder="Введите логин" />
+						</label>
+						<button type="submit" class="btn remove-user-submit-btn">Удалить</button>
+					`,
+					events: {
+						submit: (e?: Event) => this.handleRemoveUserSubmit(e),
+					},
+				}),
+			}),
+			ChatUsersModal: new Modal({
+				id: "chatUsersModal",
+				title: "Участники чата",
+				children: `
+					<ul class="chat-users-list"></ul>
+				`,
+			}),
 		});
 	}
 
@@ -118,6 +167,32 @@ export default class ChatsPage extends Block {
 
 		modal.style.display = "none";
 		this.getChats();
+	}
+
+	private async handleAddUserSubmit(e?: Event): Promise<void> {
+		e?.preventDefault();
+
+		const modal = document.querySelector<HTMLElement>("#addUserModal");
+		const input = document.querySelector<HTMLInputElement>("#addUserInput");
+		const chatId = Number(window.location.pathname.split("/").pop());
+		if (!modal || !input || !chatId) return;
+
+		const userData = await UserService.search(input.value);
+		await ChatsService.addUser([userData[0].id], chatId as number);
+		modal.style.display = "none";
+	}
+
+	private async handleRemoveUserSubmit(e?: Event): Promise<void> {
+		e?.preventDefault();
+
+		const modal = document.querySelector<HTMLElement>("#removeUserModal");
+		const input = document.querySelector<HTMLInputElement>("#removeUserInput");
+		const chatId = Number(window.location.pathname.split("/").pop());
+		if (!modal || !input || !chatId) return;
+
+		const userData = await UserService.search(input.value);
+		await ChatsService.removeUser([userData[0].id], chatId as number);
+		modal.style.display = "none";
 	}
 
 	getChats = async () => {
