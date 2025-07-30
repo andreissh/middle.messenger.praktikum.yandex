@@ -43,6 +43,7 @@ const template = `
 			{{{ ChatPage }}}
 		</main>
 		{{{ CreateChatModal }}}
+		{{{ DeleteChatModal }}}
 		{{{ AddUserModal }}}
 		{{{ RemoveUserModal }}}
 		{{{ ChatUsersModal }}}
@@ -93,6 +94,33 @@ export default class ChatsPage extends Block {
 					`,
 					events: {
 						submit: (e?: Event) => this.handleCreateChatSubmit(e),
+					},
+				}),
+			}),
+			DeleteChatModal: new Modal({
+				id: "deleteChatModal",
+				title: "Удаление чата",
+				children: `
+					<div class="delete-chat-modal-btns">
+						<span>Вы действительно хотите удалить выбранный чат?</span>
+						{{{ DeleteChatConfirmBtn }}}
+						{{{ DeleteChatCancelBtn }}}
+					</div>
+				`,
+				DeleteChatCancelBtn: new Button({
+					id: "deleteChatCancelBtn",
+					class: "btn-secondary",
+					children: "Нет",
+					events: {
+						click: () => this.handleDeleteChatCancelClick(),
+					},
+				}),
+				DeleteChatConfirmBtn: new Button({
+					id: "deleteChatConfirmBtn",
+					class: "btn",
+					children: "Да",
+					events: {
+						click: () => this.handleDeleteChatConfirmClick(),
 					},
 				}),
 			}),
@@ -154,6 +182,23 @@ export default class ChatsPage extends Block {
 		const modal = document.querySelector<HTMLElement>("#createChatModal");
 		if (!modal) return;
 		modal.style.display = "block";
+	}
+
+	private handleDeleteChatCancelClick(): void {
+		const modal = document.querySelector<HTMLElement>("#deleteChatModal");
+		if (!modal) return;
+		modal.style.display = "none";
+		sessionStorage.removeItem("chatId");
+	}
+
+	private async handleDeleteChatConfirmClick(): Promise<void> {
+		const chatId = sessionStorage.getItem("chatId");
+		const modal = document.querySelector<HTMLElement>("#deleteChatModal");
+		if (!modal) return;
+		await ChatsService.deleteChat(Number(chatId));
+		modal.style.display = "none";
+		sessionStorage.removeItem("chatId");
+		this.getChats();
 	}
 
 	private async handleCreateChatSubmit(e?: Event): Promise<void> {

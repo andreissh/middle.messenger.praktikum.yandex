@@ -2,7 +2,6 @@ import Block from "@/framework/Block";
 import ContextMenu from "@/components/context-menu/ContextMenu";
 import router from "@/routes/Router";
 import avatarImg from "@/assets/icons/avatar-img.svg";
-import ChatsService from "@/services/ChatsService";
 import "./chats-item.css";
 
 export type ChatsItemProps = {
@@ -40,7 +39,7 @@ export default class ChatsItem extends Block {
 			...props,
 			ContextMenu: new ContextMenu({}),
 			events: {
-				click: (e?: Event) => ChatsItem.handleChatItemClick(e),
+				click: () => this.handleChatItemClick(),
 				contextmenu: (e?: Event) => this.handleContextMenu(e),
 			},
 		});
@@ -58,25 +57,16 @@ export default class ChatsItem extends Block {
 		});
 	}
 
-	deleteChat = async () => {
-		ChatsService.deleteChat(this.props.id as number);
+	showDeleteChatModal = async (): Promise<void> => {
+		sessionStorage.setItem("chatId", String(this.props.id));
+		const modal = document.querySelector<HTMLElement>("#deleteChatModal");
+		if (!modal) return;
 		this.closeContextMenu();
-		if (typeof this.props.onRefresh === "function") {
-			this.props.onRefresh();
-		}
+		modal.style.display = "block";
 	};
 
-	private static handleChatItemClick(e?: Event): void {
-		const chatItems = document.querySelectorAll(".chat-item");
-		let chatId;
-		chatItems.forEach((item) => {
-			if (e?.target instanceof Node && item.contains(e.target)) {
-				chatId = item.id;
-			}
-		});
-		if (!chatId) return;
-
-		router.go(`/messenger/${chatId}`);
+	private handleChatItemClick(): void {
+		router.go(`/messenger/${this.props.id}`);
 	}
 
 	handleContextMenu(e?: Event) {
@@ -92,7 +82,7 @@ export default class ChatsItem extends Block {
 			ContextMenu: new ContextMenu({
 				x: mouseEvent.clientX,
 				y: mouseEvent.clientY,
-				onDelete: () => this.deleteChat(),
+				onDelete: () => this.showDeleteChatModal(),
 			}),
 		});
 
