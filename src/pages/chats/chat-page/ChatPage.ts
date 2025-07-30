@@ -14,10 +14,10 @@ const template = `
 					<span class="chat-avatar">
 						<img src=${avatarImg} alt="avatar" />
 					</span>
-					<div>
+					<div class="chat-header-info-text-block">
 						<h5 class="chat-title">{{ title }}</h5>
 						<button class="chat-users-btn">
-							<span>Участников: {{ chatUsersCount }}</span>
+							Участников: {{ chatUsersCount }}
 						</button>
 					</div>
 				</div>

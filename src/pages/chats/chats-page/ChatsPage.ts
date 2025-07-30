@@ -166,7 +166,10 @@ export default class ChatsPage extends Block {
 				id: "chatUsersModal",
 				title: "Участники чата",
 				children: `
-					<ul class="chat-users-list"></ul>
+					<div class="chat-users-list-container">
+						<span class="chat-users-list-title">Список участников:</span>
+						<ul class="chat-users-list"></ul>
+					</div>
 				`,
 			}),
 		});
@@ -193,11 +196,15 @@ export default class ChatsPage extends Block {
 
 	private async handleDeleteChatConfirmClick(): Promise<void> {
 		const chatId = sessionStorage.getItem("chatId");
+		const chatIdFromRoute = window.location.pathname.split("/").pop();
 		const modal = document.querySelector<HTMLElement>("#deleteChatModal");
 		if (!modal) return;
 		await ChatsService.deleteChat(Number(chatId));
 		modal.style.display = "none";
 		sessionStorage.removeItem("chatId");
+		if (chatId === chatIdFromRoute) {
+			router.go("/messenger");
+		}
 		this.getChats();
 	}
 

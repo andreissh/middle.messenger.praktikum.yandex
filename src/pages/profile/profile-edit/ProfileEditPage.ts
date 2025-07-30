@@ -49,6 +49,7 @@ export default class ProfileEditPage extends Block {
 				children: `
 					<span class="profile-edit-avatar" name="avatar">
 						<img src="${avatarImg}" class="profile-edit-avatar-img" />
+						<span class="avatar-overlay-text">Поменять аватар</span>
 					</span>
 				`,
 				events: {
@@ -233,6 +234,7 @@ export default class ProfileEditPage extends Block {
 					children: `
 							<span class="profile-edit-avatar" name="avatar">
 								<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-avatar-img" />
+								<span class="avatar-overlay-text">Поменять аватар</span>
 							</span>
 						`,
 					events: {

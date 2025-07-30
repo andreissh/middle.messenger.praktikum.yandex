@@ -72,6 +72,7 @@
 	line-height: 13px;
 	color: var(--text-color-blue);
 	text-decoration: none;
+	cursor: pointer;
 }
 
 .profile-info-btns-item-btn--danger {
