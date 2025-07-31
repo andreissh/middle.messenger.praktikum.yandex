@@ -7,6 +7,7 @@ export type InputProps = {
 	name: string;
 	value?: string;
 	autocomplete: string;
+	placeholder?: string;
 	readonly?: boolean;
 	events?: EventsType;
 };

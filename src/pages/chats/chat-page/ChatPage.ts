@@ -4,6 +4,7 @@ import sendBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import Button from "@/components/button/Button";
 import Form from "@/components/form/Form";
+import Input from "@/components/input/Input";
 import "./chat-page.css";
 
 const template = `
@@ -90,13 +91,7 @@ export default class ChatPage extends Block {
 			SendMessageForm: new Form({
 				class: "send-msg-form",
 				children: `
-					<input
-						id="message"
-						type="text"
-						name="message"
-						class="message"
-						placeholder="Сообщение"
-					/>
+					{{{ SendMessageInput }}}
 					{{{ SendMessageBtn }}}
 				`,
 				SendMessageBtn: new Button({
@@ -105,6 +100,14 @@ export default class ChatPage extends Block {
 					children: `
 						<img src=${sendBtn} alt="send" />
 					`,
+				}),
+				SendMessageInput: new Input({
+					id: "message",
+					type: "text",
+					name: "message",
+					class: "message",
+					placeholder: "Сообщение",
+					autocomplete: "message",
 				}),
 				events: {
 					submit: (e?: Event) => ChatPage.handleSendMessageSubmit(e),

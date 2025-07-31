@@ -9,6 +9,7 @@ const template = `
       type="{{ type }}"
       name="{{ name }}"
       value="{{ value }}"
+      placeholder="{{ placeholder }}"
 	    autocomplete="{{ autocomplete }}"
       {{#if readonly}}readonly{{/if}}
     />

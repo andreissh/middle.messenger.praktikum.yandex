@@ -8,6 +8,7 @@ import formatChatDate from "@/utils/formatChatDate";
 import Form from "@/components/form/Form";
 import ChatsService from "@/services/ChatsService";
 import UserService from "@/services/UserService";
+import Input from "@/components/input/Input";
 import ChatsList from "./components/chats-list/ChatsList";
 import ChatPage from "../chat-page/ChatPage";
 import "./chats-page.css";
@@ -27,12 +28,7 @@ const template = `
 				<div class="chats-profile-btn-wrapper">
 					{{{ ProfileBtn }}}
 				</div>
-				<input
-				type="search"
-				name="search"
-				class="chats-aside-search"
-				placeholder="Поиск"
-				/>
+				{{{ SearchInput }}}
 			</div>
 			{{{ ChatsList }}}
 			<div class="create-chat-btn-wrapper">
@@ -64,6 +60,14 @@ export default class ChatsPage extends Block {
 					click: () => ChatsPage.handleProfileClick(),
 				},
 			}),
+			SearchInput: new Input({
+				id: "search",
+				class: "chats-aside-search",
+				type: "search",
+				name: "search",
+				placeholder: "Поиск",
+				autocomplete: "search",
+			}),
 			ChatsList: new ChatsList({
 				chats: [],
 			}),
@@ -90,7 +94,7 @@ export default class ChatsPage extends Block {
 					class: "create-chat-form",
 					children: `
 						<label class="create-chat-label">
-							<input type="text" id="createChatInput" class="create-chat-input" placeholder="Введите название" />
+							{{{ CreateChatInput }}}
 						</label>
 						{{{ CreateChatBtn }}}
 					`,
@@ -98,6 +102,14 @@ export default class ChatsPage extends Block {
 						class: "btn create-chat-submit-btn",
 						type: "submit",
 						children: "Создать",
+					}),
+					CreateChatInput: new Input({
+						id: "createChatInput",
+						class: "create-chat-input",
+						type: "text",
+						name: "createChatInput",
+						placeholder: "Введите название",
+						autocomplete: "createChatInput",
 					}),
 					events: {
 						submit: (e?: Event) => this.handleCreateChatSubmit(e),
@@ -141,7 +153,7 @@ export default class ChatsPage extends Block {
 					class: "add-user-form",
 					children: `
 						<label class="add-user-label">
-							<input type="text" id="addUserInput" class="add-user-input" placeholder="Введите логин" />
+							{{{ AddUserInput }}}
 						</label>
 						{{{ AddUserBtn }}}
 					`,
@@ -149,6 +161,14 @@ export default class ChatsPage extends Block {
 						class: "btn add-user-submit-btn",
 						type: "submit",
 						children: "Добавить",
+					}),
+					AddUserInput: new Input({
+						id: "addUserInput",
+						class: "add-user-input",
+						type: "text",
+						name: "addUserInput",
+						placeholder: "Введите логин",
+						autocomplete: "addUserInput",
 					}),
 					events: {
 						submit: (e?: Event) => ChatsPage.handleAddUserSubmit(e),
@@ -165,7 +185,7 @@ export default class ChatsPage extends Block {
 					class: "remove-user-form",
 					children: `
 						<label class="remove-user-label">
-							<input type="text" id="removeUserInput" class="remove-user-input" placeholder="Введите логин" />
+							{{{ RemoveUserInput }}}
 						</label>
 						{{{ RemoveUserBtn }}}
 					`,
@@ -173,6 +193,14 @@ export default class ChatsPage extends Block {
 						class: "btn remove-user-submit-btn",
 						type: "submit",
 						children: "Удалить",
+					}),
+					RemoveUserInput: new Input({
+						id: "removeUserInput",
+						class: "remove-user-input",
+						type: "text",
+						name: "removeUserInput",
+						placeholder: "Введите логин",
+						autocomplete: "removeUserInput",
 					}),
 					events: {
 						submit: (e?: Event) => ChatsPage.handleRemoveUserSubmit(e),
