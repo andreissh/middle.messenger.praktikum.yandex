@@ -5,6 +5,7 @@ import avatarImg from "@/assets/icons/avatar-img.svg";
 import Button from "@/components/button/Button";
 import Form from "@/components/form/Form";
 import Input from "@/components/input/Input";
+import Avatar from "@/components/avatar/Avatar";
 import "./chat-page.css";
 
 const template = `
@@ -12,9 +13,7 @@ const template = `
 		{{#if chatId}}
 			<div class="chat-header">
 				<div class="chat-header-info">
-					<span class="chat-avatar">
-						<img src=${avatarImg} alt="avatar" />
-					</span>
+					{{{ Avatar }}}
 					<div class="chat-header-info-text-block">
 						<h5 class="chat-title">{{ title }}</h5>
 						{{{ ChatUsersBtn }}}
@@ -49,6 +48,12 @@ export default class ChatPage extends Block {
 	constructor(props: Record<string, unknown>) {
 		super("div", {
 			...props,
+			Avatar: new Avatar({
+				class: "chat-avatar",
+				children: `
+					<img src=${avatarImg} alt="avatar" />
+				`,
+			}),
 			ChatUsersBtn: new Button({
 				class: "chat-users-btn",
 				children: `

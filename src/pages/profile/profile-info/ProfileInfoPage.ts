@@ -7,6 +7,7 @@ import { UserData } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import AuthService from "@/services/AuthService";
+import Avatar from "@/components/avatar/Avatar";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileFields } from "../utils/profileData";
 import ProfileEditPage from "../profile-edit/ProfileEditPage";
@@ -19,7 +20,7 @@ const template = `
     <div class="profile-info-content-wrapper">
       <div class="profile-info-content">
         <div class="profile-info-avatar-block">
-          {{{ AvatarBtn }}}
+          {{{ Avatar }}}
           <span class="profile-info-username">Иван</span>
         </div>
         <div class="profile-info-data-block">
@@ -57,16 +58,12 @@ export default class ProfileInfoPage extends Block {
 					click: () => ProfileInfoPage.handleBackClick(),
 				},
 			}),
-			AvatarBtn: new Button({
-				id: "avatarBtn",
+			Avatar: new Avatar({
+				class: "profile-info-avatar",
+				name: "avatar",
 				children: `
-					<span class="profile-info-avatar" name="avatar">
-						<img src="${avatarImg}" class="profile-info-default-avatar-img" />
-					</span>
+					<img src="${avatarImg}" class="profile-info-default-avatar-img" />
 				`,
-				events: {
-					click: (e?: Event) => ProfileInfoPage.handleAvatarClick(e),
-				},
 			}),
 			ProfileFieldsList: new ProfileFieldsList({
 				fields: profileFields,
@@ -100,10 +97,6 @@ export default class ProfileInfoPage extends Block {
 
 	private static handleBackClick(): void {
 		router.go("/messenger");
-	}
-
-	private static handleAvatarClick(e?: Event): void {
-		e?.preventDefault();
 	}
 
 	private static handleChangeDataClick(): void {
@@ -140,16 +133,12 @@ export default class ProfileInfoPage extends Block {
 				ProfileFieldsList: new ProfileFieldsList({
 					fields: profileFieldsClone,
 				}),
-				AvatarBtn: new Button({
-					id: "avatarBtn",
+				Avatar: new Avatar({
+					class: "profile-info-avatar",
+					name: "avatar",
 					children: `
-						<span class="profile-info-avatar" name="avatar">
-							<img src="${imgSrc}" class="${imgClass}" />
-						</span>
+						<img src="${imgSrc}" class="${imgClass}" />
 					`,
-					events: {
-						click: (e?: Event) => ProfileInfoPage.handleAvatarClick(e),
-					},
 				}),
 			});
 		};

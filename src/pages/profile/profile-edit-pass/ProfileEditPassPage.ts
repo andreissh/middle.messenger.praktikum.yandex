@@ -10,6 +10,7 @@ import { resourcesUrl } from "@/utils/utils";
 import Form from "@/components/form/Form";
 import AuthService from "@/services/AuthService";
 import UserService from "@/services/UserService";
+import Avatar from "@/components/avatar/Avatar";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { passwordFields } from "../utils/profileData";
 import "./profile-edit-pass.css";
@@ -20,7 +21,7 @@ const template = `
     <div class="profile-edit-pass-content-wrapper">
       <div class="profile-edit-pass-content">
         <div class="profile-edit-pass-avatar-block">
-          {{{ AvatarBtn }}}
+          {{{ Avatar }}}
         </div>
         {{{ ProfileEditPassForm }}}
       </div>
@@ -44,12 +45,11 @@ export default class ProfileEditPassPage extends Block {
 					click: () => ProfileEditPassPage.handleBackClick(),
 				},
 			}),
-			AvatarBtn: new Button({
-				id: "avatarBtn",
+			Avatar: new Avatar({
+				class: "profile-edit-pass-avatar",
+				name: "avatar",
 				children: `
-					<span class="profile-edit-pass-avatar" name="avatar">
-						<img src="${avatarImg}" class="profile-edit-pass-default-avatar-img" />
-					</span>
+					<img src="${avatarImg}" class="profile-edit-pass-default-avatar-img" />
 				`,
 			}),
 			ProfileEditPassForm: new Form({
@@ -169,12 +169,11 @@ export default class ProfileEditPassPage extends Block {
 				: "profile-edit-pass-default-avatar-img";
 
 			this.setProps({
-				AvatarBtn: new Button({
-					id: "avatarBtn",
+				Avatar: new Avatar({
+					class: "profile-edit-pass-avatar",
+					name: "avatar",
 					children: `
-						<span class="profile-edit-pass-avatar" name="avatar">
-							<img src="${imgSrc}" class="${imgClass}" />
-						</span>
+						<img src="${imgSrc}" class="${imgClass}" />
 					`,
 				}),
 			});

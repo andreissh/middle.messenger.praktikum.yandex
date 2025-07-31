@@ -10,6 +10,7 @@ import { resourcesUrl } from "@/utils/utils";
 import Form from "@/components/form/Form";
 import AuthService from "@/services/AuthService";
 import UserService from "@/services/UserService";
+import Avatar from "@/components/avatar/Avatar";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileEditFields } from "../utils/profileData";
 import "./profile-edit.css";
@@ -47,11 +48,16 @@ export default class ProfileEditPage extends Block {
 			AvatarBtn: new Button({
 				id: "avatarBtn",
 				children: `
-					<span class="profile-edit-avatar" name="avatar">
+					{{{ Avatar }}}
+				`,
+				Avatar: new Avatar({
+					class: "profile-edit-avatar",
+					name: "avatar",
+					children: `
 						<img src="${avatarImg}" class="profile-edit-default-avatar-img" />
 						<span class="avatar-overlay-text">Поменять аватар</span>
-					</span>
-				`,
+					`,
+				}),
 				events: {
 					click: () => this.handleAvatarClick(),
 				},
@@ -148,10 +154,15 @@ export default class ProfileEditPage extends Block {
 			AvatarBtn: new Button({
 				id: "avatarBtn",
 				children: `
-						<span class="profile-edit-avatar" name="avatar">
-							<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-avatar-img" />
-						</span>
+					{{{ Avatar }}}
+				`,
+				Avatar: new Avatar({
+					class: "profile-edit-avatar",
+					name: "avatar",
+					children: `
+						<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-avatar-img" />
 					`,
+				}),
 				events: {
 					click: () => this.handleAvatarClick(),
 				},
@@ -237,11 +248,11 @@ export default class ProfileEditPage extends Block {
 				AvatarBtn: new Button({
 					id: "avatarBtn",
 					children: `
-							<span class="profile-edit-avatar" name="avatar">
-								<img src="${imgSrc}" class="${imgClass}" />
-								<span class="avatar-overlay-text">Поменять аватар</span>
-							</span>
-						`,
+						<span class="profile-edit-avatar" name="avatar">
+							<img src="${imgSrc}" class="${imgClass}" />
+							<span class="avatar-overlay-text">Поменять аватар</span>
+						</span>
+					`,
 					events: {
 						click: () => this.handleAvatarClick(),
 					},
