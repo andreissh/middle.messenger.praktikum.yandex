@@ -170,18 +170,14 @@ export default class ChatPage extends Block {
 			: "none";
 	}
 
-	private static closeChatOptionsDropdown = (e: Event) => {
+	private static closeChatOptionsDropdown = () => {
 		const optionsBtn =
 			document.querySelector<HTMLButtonElement>(".chat-options-btn");
 		const dropdown = document.getElementById("chatDropdown");
 		if (!dropdown || !optionsBtn) return;
-		if (
-			!dropdown.contains(e.target as Node) &&
-			!optionsBtn.contains(e.target as Node)
-		) {
-			dropdown.classList.remove("open");
-			dropdown.style.display = "none";
-		}
+
+		dropdown.classList.remove("open");
+		dropdown.style.display = "none";
 	};
 
 	componentDidMount() {

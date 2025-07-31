@@ -32,8 +32,6 @@ const template = `
 `;
 
 export default class ChatsItem extends Block {
-	private static currentOpenMenu: Block | null = null;
-
 	constructor(props: ChatsItemProps) {
 		super("div", {
 			...props,
@@ -44,24 +42,14 @@ export default class ChatsItem extends Block {
 			},
 		});
 
-		document.addEventListener("click", (e) => {
-			const target = e.target as Node;
-			const isClickInsideMenu = this.children.ContextMenu
-				? this.children.ContextMenu.getContent().contains(target)
-				: false;
-			const isClickInsideChatItem = this.getContent().contains(target);
-
-			if (!isClickInsideMenu && !isClickInsideChatItem) {
-				this.closeContextMenu();
-			}
-		});
+		document.addEventListener("click", ChatsItem.removeContextMenu);
 	}
 
-	showDeleteChatModal = async (): Promise<void> => {
-		sessionStorage.setItem("chatId", String(this.props.id));
+	private showDeleteChatModal = (): void => {
 		const modal = document.querySelector<HTMLElement>("#deleteChatModal");
 		if (!modal) return;
-		this.closeContextMenu();
+
+		sessionStorage.setItem("chatId", String(this.props.id));
 		modal.style.display = "block";
 	};
 
@@ -69,33 +57,40 @@ export default class ChatsItem extends Block {
 		router.go(`/messenger/${this.props.id}`);
 	}
 
-	handleContextMenu(e?: Event) {
+	private handleContextMenu(e?: Event) {
 		e?.preventDefault();
 		const mouseEvent = e as MouseEvent;
-
-		if (ChatsItem.currentOpenMenu) {
-			ChatsItem.currentOpenMenu.getContent().remove();
-			ChatsItem.currentOpenMenu = null;
-		}
 
 		this.setProps({
 			ContextMenu: new ContextMenu({
 				x: mouseEvent.clientX,
 				y: mouseEvent.clientY,
-				onDelete: () => this.showDeleteChatModal(),
+				events: {
+					click: () => this.showDeleteChatModal(),
+				},
 			}),
 		});
 
-		ChatsItem.currentOpenMenu = this.children.ContextMenu;
+		this.renderContextMenu();
+		ChatsItem.positionContextMenu(mouseEvent.clientX, mouseEvent.clientY);
 
-		document.body.appendChild(this.children.ContextMenu.getContent());
-		this.positionContextMenu(mouseEvent.clientX, mouseEvent.clientY);
+		const contextMenu = document.querySelector<HTMLElement>(".context-menu");
+		if (!contextMenu) return;
+		contextMenu.style.display = "block";
 	}
 
-	positionContextMenu(x: number, y: number) {
-		if (!this.children.ContextMenu) return;
+	private renderContextMenu() {
+		const contextMenu = document.querySelector<HTMLElement>(".context-menu");
+		if (!contextMenu) {
+			document.body.appendChild(this.children.ContextMenu.getContent());
+		}
+	}
 
-		const menuElement = this.children.ContextMenu.getContent();
+	private static positionContextMenu(x: number, y: number) {
+		const contextMenu = document.querySelector<HTMLElement>(".context-menu");
+		if (!contextMenu) return;
+
+		const menuElement = contextMenu;
 		const menuWidth = menuElement.offsetWidth;
 		const menuHeight = menuElement.offsetHeight;
 		const windowWidth = window.innerWidth;
@@ -112,12 +107,11 @@ export default class ChatsItem extends Block {
 		menuElement.style.zIndex = "1000";
 	}
 
-	closeContextMenu() {
-		if (this.children.ContextMenu) {
-			this.children.ContextMenu.getContent().remove();
-			this.children.ContextMenu = null as unknown as Block;
-			ChatsItem.currentOpenMenu = null;
-		}
+	private static removeContextMenu() {
+		const contextMenu = document.querySelector<HTMLElement>(".context-menu");
+		if (!contextMenu) return;
+
+		contextMenu.remove();
 	}
 
 	render(): HTMLElement {
