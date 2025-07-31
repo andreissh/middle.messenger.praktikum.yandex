@@ -61,7 +61,7 @@ export default class ChatsPage extends Block {
 					<img src="${arrowIcon}" alt="profile" />
 				`,
 				events: {
-					click: (e?: Event) => ChatsPage.handleProfileClick(e),
+					click: () => ChatsPage.handleProfileClick(),
 				},
 			}),
 			ChatsList: new ChatsList({
@@ -74,7 +74,7 @@ export default class ChatsPage extends Block {
 					<img src=${plusIcon} alt="add chat" />
 				`,
 				events: {
-					click: (e?: Event) => ChatsPage.handleCreateChatClick(e),
+					click: () => ChatsPage.handleCreateChatClick(),
 				},
 			}),
 			ChatPage: new ChatPage({
@@ -92,8 +92,13 @@ export default class ChatsPage extends Block {
 						<label class="create-chat-label">
 							<input type="text" id="createChatInput" class="create-chat-input" placeholder="Введите название" />
 						</label>
-						<button type="submit" class="btn create-chat-submit-btn">Создать</button>
+						{{{ CreateChatBtn }}}
 					`,
+					CreateChatBtn: new Button({
+						class: "btn create-chat-submit-btn",
+						type: "submit",
+						children: "Создать",
+					}),
 					events: {
 						submit: (e?: Event) => this.handleCreateChatSubmit(e),
 					},
@@ -114,7 +119,7 @@ export default class ChatsPage extends Block {
 					class: "btn-secondary",
 					children: "Нет",
 					events: {
-						click: () => this.handleDeleteChatCancelClick(),
+						click: () => ChatsPage.handleDeleteChatCancelClick(),
 					},
 				}),
 				DeleteChatConfirmBtn: new Button({
@@ -138,10 +143,15 @@ export default class ChatsPage extends Block {
 						<label class="add-user-label">
 							<input type="text" id="addUserInput" class="add-user-input" placeholder="Введите логин" />
 						</label>
-						<button type="submit" class="btn add-user-submit-btn">Добавить</button>
+						{{{ AddUserBtn }}}
 					`,
+					AddUserBtn: new Button({
+						class: "btn add-user-submit-btn",
+						type: "submit",
+						children: "Добавить",
+					}),
 					events: {
-						submit: (e?: Event) => this.handleAddUserSubmit(e),
+						submit: (e?: Event) => ChatsPage.handleAddUserSubmit(e),
 					},
 				}),
 			}),
@@ -157,10 +167,15 @@ export default class ChatsPage extends Block {
 						<label class="remove-user-label">
 							<input type="text" id="removeUserInput" class="remove-user-input" placeholder="Введите логин" />
 						</label>
-						<button type="submit" class="btn remove-user-submit-btn">Удалить</button>
+						{{{ RemoveUserBtn }}}
 					`,
+					RemoveUserBtn: new Button({
+						class: "btn remove-user-submit-btn",
+						type: "submit",
+						children: "Удалить",
+					}),
 					events: {
-						submit: (e?: Event) => this.handleRemoveUserSubmit(e),
+						submit: (e?: Event) => ChatsPage.handleRemoveUserSubmit(e),
 					},
 				}),
 			}),
@@ -177,19 +192,17 @@ export default class ChatsPage extends Block {
 		});
 	}
 
-	private static handleProfileClick(e?: Event): void {
-		e?.preventDefault();
+	private static handleProfileClick(): void {
 		router.go("/settings");
 	}
 
-	private static handleCreateChatClick(e?: Event): void {
-		e?.preventDefault();
+	private static handleCreateChatClick(): void {
 		const modal = document.querySelector<HTMLElement>("#createChatModal");
 		if (!modal) return;
 		modal.style.display = "block";
 	}
 
-	private handleDeleteChatCancelClick(): void {
+	private static handleDeleteChatCancelClick(): void {
 		const modal = document.querySelector<HTMLElement>("#deleteChatModal");
 		if (!modal) return;
 		modal.style.display = "none";
@@ -223,7 +236,7 @@ export default class ChatsPage extends Block {
 		this.getChats();
 	}
 
-	private async handleAddUserSubmit(e?: Event): Promise<void> {
+	private static async handleAddUserSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
 
 		const modal = document.querySelector<HTMLElement>("#addUserModal");
@@ -236,7 +249,7 @@ export default class ChatsPage extends Block {
 		modal.style.display = "none";
 	}
 
-	private async handleRemoveUserSubmit(e?: Event): Promise<void> {
+	private static async handleRemoveUserSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
 
 		const modal = document.querySelector<HTMLElement>("#removeUserModal");
@@ -249,7 +262,7 @@ export default class ChatsPage extends Block {
 		modal.style.display = "none";
 	}
 
-	getChats = async () => {
+	private async getChats() {
 		const userChats = await ChatsService.getChats();
 		const newChats: UserChatListData[] = [];
 		const chatId = Number(window.location.pathname.split("/").pop());
@@ -292,7 +305,7 @@ export default class ChatsPage extends Block {
 
 		this.setProps(props);
 		props.ChatPage.dispatchComponentDidMount();
-	};
+	}
 
 	componentDidMount() {
 		this.getChats();
