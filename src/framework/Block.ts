@@ -171,6 +171,11 @@ abstract class Block {
 		if (this._props.children) {
 			let childrenTemplate = this._props.children as string;
 
+			Object.entries(this.props).forEach(([key, component]) => {
+				const regex = new RegExp(`\\{\\{\\s*${key}\\s*}}`, "g");
+				childrenTemplate = childrenTemplate.replace(regex, component as string);
+			});
+
 			Object.entries(this.children).forEach(([key, component]) => {
 				const regex = new RegExp(`\\{\\{\\{\\s*${key}\\s*}}}`, "g");
 				childrenTemplate = childrenTemplate.replace(

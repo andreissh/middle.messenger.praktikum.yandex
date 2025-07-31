@@ -8,6 +8,7 @@ type ButtonProps = {
 	children?: Block | Block[] | string;
 	events?: EventsType;
 	type?: string;
+	[key: string]: unknown;
 };
 
 const template = `

@@ -77,7 +77,9 @@ export default class ChatsPage extends Block {
 					click: (e?: Event) => ChatsPage.handleCreateChatClick(e),
 				},
 			}),
-			ChatPage: new ChatPage({}),
+			ChatPage: new ChatPage({
+				chatUsers: [],
+			}),
 			CreateChatModal: new Modal({
 				id: "createChatModal",
 				title: "Создайте чат",

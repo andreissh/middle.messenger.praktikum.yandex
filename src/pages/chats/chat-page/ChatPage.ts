@@ -16,19 +16,11 @@ const template = `
 					</span>
 					<div class="chat-header-info-text-block">
 						<h5 class="chat-title">{{ title }}</h5>
-						<button class="chat-users-btn">
-							Участников: {{ chatUsersCount }}
-						</button>
+						{{{ ChatUsersBtn }}}
 					</div>
 				</div>
 				<div class="chat-options">
-					<button class="chat-options-btn" aria-label="Опции чата">
-						<svg width="4" height="20" viewBox="0 0 4 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<circle cx="2" cy="2" r="2" fill="#999"/>
-							<circle cx="2" cy="10" r="2" fill="#999"/>
-							<circle cx="2" cy="18" r="2" fill="#999"/>
-						</svg>
-					</button>
+					{{{ ChatOptionsBtn }}}
 					<div id="chatDropdown" class="chat-dropdown">
 						{{{ AddUserBtn }}}
 						{{{ RemoveUserBtn }}}
@@ -56,20 +48,35 @@ export default class ChatPage extends Block {
 	constructor(props: Record<string, unknown>) {
 		super("div", {
 			...props,
-			chatUsersCount: props.chatUsers
-				? (props.chatUsers as string[]).length
-				: 0,
 			ChatUsersBtn: new Button({
+				class: "chat-users-btn",
 				children: `
 					<span>Участников: {{ chatUsersCount }}</span>
 				`,
+				events: {
+					click: () => ChatPage.handleChatUsersClick(),
+				},
+				chatUsersCount: (props.chatUsers as string[]).length,
+			}),
+			ChatOptionsBtn: new Button({
+				class: "chat-options-btn",
+				children: `
+					<svg width="4" height="20" viewBox="0 0 4 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<circle cx="2" cy="2" r="2" fill="#999"/>
+						<circle cx="2" cy="10" r="2" fill="#999"/>
+						<circle cx="2" cy="18" r="2" fill="#999"/>
+					</svg>
+				`,
+				events: {
+					click: (e?: Event) => ChatPage.handleChatOptionsClick(e),
+				},
 			}),
 			AddUserBtn: new Button({
 				id: "addUserBtn",
 				class: "chat-dropdown-item",
 				children: `Добавить пользователя`,
 				events: {
-					click: (e?: Event) => ChatPage.handleAddUserClick(e),
+					click: () => ChatPage.handleAddUserClick(),
 				},
 			}),
 			RemoveUserBtn: new Button({
@@ -77,7 +84,7 @@ export default class ChatPage extends Block {
 				class: "chat-dropdown-item",
 				children: `Удалить пользователя`,
 				events: {
-					click: (e?: Event) => ChatPage.handleRemoveUserClick(e),
+					click: () => ChatPage.handleRemoveUserClick(),
 				},
 			}),
 			SendMessageForm: new Form({
@@ -90,10 +97,15 @@ export default class ChatPage extends Block {
 						class="message"
 						placeholder="Сообщение"
 					/>
-					<button type="submit" class="chat-send-btn" >
-						<img src=${sendBtn} alt="send" />
-					</button>
+					{{{ SendMessageBtn }}}
 				`,
+				SendMessageBtn: new Button({
+					class: "chat-send-btn",
+					type: "submit",
+					children: `
+						<img src=${sendBtn} alt="send" />
+					`,
+				}),
 				events: {
 					submit: (e?: Event) => ChatPage.handleSendMessageSubmit(e),
 				},
@@ -101,22 +113,30 @@ export default class ChatPage extends Block {
 		});
 	}
 
-	private static handleAddUserClick(e?: Event) {
-		e?.preventDefault();
+	private static handleAddUserClick() {
 		const modal = document.querySelector<HTMLElement>("#addUserModal");
 		if (!modal) return;
 		modal.style.display = "block";
 	}
 
-	private static handleRemoveUserClick(e?: Event) {
-		e?.preventDefault();
+	private static handleRemoveUserClick() {
 		const modal = document.querySelector<HTMLElement>("#removeUserModal");
 		if (!modal) return;
 		modal.style.display = "block";
 	}
 
-	static handleSendMessageSubmit(e?: Event): void {
+	private static handleSendMessageSubmit(e?: Event): void {
 		e?.preventDefault();
+
+		const input = document.querySelector<HTMLInputElement>("#message");
+		if (!input || !input.value.trim()) return;
+
+		ChatController.send({
+			type: "message",
+			content: input.value.trim(),
+		});
+
+		input.value = "";
 	}
 
 	private addUsersToModal() {
@@ -133,23 +153,41 @@ export default class ChatPage extends Block {
 		}
 	}
 
-	private handleChatUsersClick() {
-		const chatUsersBtn =
-			document.querySelector<HTMLButtonElement>(".chat-users-btn");
-		const chatUsersModal =
-			document.querySelector<HTMLElement>("#chatUsersModal");
-		if (!chatUsersBtn || !chatUsersModal) return;
-
-		chatUsersBtn.addEventListener("click", () => {
-			chatUsersModal.style.display = "block";
-		});
+	private static handleChatUsersClick() {
+		const modal = document.querySelector<HTMLElement>("#chatUsersModal");
+		if (!modal) return;
+		modal.style.display = "block";
 	}
+
+	private static handleChatOptionsClick(e?: Event) {
+		const dropdown = document.querySelector<HTMLElement>("#chatDropdown");
+
+		if (!dropdown) return;
+		e?.stopPropagation();
+		dropdown.classList.toggle("open");
+		dropdown.style.display = dropdown.classList.contains("open")
+			? "flex"
+			: "none";
+	}
+
+	private static closeChatOptionsDropdown = (e: Event) => {
+		const optionsBtn =
+			document.querySelector<HTMLButtonElement>(".chat-options-btn");
+		const dropdown = document.getElementById("chatDropdown");
+		if (!dropdown || !optionsBtn) return;
+		if (
+			!dropdown.contains(e.target as Node) &&
+			!optionsBtn.contains(e.target as Node)
+		) {
+			dropdown.classList.remove("open");
+			dropdown.style.display = "none";
+		}
+	};
 
 	componentDidMount() {
 		if (!this.props.chatId) return;
 
 		this.addUsersToModal();
-		this.handleChatUsersClick();
 
 		const containerMsgs = document.querySelector(".chat-messages");
 		if (!containerMsgs) return;
@@ -174,43 +212,7 @@ export default class ChatPage extends Block {
 			});
 		});
 
-		const btn = document.querySelector<HTMLButtonElement>(".chat-send-btn");
-		const input = document.querySelector<HTMLInputElement>("#message");
-
-		btn?.addEventListener("click", () => {
-			if (!input) return;
-
-			ChatController.send({
-				type: "message",
-				content: input.value,
-			});
-
-			input.value = "";
-		});
-
-		const optionsBtn =
-			document.querySelector<HTMLButtonElement>(".chat-options-btn");
-		const dropdown = document.getElementById("chatDropdown");
-
-		optionsBtn?.addEventListener("click", (e) => {
-			if (!dropdown) return;
-			e.stopPropagation();
-			dropdown.classList.toggle("open");
-			dropdown.style.display = dropdown.classList.contains("open")
-				? "flex"
-				: "none";
-		});
-
-		document.addEventListener("click", (e) => {
-			if (!dropdown) return;
-			if (
-				dropdown.contains(e.target as Node) &&
-				optionsBtn?.contains(e.target as Node)
-			) {
-				dropdown.classList.remove("open");
-				dropdown.style.display = "none";
-			}
-		});
+		document.addEventListener("click", ChatPage.closeChatOptionsDropdown);
 	}
 
 	render(): HTMLElement {
