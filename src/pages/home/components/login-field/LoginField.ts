@@ -18,14 +18,11 @@ const template = `
 export default class LoginField extends Block {
 	constructor(props: LoginFieldProps) {
 		super("div", {
+			id: props.id,
 			label: props.label,
 			Input: new Input({
-				id: props.id,
+				...props,
 				class: "login-field-input",
-				type: props.type,
-				name: props.name,
-				autocomplete: props.autocomplete,
-				events: props.events,
 			}),
 		});
 	}

@@ -47,6 +47,15 @@
 	border-radius: 50%;
 }
 
+.profile-edit-pass-default-avatar-img {
+	width: 65px;
+	height: 65px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
 .profile-edit-pass-data-block {
 	margin-bottom: 3.75rem;
 }

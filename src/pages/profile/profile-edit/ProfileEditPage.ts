@@ -41,19 +41,19 @@ export default class ProfileEditPage extends Block {
 					</div>
 				`,
 				events: {
-					click: (e?: Event) => ProfileEditPage.handleBackClick(e),
+					click: () => ProfileEditPage.handleBackClick(),
 				},
 			}),
 			AvatarBtn: new Button({
 				id: "avatarBtn",
 				children: `
 					<span class="profile-edit-avatar" name="avatar">
-						<img src="${avatarImg}" class="profile-edit-avatar-img" />
+						<img src="${avatarImg}" class="profile-edit-default-avatar-img" />
 						<span class="avatar-overlay-text">Поменять аватар</span>
 					</span>
 				`,
 				events: {
-					click: (e?: Event) => this.handleAvatarClick(e),
+					click: () => this.handleAvatarClick(),
 				},
 			}),
 			ProfileEditForm: new Form({
@@ -98,14 +98,11 @@ export default class ProfileEditPage extends Block {
 		return new FormValidator(form, ".profile-field-item");
 	}
 
-	private static handleBackClick(e?: Event): void {
-		e?.preventDefault();
+	private static handleBackClick(): void {
 		router.go("/settings");
 	}
 
-	private async handleAvatarClick(e?: Event): Promise<void> {
-		e?.preventDefault();
-
+	private async handleAvatarClick(): Promise<void> {
 		const fileInput = document.createElement("input");
 		fileInput.type = "file";
 		fileInput.accept =
@@ -156,7 +153,7 @@ export default class ProfileEditPage extends Block {
 						</span>
 					`,
 				events: {
-					click: (event?: Event) => this.handleAvatarClick(event),
+					click: () => this.handleAvatarClick(),
 				},
 			}),
 		});
@@ -164,6 +161,7 @@ export default class ProfileEditPage extends Block {
 
 	private async handleSaveSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
+
 		const form = this.element?.querySelector(
 			".profile-edit-data-form"
 		) as HTMLFormElement;
@@ -202,6 +200,13 @@ export default class ProfileEditPage extends Block {
 				value: String(userData[field.id as keyof UserData]) ?? field.value,
 			}));
 
+			const imgSrc = userData.avatar
+				? `${resourcesUrl}${userData.avatar}`
+				: `${avatarImg}`;
+			const imgClass = userData.avatar
+				? "profile-edit-avatar-img"
+				: "profile-edit-default-avatar-img";
+
 			this.setProps({
 				ProfileEditForm: new Form({
 					class: "profile-edit-data-form",
@@ -233,12 +238,12 @@ export default class ProfileEditPage extends Block {
 					id: "avatarBtn",
 					children: `
 							<span class="profile-edit-avatar" name="avatar">
-								<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-avatar-img" />
+								<img src="${imgSrc}" class="${imgClass}" />
 								<span class="avatar-overlay-text">Поменять аватар</span>
 							</span>
 						`,
 					events: {
-						click: (e?: Event) => this.handleAvatarClick(e),
+						click: () => this.handleAvatarClick(),
 					},
 				}),
 			});

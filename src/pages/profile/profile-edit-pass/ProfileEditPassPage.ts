@@ -41,14 +41,14 @@ export default class ProfileEditPassPage extends Block {
 					</div>
 				`,
 				events: {
-					click: (e?: Event) => ProfileEditPassPage.handleBackClick(e),
+					click: () => ProfileEditPassPage.handleBackClick(),
 				},
 			}),
 			AvatarBtn: new Button({
 				id: "avatarBtn",
 				children: `
 					<span class="profile-edit-pass-avatar" name="avatar">
-						<img src="${avatarImg}" class="profile-edit-pass-avatar-img" />
+						<img src="${avatarImg}" class="profile-edit-pass-default-avatar-img" />
 					</span>
 				`,
 			}),
@@ -112,8 +112,7 @@ export default class ProfileEditPassPage extends Block {
 		};
 	}
 
-	private static handleBackClick(e?: Event): void {
-		e?.preventDefault();
+	private static handleBackClick(): void {
 		router.go("/settings");
 	}
 
@@ -162,12 +161,19 @@ export default class ProfileEditPassPage extends Block {
 		const getUserData = async () => {
 			const userData = await AuthService.userInfo();
 
+			const imgSrc = userData.avatar
+				? `${resourcesUrl}${userData.avatar}`
+				: `${avatarImg}`;
+			const imgClass = userData.avatar
+				? "profile-edit-pass-avatar-img"
+				: "profile-edit-pass-default-avatar-img";
+
 			this.setProps({
 				AvatarBtn: new Button({
 					id: "avatarBtn",
 					children: `
 						<span class="profile-edit-pass-avatar" name="avatar">
-							<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-pass-avatar-img" />
+							<img src="${imgSrc}" class="${imgClass}" />
 						</span>
 					`,
 				}),

@@ -23,7 +23,6 @@ export default class ProfileFieldsList extends Block {
 					new ProfileField({
 						...field,
 						events: props.events,
-						label: field.label,
 					})
 			),
 		});

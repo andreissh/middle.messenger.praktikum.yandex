@@ -54,14 +54,14 @@ export default class ProfileInfoPage extends Block {
 					</div>
 				`,
 				events: {
-					click: (e?: Event) => ProfileInfoPage.handleBackClick(e),
+					click: () => ProfileInfoPage.handleBackClick(),
 				},
 			}),
 			AvatarBtn: new Button({
 				id: "avatarBtn",
 				children: `
 					<span class="profile-info-avatar" name="avatar">
-						<img src="${avatarImg}" class="profile-info-avatar-img" />
+						<img src="${avatarImg}" class="profile-info-default-avatar-img" />
 					</span>
 				`,
 				events: {
@@ -76,7 +76,7 @@ export default class ProfileInfoPage extends Block {
 				class: "profile-info-btns-item-btn",
 				children: "Изменить данные",
 				events: {
-					click: (e?: Event) => ProfileInfoPage.handleChangeDataClick(e),
+					click: () => ProfileInfoPage.handleChangeDataClick(),
 				},
 			}),
 			ChangePasswordBtn: new Button({
@@ -84,7 +84,7 @@ export default class ProfileInfoPage extends Block {
 				class: "profile-info-btns-item-btn",
 				children: "Изменить пароль",
 				events: {
-					click: (e?: Event) => ProfileInfoPage.handleChangePassClick(e),
+					click: () => ProfileInfoPage.handleChangePassClick(),
 				},
 			}),
 			LogoutBtn: new Button({
@@ -92,36 +92,32 @@ export default class ProfileInfoPage extends Block {
 				class: "profile-info-btns-item-btn profile-info-btns-item-btn--danger",
 				children: "Выйти",
 				events: {
-					click: (e?: Event) => ProfileInfoPage.handleLogoutClick(e),
+					click: () => ProfileInfoPage.handleLogoutClick(),
 				},
 			}),
 		});
 	}
 
-	private static handleBackClick(e?: Event): void {
-		e?.preventDefault();
+	private static handleBackClick(): void {
 		router.go("/messenger");
 	}
 
-	private static async handleAvatarClick(e?: Event): Promise<void> {
+	private static handleAvatarClick(e?: Event): void {
 		e?.preventDefault();
 	}
 
-	private static handleChangeDataClick(e?: Event): void {
-		e?.preventDefault();
+	private static handleChangeDataClick(): void {
 		const profileEditPage = new ProfileEditPage();
 		renderDOM("#app", profileEditPage);
 	}
 
-	private static handleChangePassClick(e?: Event): void {
-		e?.preventDefault();
+	private static handleChangePassClick(): void {
 		const profileEditPassPage = new ProfileEditPassPage();
 		renderDOM("#app", profileEditPassPage);
 	}
 
-	private static async handleLogoutClick(e?: Event): Promise<void> {
-		e?.preventDefault();
-		AuthService.logout();
+	private static async handleLogoutClick(): Promise<void> {
+		await AuthService.logout();
 		router.go("/");
 	}
 
@@ -133,6 +129,12 @@ export default class ProfileInfoPage extends Block {
 				...field,
 				value: String(userData[field.id as keyof UserData]) ?? field.value,
 			}));
+			const imgSrc = userData.avatar
+				? `${resourcesUrl}${userData.avatar}`
+				: `${avatarImg}`;
+			const imgClass = userData.avatar
+				? "profile-info-avatar-img"
+				: "profile-info-default-avatar-img";
 
 			this.setProps({
 				ProfileFieldsList: new ProfileFieldsList({
@@ -141,10 +143,10 @@ export default class ProfileInfoPage extends Block {
 				AvatarBtn: new Button({
 					id: "avatarBtn",
 					children: `
-							<span class="profile-info-avatar" name="avatar">
-								<img src="${resourcesUrl}${userData.avatar}" class="profile-info-avatar-img" />
-							</span>
-						`,
+						<span class="profile-info-avatar" name="avatar">
+							<img src="${imgSrc}" class="${imgClass}" />
+						</span>
+					`,
 					events: {
 						click: (e?: Event) => ProfileInfoPage.handleAvatarClick(e),
 					},

@@ -3,6 +3,7 @@ import ContextMenu from "@/components/context-menu/ContextMenu";
 import router from "@/routes/Router";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import "./chats-item.css";
+import Button from "@/components/button/Button";
 
 export type ChatsItemProps = {
 	id: number;
@@ -63,6 +64,13 @@ export default class ChatsItem extends Block {
 
 		this.setProps({
 			ContextMenu: new ContextMenu({
+				children: `
+					{{{ DeleteBtn }}}
+				 `,
+				DeleteBtn: new Button({
+					class: "context-menu-delete-btn",
+					children: "Удалить",
+				}),
 				x: mouseEvent.clientX,
 				y: mouseEvent.clientY,
 				events: {
