@@ -9,6 +9,8 @@
 		"uuid": "^11.1.0"
 	},
 	"devDependencies": {
+		"@jest/globals": "^30.0.5",
+		"@types/jest": "^30.0.0",
 		"@typescript-eslint/eslint-plugin": "^7.18.0",
 		"@typescript-eslint/parser": "^7.18.0",
 		"autoprefixer": "^10.4.21",
@@ -18,9 +20,12 @@
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-import-resolver-typescript": "^3.10.1",
 		"eslint-plugin-import": "^2.32.0",
+		"jest": "^30.0.5",
 		"serve": "^14.2.4",
 		"stylelint": "^16.22.0",
 		"stylelint-config-standard": "^38.0.0",
+		"ts-jest": "^29.4.0",
+		"ts-node": "^10.9.2",
 		"typescript": "^5.8.3",
 		"vite": "^7.0.6",
 		"vite-plugin-handlebars": "^2.0.0"
@@ -33,6 +38,6 @@
 		"lint": "eslint src/**/*.{ts,js}",
 		"lint:style": "stylelint src/**/*.css",
 		"typecheck": "tsc --noEmit",
-		"test": "vitest"
+		"test": "node --experimental-vm-modules --loader ts-node/esm node_modules/jest/bin/jest.js"
 	}
 }
