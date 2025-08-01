@@ -20,6 +20,7 @@
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-import-resolver-typescript": "^3.10.1",
 		"eslint-plugin-import": "^2.32.0",
+		"husky": "^9.1.7",
 		"identity-obj-proxy": "^3.0.0",
 		"jest": "^30.0.5",
 		"jest-environment-jsdom": "^30.0.5",
@@ -41,6 +42,7 @@
 		"lint": "eslint src/**/*.{ts,js}",
 		"lint:style": "stylelint src/**/*.css",
 		"typecheck": "tsc --noEmit",
-		"test": "node --experimental-vm-modules --loader ts-node/esm node_modules/jest/bin/jest.js"
+		"test": "node --experimental-vm-modules --loader ts-node/esm node_modules/jest/bin/jest.js",
+		"prepare": "husky"
 	}
 }
