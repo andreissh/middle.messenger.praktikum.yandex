@@ -266,7 +266,7 @@ abstract class Block {
 		const shouldUpdate = this.componentDidUpdate(oldProps, newProps);
 
 		if (shouldUpdate) {
-			this._render();
+			this._eventBus.emit(Block.EVENTS.FLOW_RENDER);
 		}
 	}
 
