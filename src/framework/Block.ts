@@ -126,8 +126,7 @@ abstract class Block {
 	}
 
 	private static _createDocumentElement(tagName: string): HTMLElement {
-		const element = document.createElement(tagName);
-		return element;
+		return document.createElement(tagName);
 	}
 
 	private _render(): void {
@@ -241,6 +240,7 @@ abstract class Block {
 		if (!this._element) {
 			throw new Error("Element not initialized");
 		}
+
 		return this._element;
 	}
 
@@ -284,11 +284,13 @@ abstract class Block {
 		if (!nextProps) {
 			return;
 		}
+
 		const { children, props, lists } = Block._getChildren(nextProps);
 
 		Object.assign(this._props, props);
 		Object.assign(this.children, children);
 		Object.assign(this.lists, lists);
+
 		this._eventBus.emit(Block.EVENTS.FLOW_CDU, this._props, nextProps);
 	};
 

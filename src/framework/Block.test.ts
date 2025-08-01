@@ -16,6 +16,50 @@ describe("Block component with Handlebars", () => {
 		expect(content.textContent).toBe("Text");
 	});
 
+	it("should handle events", () => {
+		const mockClickHandler = jest.fn();
+
+		class TestComponent extends Block {
+			render() {
+				return this.compile("<div>{{text}}</div>");
+			}
+		}
+
+		const component = new TestComponent("div", {
+			text: "Click me",
+			events: {
+				click: mockClickHandler,
+			},
+		});
+
+		const content = component.getContent();
+		content.click();
+
+		expect(mockClickHandler).toHaveBeenCalledTimes(1);
+	});
+
+	it("should handle attributes", () => {
+		class TestComponent extends Block {
+			constructor(props: Record<string, unknown> = {}) {
+				super("div", props);
+			}
+
+			render() {
+				return this.compile(`<div id="{{attributes.id}}">{{text}}</div>`);
+			}
+		}
+
+		const component = new TestComponent({
+			text: "Click me",
+			attributes: {
+				id: "test-id",
+			},
+		});
+		const content = component.getContent();
+
+		expect(content.getAttribute("id")).toBe("test-id");
+	});
+
 	it("should handle child components", () => {
 		class ChildComponent extends Block {
 			constructor(props: Record<string, unknown> = {}) {
@@ -106,28 +150,6 @@ describe("Block component with Handlebars", () => {
 		expect(content.innerHTML).toContain("Item 2");
 	});
 
-	it("should handle events", () => {
-		const mockClickHandler = jest.fn();
-
-		class TestComponent extends Block {
-			render() {
-				return this.compile("<div>{{text}}</div>");
-			}
-		}
-
-		const component = new TestComponent("div", {
-			text: "Click me",
-			events: {
-				click: mockClickHandler,
-			},
-		});
-
-		const content = component.getContent();
-		content.click();
-
-		expect(mockClickHandler).toHaveBeenCalledTimes(1);
-	});
-
 	it("should update when props change", () => {
 		class TestComponent extends Block {
 			render() {
@@ -142,6 +164,42 @@ describe("Block component with Handlebars", () => {
 		component.setProps({ text: "Updated" });
 		const updatedContent = component.getContent();
 		expect(updatedContent.textContent).toBe("Updated");
+	});
+
+	it("should handle child components via children prop", () => {
+		class ChildComponent extends Block {
+			constructor(props: Record<string, unknown> = {}) {
+				super("div", props);
+			}
+
+			render() {
+				return this.compile("<div>{{childText}}</div>");
+			}
+		}
+
+		class ParentComponent extends Block {
+			constructor(props: Record<string, unknown> = {}) {
+				super("div", {
+					...props,
+					children: `<div>{{childrenPropText}} {{{Child}}}</div>`,
+					childrenPropText: "Children Prop Text",
+					Child: new ChildComponent({
+						childText: "Child Text",
+					}),
+				});
+			}
+
+			render() {
+				return this.compile("<div>{{text}} {{{children}}}</div>");
+			}
+		}
+
+		const parent = new ParentComponent({ text: "Parent Text" });
+		const content = parent.getContent();
+
+		expect(content.textContent).toContain("Parent Text");
+		expect(content.textContent).toContain("Children Prop Text");
+		expect(content.textContent).toContain("Child Text");
 	});
 });
 
@@ -166,7 +224,7 @@ describe("Block methods", () => {
 	});
 });
 
-describe("Component Lifecycle", () => {
+describe("Block Lifecycle", () => {
 	it("should trigger componentDidMount for parent and children", () => {
 		const mockChild = {
 			dispatchComponentDidMount: jest.fn(),
