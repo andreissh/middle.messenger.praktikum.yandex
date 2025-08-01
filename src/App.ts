@@ -27,8 +27,8 @@ export default class App {
 
 	static init() {
 		this.routeManager.setupRoutes();
-		App.checkAuth();
 		router.start();
+		App.checkAuth();
 	}
 
 	static getRouteManager(): IRouteManager {

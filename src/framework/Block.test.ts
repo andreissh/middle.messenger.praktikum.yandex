@@ -31,8 +31,8 @@ describe("Block component with Handlebars", () => {
 				click: mockClickHandler,
 			},
 		});
-
 		const content = component.getContent();
+
 		content.click();
 
 		expect(mockClickHandler).toHaveBeenCalledTimes(1);
@@ -159,10 +159,12 @@ describe("Block component with Handlebars", () => {
 
 		const component = new TestComponent("div", { text: "Initial" });
 		const initialContent = component.getContent();
+
 		expect(initialContent.textContent).toBe("Initial");
 
 		component.setProps({ text: "Updated" });
 		const updatedContent = component.getContent();
+
 		expect(updatedContent.textContent).toBe("Updated");
 	});
 
@@ -218,8 +220,8 @@ describe("Block methods", () => {
 		expect(component.props.text).toBe("Text");
 
 		component.setProps({ text: "New Text" });
-		expect(component.props.text).toBe("New Text");
 
+		expect(component.props.text).toBe("New Text");
 		expect(() => delete component.props.text).toThrow("Нет доступа");
 	});
 });
@@ -248,10 +250,10 @@ describe("Block Lifecycle", () => {
 		}
 
 		const component = new TestComponent();
+
 		component.dispatchComponentDidMount();
 
 		expect(component.didMountCalled).toBe(true);
-
 		expect(mockChild.dispatchComponentDidMount).toHaveBeenCalled();
 	});
 
@@ -301,6 +303,7 @@ describe("Block Lifecycle", () => {
 		}
 
 		const component = new TestComponent();
+
 		component.setProps({ newProp: "value" });
 
 		const { emit } = (component as any)._eventBus;
@@ -310,7 +313,6 @@ describe("Block Lifecycle", () => {
 			expect.anything(),
 			expect.anything()
 		);
-
 		expect(emit).not.toHaveBeenCalledWith(Block.EVENTS.FLOW_RENDER);
 	});
 });
