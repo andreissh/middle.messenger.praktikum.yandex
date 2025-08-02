@@ -116,4 +116,5 @@ class HttpClient {
 }
 
 const http = new HttpClient(baseUrl);
+export { HttpClient };
 export default http;
