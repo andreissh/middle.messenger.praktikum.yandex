@@ -148,17 +148,17 @@ export default class ChatPage extends Block {
 	}
 
 	private addUsersToModal() {
-		const chatUsersList =
-			document.querySelector<HTMLElement>(".chat-users-list");
-		if (!chatUsersList) return;
+		const chatUsersLists =
+			document.querySelectorAll<HTMLUListElement>(".chat-users-list");
 		const users = this.lists.chatUsers as string[];
-		if (!chatUsersList.hasChildNodes()) {
+		chatUsersLists.forEach((chatUsersList) => {
+			chatUsersList.replaceChildren();
 			users.forEach((user) => {
 				const li = document.createElement("li");
 				li.textContent = user;
 				chatUsersList.appendChild(li);
 			});
-		}
+		});
 	}
 
 	private static handleChatUsersClick() {

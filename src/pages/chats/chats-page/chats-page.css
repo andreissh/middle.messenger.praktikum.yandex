@@ -134,3 +134,8 @@
 		list-style: initial;
 	}
 }
+
+.add-user-form,
+.remove-user-form {
+	margin-bottom: 16px;
+}

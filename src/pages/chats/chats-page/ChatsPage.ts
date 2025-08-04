@@ -148,6 +148,10 @@ export default class ChatsPage extends Block {
 				title: "Добавьте пользователя",
 				children: `
 					{{{ AddUserForm }}}
+					<div class="chat-users-list-container">
+						<span class="chat-users-list-title">Список участников:</span>
+						<ul class="chat-users-list"></ul>
+					</div>
 				`,
 				AddUserForm: new Form({
 					class: "add-user-form",
@@ -171,7 +175,7 @@ export default class ChatsPage extends Block {
 						autocomplete: "addUserInput",
 					}),
 					events: {
-						submit: (e?: Event) => ChatsPage.handleAddUserSubmit(e),
+						submit: (e?: Event) => this.handleAddUserSubmit(e),
 					},
 				}),
 			}),
@@ -180,6 +184,10 @@ export default class ChatsPage extends Block {
 				title: "Удалите пользователя",
 				children: `
 					{{{ RemoveUserForm }}}
+					<div class="chat-users-list-container">
+						<span class="chat-users-list-title">Список участников:</span>
+						<ul class="chat-users-list"></ul>
+					</div>
 				`,
 				RemoveUserForm: new Form({
 					class: "remove-user-form",
@@ -203,7 +211,7 @@ export default class ChatsPage extends Block {
 						autocomplete: "removeUserInput",
 					}),
 					events: {
-						submit: (e?: Event) => ChatsPage.handleRemoveUserSubmit(e),
+						submit: (e?: Event) => this.handleRemoveUserSubmit(e),
 					},
 				}),
 			}),
@@ -264,7 +272,7 @@ export default class ChatsPage extends Block {
 		this.getChats();
 	}
 
-	private static async handleAddUserSubmit(e?: Event): Promise<void> {
+	private async handleAddUserSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
 
 		const modal = document.querySelector<HTMLElement>("#addUserModal");
@@ -275,9 +283,10 @@ export default class ChatsPage extends Block {
 		const userData = await UserService.search(input.value);
 		await ChatsService.addUser([userData[0].id], chatId as number);
 		modal.style.display = "none";
+		this.getChats();
 	}
 
-	private static async handleRemoveUserSubmit(e?: Event): Promise<void> {
+	private async handleRemoveUserSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
 
 		const modal = document.querySelector<HTMLElement>("#removeUserModal");
@@ -288,6 +297,7 @@ export default class ChatsPage extends Block {
 		const userData = await UserService.search(input.value);
 		await ChatsService.removeUser([userData[0].id], chatId as number);
 		modal.style.display = "none";
+		this.getChats();
 	}
 
 	private async getChats() {
