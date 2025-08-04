@@ -43,5 +43,8 @@
 		"typecheck": "tsc --noEmit",
 		"test": "node --experimental-vm-modules --loader ts-node/esm node_modules/jest/bin/jest.js",
 		"prepare": "husky"
+	},
+	"overrides": {
+		"esbuild": "0.25.8"
 	}
 }
