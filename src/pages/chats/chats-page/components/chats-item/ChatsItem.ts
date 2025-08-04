@@ -12,7 +12,6 @@ export type ChatsItemProps = {
 	text: string;
 	time: string;
 	count: number;
-	onRefresh?: () => void;
 };
 
 const template = `

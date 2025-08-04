@@ -134,17 +134,6 @@ export default class ProfileEditPage extends Block {
 			throw new Error("Недопустимый тип файла");
 		}
 
-		const reader = new FileReader();
-		reader.onload = (event) => {
-			const avatarImgEl = document.querySelector(
-				".profile-edit-avatar-img"
-			) as HTMLImageElement;
-			if (avatarImgEl && event.target?.result) {
-				avatarImgEl.src = event.target.result as string;
-			}
-		};
-		reader.readAsDataURL(file);
-
 		const formData = new FormData();
 		formData.append("avatar", file);
 		await UserService.changeAvatar(formData);

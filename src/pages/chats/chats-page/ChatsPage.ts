@@ -332,7 +332,6 @@ export default class ChatsPage extends Block {
 		const props = {
 			ChatsList: new ChatsList({
 				chats: newChats,
-				onRefresh: () => this.getChats(),
 			}),
 			ChatPage: new ChatPage({
 				chatId,

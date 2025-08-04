@@ -7,13 +7,15 @@ import Form from "@/components/form/Form";
 import Input from "@/components/input/Input";
 import Avatar from "@/components/avatar/Avatar";
 import "./chat-page.css";
+import { resourcesUrl } from "@/utils/utils";
+import ChatsService from "@/services/ChatsService";
 
 const template = `
 	<div class="chat-content">
 		{{#if chatId}}
 			<div class="chat-header">
 				<div class="chat-header-info">
-					{{{ Avatar }}}
+					{{{ AvatarBtn }}}
 					<div class="chat-header-info-text-block">
 						<h5 class="chat-title">{{ title }}</h5>
 						{{{ ChatUsersBtn }}}
@@ -48,11 +50,18 @@ export default class ChatPage extends Block {
 	constructor(props: Record<string, unknown>) {
 		super("div", {
 			...props,
-			Avatar: new Avatar({
-				class: "chat-avatar",
-				children: `
-					<img src=${avatarImg} alt="avatar" />
-				`,
+			AvatarBtn: new Button({
+				id: "avatarBtn",
+				children: "{{{ Avatar }}}",
+				Avatar: new Avatar({
+					class: "chat-avatar",
+					children: `
+						<img src=${avatarImg} alt="avatar" />
+					`,
+				}),
+				events: {
+					click: () => this.handleAvatarClick(),
+				},
 			}),
 			ChatUsersBtn: new Button({
 				class: "chat-users-btn",
@@ -116,6 +125,58 @@ export default class ChatPage extends Block {
 				}),
 				events: {
 					submit: (e?: Event) => ChatPage.handleSendMessageSubmit(e),
+				},
+			}),
+		});
+	}
+
+	private async handleAvatarClick(): Promise<void> {
+		const fileInput = document.createElement("input");
+		fileInput.type = "file";
+		fileInput.accept =
+			"image/jpeg, image/jpg, image/png, image/gif, image/webp";
+
+		const file = await new Promise<File | null>((resolve) => {
+			fileInput.onchange = (event: Event) => {
+				resolve((event.target as HTMLInputElement).files?.[0] || null);
+			};
+			fileInput.click();
+		});
+
+		if (!file) return;
+
+		const allowedTypes = [
+			"image/jpeg",
+			"image/jpg",
+			"image/png",
+			"image/gif",
+			"image/webp",
+		];
+		if (!allowedTypes.includes(file.type)) {
+			throw new Error("Недопустимый тип файла");
+		}
+
+		const formData = new FormData();
+		formData.append("chatId", String(this.props.chatId));
+		formData.append("avatar", file);
+		await ChatsService.changeAvatar(formData);
+		const chatsData = await ChatsService.getChats();
+		const chatData = chatsData.filter((chat) => chat.id === this.props.chatId);
+
+		this.setProps({
+			AvatarBtn: new Button({
+				id: "avatarBtn",
+				children: `
+					{{{ Avatar }}}
+				`,
+				Avatar: new Avatar({
+					class: "chat-avatar",
+					children: `
+						<img src="${resourcesUrl}${chatData[0].avatar}" class="chat-avatar-img" />
+					`,
+				}),
+				events: {
+					click: () => this.handleAvatarClick(),
 				},
 			}),
 		});
@@ -217,6 +278,39 @@ export default class ChatPage extends Block {
 		});
 
 		document.addEventListener("click", ChatPage.closeChatOptionsDropdown);
+
+		const getChatData = async () => {
+			const chatsData = await ChatsService.getChats();
+			const chatData = chatsData.filter(
+				(chat) => chat.id === this.props.chatId
+			);
+
+			const imgSrc = chatData[0].avatar
+				? `${resourcesUrl}${chatData[0].avatar}`
+				: `${avatarImg}`;
+			const imgClass = chatData[0].avatar
+				? "profile-edit-avatar-img"
+				: "profile-edit-default-avatar-img";
+
+			this.setProps({
+				AvatarBtn: new Button({
+					id: "avatarBtn",
+					children: `
+						{{{ Avatar }}}
+					`,
+					Avatar: new Avatar({
+						class: "chat-avatar",
+						children: `
+							<img src="${imgSrc}" class="${imgClass}" />
+						`,
+					}),
+					events: {
+						click: () => this.handleAvatarClick(),
+					},
+				}),
+			});
+		};
+		getChatData();
 	}
 
 	render(): HTMLElement {

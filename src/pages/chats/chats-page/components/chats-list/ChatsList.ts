@@ -4,7 +4,6 @@ import "./chats-list.css";
 
 type ChatsListProps = {
 	chats: ChatsItemProps[];
-	onRefresh?: () => void;
 };
 
 const template = `
@@ -21,9 +20,7 @@ export default class ChatsList extends Block {
 	constructor(props: ChatsListProps) {
 		super("div", {
 			hasChats: props.chats.length > 0,
-			chats: props.chats.map(
-				(chat) => new ChatsItem({ ...chat, onRefresh: props.onRefresh })
-			),
+			chats: props.chats.map((chat) => new ChatsItem({ ...chat })),
 		});
 	}
 
