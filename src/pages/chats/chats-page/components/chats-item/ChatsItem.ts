@@ -5,6 +5,7 @@ import router from "@/routes/Router";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import Button from "@/components/button/Button";
 import Avatar from "@/components/avatar/Avatar";
+import deleteImg from "@/assets/icons/delete.svg";
 import "./chats-item.css";
 
 export type ChatsItemProps = {
@@ -28,6 +29,9 @@ const template = `
       {{#if count}}
         <span class="chat-item-msg-count">{{ count }}</span>
       {{/if}}
+      <button class="chat-item-delete-btn">
+		<img src="${deleteImg}" alt="delete" />
+      </button>
     </div>
   </li>
 `;
@@ -46,7 +50,7 @@ export default class ChatsItem extends Block {
 			}),
 			ContextMenu: new ContextMenu({}),
 			events: {
-				click: () => this.handleChatItemClick(),
+				click: (e?: Event) => this.handleChatItemClick(e),
 				contextmenu: (e?: Event) => this.handleContextMenu(e),
 			},
 		});
@@ -62,8 +66,15 @@ export default class ChatsItem extends Block {
 		modal.style.display = "block";
 	};
 
-	private handleChatItemClick(): void {
-		router.go(`/messenger/${this.props.id}`);
+	private handleChatItemClick(e?: Event): void {
+		const target = e?.target as HTMLElement;
+		const deleteBtn = target.closest(".chat-item-delete-btn");
+
+		if (deleteBtn) {
+			this.showDeleteChatModal();
+		} else {
+			router.go(`/messenger/${this.props.id}`);
+		}
 	}
 
 	private handleContextMenu(e?: Event) {

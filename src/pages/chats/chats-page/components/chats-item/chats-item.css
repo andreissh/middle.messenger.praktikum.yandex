@@ -73,3 +73,18 @@
 	color: var(--text-color-white);
 	background-color: var(--bg-color-blue);
 }
+
+.chat-item-delete-btn {
+	display: none;
+	cursor: pointer;
+	padding: 2px;
+	margin-top: auto;
+}
+
+.chat-item:hover .chat-item-delete-btn {
+	display: inline-block;
+}
+
+.chat-item:hover .chat-item-msg-count {
+	display: none;
+}
