@@ -12,6 +12,11 @@
 	background-color: var(--bg-color-subtle);
 	border-right: 1px solid var(--border-color);
 	cursor: pointer;
+	transition: filter 0.3s ease;
+
+	&:hover {
+		filter: brightness(0.96);
+	}
 }
 
 .profile-info-content-wrapper {
@@ -83,6 +88,11 @@
 	color: var(--text-color-blue);
 	text-decoration: none;
 	cursor: pointer;
+	transition: filter 0.3s ease;
+
+	&:hover {
+		filter: brightness(0.7);
+	}
 }
 
 .profile-info-btns-item-btn--danger {

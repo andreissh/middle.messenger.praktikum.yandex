@@ -28,6 +28,11 @@
 .chat-users-btn {
 	color: var(--text-color-muted);
 	cursor: pointer;
+	transition: filter 0.3s ease;
+
+	&:hover {
+		filter: brightness(0.8);
+	}
 }
 
 .chat-options {
@@ -38,12 +43,16 @@
 	background: none;
 	border: none;
 	cursor: pointer;
-	padding: 4px;
-	margin: 0 8px;
-}
+	padding: 0.25rem;
+	margin: 0 0.5rem;
 
-.chat-options-btn:hover svg circle {
-	fill: #3369f3;
+	& svg circle {
+		transition: fill 0.3s ease;
+	}
+
+	&:hover svg circle {
+		fill: #3369f3;
+	}
 }
 
 .chat-dropdown {
@@ -51,7 +60,7 @@
 	display: none;
 	top: 32px;
 	right: 0;
-	margin-top: 4px;
+	margin-top: 0.25rem;
 	background: var(--bg-color-white);
 	border: 1px solid var(--border-color);
 	border-radius: 6px;
@@ -82,6 +91,7 @@
 	border-radius: 50%;
 	background-color: #efefef;
 	margin-right: 8px;
+	cursor: pointer;
 
 	& img {
 		position: absolute;
@@ -144,13 +154,15 @@
 }
 
 .chat-send-btn {
-	border: none;
-	outline: none;
-	background-color: transparent;
 	transform: rotate(180deg);
 	cursor: pointer;
 	height: 30px;
 	margin: auto 0;
+	transition: filter 0.3s ease;
+
+	&:hover {
+		filter: brightness(0.9);
+	}
 
 	& img {
 		width: 30px;

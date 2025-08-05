@@ -8,14 +8,13 @@
 	display: flex;
 	flex-direction: column;
 	width: 310px;
-	padding: 0 0.625rem;
 	border-right: 1px solid var(--border-color);
 }
 
 .chats-aside-top-section {
 	display: flex;
 	flex-direction: column;
-	padding: 1.25rem 0 0.875rem;
+	padding: 1.25rem 0.625rem 0.875rem;
 	border-bottom: 1px solid var(--border-color);
 }
 
@@ -31,6 +30,11 @@
 	text-align: right;
 	text-decoration: none;
 	cursor: pointer;
+	transition: filter 0.3s ease;
+
+	&:hover {
+		filter: brightness(0.8);
+	}
 }
 
 .chats-aside-to-profile-btn-text {
@@ -56,7 +60,7 @@
 }
 
 .create-chat-btn-wrapper {
-	padding: 8px 0;
+	padding: 0.5rem 0.625rem;
 }
 
 .create-chat-btn {
@@ -66,8 +70,12 @@
 	cursor: pointer;
 	width: 32px;
 	height: 32px;
-	margin-right: 8px;
 	border-radius: 50%;
+	transition: filter 0.3s ease;
+
+	&:hover {
+		filter: brightness(0.9);
+	}
 
 	& img {
 		position: absolute;
