@@ -180,6 +180,8 @@ export default class ChatPage extends Block {
 				},
 			}),
 		});
+
+		this.setupChatConnection();
 	}
 
 	private static handleAddUserClick() {
@@ -249,11 +251,37 @@ export default class ChatPage extends Block {
 		dropdown.style.display = "none";
 	};
 
-	componentDidMount() {
-		if (!this.props.chatId) return;
+	private setupAvatar = async () => {
+		const chatsData = await ChatsService.getChats();
+		const chatData = chatsData.filter((chat) => chat.id === this.props.chatId);
 
-		this.addUsersToModal();
+		const imgSrc = chatData[0].avatar
+			? `${resourcesUrl}${chatData[0].avatar}`
+			: `${avatarImg}`;
+		const imgClass = chatData[0].avatar
+			? "chat-avatar-img"
+			: "chat-default-avatar-img";
 
+		this.setProps({
+			AvatarBtn: new Button({
+				id: "avatarBtn",
+				children: `
+						{{{ Avatar }}}
+					`,
+				Avatar: new Avatar({
+					class: "chat-avatar",
+					children: `
+							<img src="${imgSrc}" class="${imgClass}" />
+						`,
+				}),
+				events: {
+					click: () => this.handleAvatarClick(),
+				},
+			}),
+		});
+	};
+
+	private setupChatConnection() {
 		const containerMsgs = document.querySelector(".chat-messages");
 		if (!containerMsgs) return;
 
@@ -276,41 +304,18 @@ export default class ChatPage extends Block {
 				containerMsgs.append(msgEl);
 			});
 		});
+	}
 
+	private async initializeChat() {
+		if (!this.props.chatId) return;
+		await this.setupAvatar();
+		this.addUsersToModal();
+		this.setupChatConnection();
 		document.addEventListener("click", ChatPage.closeChatOptionsDropdown);
+	}
 
-		const getChatData = async () => {
-			const chatsData = await ChatsService.getChats();
-			const chatData = chatsData.filter(
-				(chat) => chat.id === this.props.chatId
-			);
-
-			const imgSrc = chatData[0].avatar
-				? `${resourcesUrl}${chatData[0].avatar}`
-				: `${avatarImg}`;
-			const imgClass = chatData[0].avatar
-				? "profile-edit-avatar-img"
-				: "profile-edit-default-avatar-img";
-
-			this.setProps({
-				AvatarBtn: new Button({
-					id: "avatarBtn",
-					children: `
-						{{{ Avatar }}}
-					`,
-					Avatar: new Avatar({
-						class: "chat-avatar",
-						children: `
-							<img src="${imgSrc}" class="${imgClass}" />
-						`,
-					}),
-					events: {
-						click: () => this.handleAvatarClick(),
-					},
-				}),
-			});
-		};
-		getChatData();
+	componentDidMount() {
+		this.initializeChat();
 	}
 
 	render(): HTMLElement {
