@@ -19,6 +19,7 @@ type UserChatListData = {
 	text: string;
 	time: string;
 	count: number;
+	avatar: string;
 };
 
 const template = `
@@ -322,6 +323,7 @@ export default class ChatsPage extends Block {
 					? formatChatDate(chat.last_message?.time) ?? ""
 					: "",
 				count: chat.unread_count,
+				avatar: chat.avatar,
 			});
 
 			if (chat.id === chatId) {
@@ -337,6 +339,9 @@ export default class ChatsPage extends Block {
 				chatId,
 				title,
 				chatUsers,
+				events: {
+					onRefresh: () => this.getChats(),
+				},
 			}),
 		};
 

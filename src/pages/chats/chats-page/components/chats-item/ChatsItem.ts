@@ -1,3 +1,4 @@
+import { resourcesUrl } from "@/utils/utils";
 import Block from "@/framework/Block";
 import ContextMenu from "@/components/context-menu/ContextMenu";
 import router from "@/routes/Router";
@@ -12,6 +13,7 @@ export type ChatsItemProps = {
 	text: string;
 	time: string;
 	count: number;
+	avatar: string;
 };
 
 const template = `
@@ -37,7 +39,9 @@ export default class ChatsItem extends Block {
 			Avatar: new Avatar({
 				class: "chat-item-avatar",
 				children: `
-					<img src=${avatarImg} alt="chatIcon" />
+					<img src=${
+						props.avatar ? resourcesUrl + props.avatar : avatarImg
+					} alt="chatIcon" />
 				`,
 			}),
 			ContextMenu: new ContextMenu({}),

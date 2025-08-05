@@ -160,28 +160,10 @@ export default class ChatPage extends Block {
 		formData.append("chatId", String(this.props.chatId));
 		formData.append("avatar", file);
 		await ChatsService.changeAvatar(formData);
-		const chatsData = await ChatsService.getChats();
-		const chatData = chatsData.filter((chat) => chat.id === this.props.chatId);
 
-		this.setProps({
-			AvatarBtn: new Button({
-				id: "avatarBtn",
-				children: `
-					{{{ Avatar }}}
-				`,
-				Avatar: new Avatar({
-					class: "chat-avatar",
-					children: `
-						<img src="${resourcesUrl}${chatData[0].avatar}" class="chat-avatar-img" />
-					`,
-				}),
-				events: {
-					click: () => this.handleAvatarClick(),
-				},
-			}),
-		});
-
-		this.setupChatConnection();
+		if (this.props.events) {
+			this.props.events.onRefresh();
+		}
 	}
 
 	private static handleAddUserClick() {
