@@ -93,6 +93,8 @@ export default class ProfileEditPage extends Block {
 		this.validator = this.initValidator();
 	}
 
+	private selectedAvatarFile: File | null = null;
+
 	private initValidator(): FormValidator {
 		const form = this.element?.querySelector(
 			".profile-edit-data-form"
@@ -134,11 +136,9 @@ export default class ProfileEditPage extends Block {
 			throw new Error("Недопустимый тип файла");
 		}
 
-		const formData = new FormData();
-		formData.append("avatar", file);
-		await UserService.changeAvatar(formData);
-		const userData = await AuthService.userInfo();
+		this.selectedAvatarFile = file;
 
+		const previewUrl = URL.createObjectURL(file);
 		this.setProps({
 			AvatarBtn: new Button({
 				id: "avatarBtn",
@@ -149,7 +149,7 @@ export default class ProfileEditPage extends Block {
 					class: "profile-edit-avatar",
 					name: "avatar",
 					children: `
-						<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-avatar-img" />
+						<img src="${previewUrl}" class="profile-edit-avatar-img" />
 					`,
 				}),
 				events: {
@@ -170,16 +170,27 @@ export default class ProfileEditPage extends Block {
 		if (this.validator.validateForm()) {
 			const data = getFormData(form);
 			if (data) {
-				const inputFields: NodeListOf<HTMLInputElement> =
-					document.querySelectorAll(".profile-field-input");
-				const reqBody: UserProfileReq = {} as UserProfileReq;
-				profileEditFields.forEach((field, i) => {
-					reqBody[field.id as keyof UserProfileReq] =
-						inputFields[i].value ?? field.value;
-				});
+				try {
+					const inputFields: NodeListOf<HTMLInputElement> =
+						document.querySelectorAll(".profile-field-input");
+					const reqBody: UserProfileReq = {} as UserProfileReq;
+					profileEditFields.forEach((field, i) => {
+						reqBody[field.id as keyof UserProfileReq] =
+							inputFields[i].value ?? field.value;
+					});
 
-				await UserService.changeProfile(reqBody);
-				router.go("/settings");
+					await UserService.changeProfile(reqBody);
+
+					if (this.selectedAvatarFile) {
+						const formData = new FormData();
+						formData.append("avatar", this.selectedAvatarFile);
+						await UserService.changeAvatar(formData);
+					}
+
+					router.go("/settings");
+				} catch (err) {
+					throw new Error("Ошибка при сохранении профиля", { cause: err });
+				}
 			}
 		}
 	}
