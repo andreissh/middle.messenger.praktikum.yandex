@@ -2,6 +2,7 @@
 	"type": "module",
 	"dependencies": {
 		"handlebars": "^4.7.8",
+		"lint-staged": "^16.1.4",
 		"postcss": "^8.5.6",
 		"postcss-mixins": "^12.0.0",
 		"postcss-normalize": "^13.0.1",
@@ -9,6 +10,8 @@
 		"uuid": "^11.1.0"
 	},
 	"devDependencies": {
+		"@jest/globals": "^30.0.5",
+		"@types/jest": "^30.0.0",
 		"@typescript-eslint/eslint-plugin": "^7.18.0",
 		"@typescript-eslint/parser": "^7.18.0",
 		"autoprefixer": "^10.4.21",
@@ -18,9 +21,15 @@
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-import-resolver-typescript": "^3.10.1",
 		"eslint-plugin-import": "^2.32.0",
-		"serve": "^14.2.4",
+		"husky": "^9.1.7",
+		"identity-obj-proxy": "^3.0.0",
+		"jest": "^30.0.5",
+		"jest-environment-jsdom": "^30.0.5",
+		"jest-transform-stub": "^2.0.0",
 		"stylelint": "^16.22.0",
 		"stylelint-config-standard": "^38.0.0",
+		"ts-jest": "^29.4.0",
+		"ts-node": "^10.9.2",
 		"typescript": "^5.8.3",
 		"vite": "^7.0.6",
 		"vite-plugin-handlebars": "^2.0.0"
@@ -29,10 +38,22 @@
 		"dev": "vite",
 		"build": "vite build",
 		"preview": "vite preview",
-		"start": "npm run build && npx serve -s dist",
+		"start": "npm run build && npm run preview",
 		"lint": "eslint src/**/*.{ts,js}",
 		"lint:style": "stylelint src/**/*.css",
 		"typecheck": "tsc --noEmit",
-		"test": "vitest"
+		"test": "node --experimental-vm-modules --loader ts-node/esm node_modules/jest/bin/jest.js",
+		"prepare": "husky"
+	},
+	"overrides": {
+		"esbuild": "0.25.8"
+	},
+	"lint-staged": {
+		"src/**/*.ts": [
+			"eslint --fix"
+		],
+		"src/**/*.css": [
+			"stylelint --fix"
+		]
 	}
 }

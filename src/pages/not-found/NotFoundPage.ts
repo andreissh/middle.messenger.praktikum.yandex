@@ -1,7 +1,7 @@
 import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
-import "./not-found.css";
 import router from "@/routes/Router";
+import "./not-found.css";
 
 const template = `
   <div class="not-found-container">
@@ -21,14 +21,13 @@ export default class NotFoundPage extends Block {
 				class: "btn-secondary",
 				children: "Назад к чатам",
 				events: {
-					click: (e) => NotFoundPage.handleHomeClick(e),
+					click: () => NotFoundPage.handleHomeClick(),
 				},
 			}),
 		});
 	}
 
-	private static handleHomeClick(e?: Event): void {
-		e?.preventDefault();
+	private static handleHomeClick(): void {
 		router.go("/messenger");
 	}
 

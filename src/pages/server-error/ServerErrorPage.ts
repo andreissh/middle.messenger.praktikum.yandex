@@ -1,7 +1,7 @@
 import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
-import "./server-error.css";
 import router from "@/routes/Router";
+import "./server-error.css";
 
 const template = `
   <div class="server-error-container">
@@ -21,14 +21,13 @@ export default class ServerErrorPage extends Block {
 				class: "btn-secondary",
 				children: "Назад к чатам",
 				events: {
-					click: (e) => ServerErrorPage.handleHomeClick(e),
+					click: () => ServerErrorPage.handleHomeClick(),
 				},
 			}),
 		});
 	}
 
-	private static handleHomeClick(e?: Event): void {
-		e?.preventDefault();
+	private static handleHomeClick(): void {
 		router.go("/messenger");
 	}
 

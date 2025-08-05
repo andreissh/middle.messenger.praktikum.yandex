@@ -12,6 +12,8 @@
 - **PostCSS** — для стилей
 - **ESLint** (`airbnb`) + **Stylelint** — линтинг кода
 - **Vite** — сборка проекта
+- **Husky** - pre-commit проверки
+- **Jest** - unit-тесты
 
 ## Установка и запуск
 
@@ -20,8 +22,14 @@ npm install
 npm start
 ```
 
+## Запуск тестов
+
+```bash
+npm test
+```
+
 ## Ссылки
 
 - **[Деплой](https://ypmessengerproj.netlify.app/)**
-- **[Пул реквест](https://github.com/andreissh/middle.messenger.praktikum.yandex/pull/7)**
+- **[Пул реквест](https://github.com/andreissh/middle.messenger.praktikum.yandex/pull/9)**
 - **[Макет в Figma](https://www.figma.com/design/jF5fFFzgGOxQeB4CmKWTiE/Chat_external_link?node-id=0-1&p=f&t=527dforHduelaF59-0)**

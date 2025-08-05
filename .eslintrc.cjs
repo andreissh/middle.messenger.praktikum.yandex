@@ -11,7 +11,13 @@ module.exports = {
 		"no-underscore-dangle": "off",
 		"class-methods-use-this": "off",
 	},
-	ignorePatterns: ["dist/", "node_modules/", "*.config.*js"],
+	ignorePatterns: [
+		"dist/",
+		"node_modules/",
+		"*.config.*js",
+		"*.config.ts",
+		"*.setup.ts",
+	],
 	settings: {
 		"import/resolver": {
 			typescript: {

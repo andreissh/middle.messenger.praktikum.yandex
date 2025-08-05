@@ -1,8 +1,11 @@
+import { resourcesUrl } from "@/utils/utils";
 import Block from "@/framework/Block";
 import ContextMenu from "@/components/context-menu/ContextMenu";
 import router from "@/routes/Router";
 import avatarImg from "@/assets/icons/avatar-img.svg";
-import ChatsService from "@/services/ChatsService";
+import Button from "@/components/button/Button";
+import Avatar from "@/components/avatar/Avatar";
+import deleteImg from "@/assets/icons/delete.svg";
 import "./chats-item.css";
 
 export type ChatsItemProps = {
@@ -11,14 +14,12 @@ export type ChatsItemProps = {
 	text: string;
 	time: string;
 	count: number;
-	onRefresh?: () => void;
+	avatar: string;
 };
 
 const template = `
   <li id="{{ id }}" class="chat-item">
-    <span class="chat-item-avatar">
-		<img src=${avatarImg} alt="chatIcon" />
-	</span>
+    {{{ Avatar }}}
     <div class="chat-item-content-block">
       <h5 class="chat-item-header">{{ name }}</h5>
       <p class="chat-item-message">{{ text }}</p>
@@ -28,84 +29,95 @@ const template = `
       {{#if count}}
         <span class="chat-item-msg-count">{{ count }}</span>
       {{/if}}
+      <button class="chat-item-delete-btn">
+		<img src="${deleteImg}" alt="delete" />
+      </button>
     </div>
   </li>
 `;
 
 export default class ChatsItem extends Block {
-	private static currentOpenMenu: Block | null = null;
-
 	constructor(props: ChatsItemProps) {
 		super("div", {
 			...props,
+			Avatar: new Avatar({
+				class: "chat-item-avatar",
+				children: `
+					<img src=${
+						props.avatar ? resourcesUrl + props.avatar : avatarImg
+					} alt="chatIcon" />
+				`,
+			}),
 			ContextMenu: new ContextMenu({}),
 			events: {
-				click: (e?: Event) => ChatsItem.handleChatItemClick(e),
+				click: (e?: Event) => this.handleChatItemClick(e),
 				contextmenu: (e?: Event) => this.handleContextMenu(e),
 			},
 		});
 
-		document.addEventListener("click", (e) => {
-			const target = e.target as Node;
-			const isClickInsideMenu = this.children.ContextMenu
-				? this.children.ContextMenu.getContent().contains(target)
-				: false;
-			const isClickInsideChatItem = this.getContent().contains(target);
-
-			if (!isClickInsideMenu && !isClickInsideChatItem) {
-				this.closeContextMenu();
-			}
-		});
+		document.addEventListener("click", ChatsItem.removeContextMenu);
 	}
 
-	deleteChat = async () => {
-		ChatsService.deleteChat(this.props.id as number);
-		this.closeContextMenu();
-		if (typeof this.props.onRefresh === "function") {
-			this.props.onRefresh();
-		}
+	private showDeleteChatModal = (): void => {
+		const modal = document.querySelector<HTMLElement>("#deleteChatModal");
+		if (!modal) return;
+
+		sessionStorage.setItem("chatId", String(this.props.id));
+		modal.style.display = "block";
 	};
 
-	private static handleChatItemClick(e?: Event): void {
-		const chatItems = document.querySelectorAll(".chat-item");
-		let chatId;
-		chatItems.forEach((item) => {
-			if (e?.target instanceof Node && item.contains(e.target)) {
-				chatId = item.id;
-			}
-		});
-		if (!chatId) return;
+	private handleChatItemClick(e?: Event): void {
+		const target = e?.target as HTMLElement;
+		const deleteBtn = target.closest(".chat-item-delete-btn");
 
-		router.go(`/messenger/${chatId}`);
+		if (deleteBtn) {
+			this.showDeleteChatModal();
+		} else {
+			router.go(`/messenger/${this.props.id}`);
+		}
 	}
 
-	handleContextMenu(e?: Event) {
+	private handleContextMenu(e?: Event) {
 		e?.preventDefault();
 		const mouseEvent = e as MouseEvent;
 
-		if (ChatsItem.currentOpenMenu) {
-			ChatsItem.currentOpenMenu.getContent().remove();
-			ChatsItem.currentOpenMenu = null;
-		}
-
 		this.setProps({
 			ContextMenu: new ContextMenu({
+				children: `
+					{{{ DeleteBtn }}}
+				 `,
+				DeleteBtn: new Button({
+					class: "context-menu-delete-btn",
+					children: "Удалить",
+				}),
 				x: mouseEvent.clientX,
 				y: mouseEvent.clientY,
-				onDelete: () => this.deleteChat(),
+				events: {
+					click: () => this.showDeleteChatModal(),
+				},
 			}),
 		});
 
-		ChatsItem.currentOpenMenu = this.children.ContextMenu;
+		this.renderContextMenu();
+		ChatsItem.positionContextMenu(mouseEvent.clientX, mouseEvent.clientY);
 
-		document.body.appendChild(this.children.ContextMenu.getContent());
-		this.positionContextMenu(mouseEvent.clientX, mouseEvent.clientY);
+		const contextMenu = document.querySelector<HTMLElement>(".context-menu");
+		if (!contextMenu) return;
+		contextMenu.style.display = "block";
 	}
 
-	positionContextMenu(x: number, y: number) {
-		if (!this.children.ContextMenu) return;
+	private renderContextMenu() {
+		const contextMenu = document.querySelector<HTMLElement>(".context-menu");
+		if (!contextMenu) {
+			document.body.appendChild(this.children.ContextMenu.getContent());
+		}
+	}
 
-		const menuElement = this.children.ContextMenu.getContent();
+	private static positionContextMenu(x: number, y: number) {
+		const contextMenu = document.querySelector<HTMLElement>(".context-menu");
+		if (!contextMenu) return;
+
+		const menuElement = contextMenu;
 		const menuWidth = menuElement.offsetWidth;
 		const menuHeight = menuElement.offsetHeight;
 		const windowWidth = window.innerWidth;
@@ -122,12 +134,11 @@ export default class ChatsItem extends Block {
 		menuElement.style.zIndex = "1000";
 	}
 
-	closeContextMenu() {
-		if (this.children.ContextMenu) {
-			this.children.ContextMenu.getContent().remove();
-			this.children.ContextMenu = null as unknown as Block;
-			ChatsItem.currentOpenMenu = null;
-		}
+	private static removeContextMenu() {
+		const contextMenu = document.querySelector<HTMLElement>(".context-menu");
+		if (!contextMenu) return;
+
+		contextMenu.remove();
 	}
 
 	render(): HTMLElement {

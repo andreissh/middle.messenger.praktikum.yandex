@@ -3,35 +3,26 @@ import ChatController from "@/api/ChatController";
 import sendBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import Button from "@/components/button/Button";
-import Modal from "@/components/modal/Modal";
 import Form from "@/components/form/Form";
-import ChatsService from "@/services/ChatsService";
-import UserService from "@/services/UserService";
+import Input from "@/components/input/Input";
+import Avatar from "@/components/avatar/Avatar";
 import "./chat-page.css";
+import { resourcesUrl } from "@/utils/utils";
+import ChatsService from "@/services/ChatsService";
 
 const template = `
 	<div class="chat-content">
 		{{#if chatId}}
 			<div class="chat-header">
 				<div class="chat-header-info">
-					<span class="chat-avatar">
-						<img src=${avatarImg} alt="avatar" />
-					</span>
-					<div>
+					{{{ AvatarBtn }}}
+					<div class="chat-header-info-text-block">
 						<h5 class="chat-title">{{ title }}</h5>
-						<button class="chat-users-btn">
-							<span>Участников: {{ chatUsersCount }}</span>
-						</button>
+						{{{ ChatUsersBtn }}}
 					</div>
 				</div>
 				<div class="chat-options">
-					<button class="chat-options-btn" aria-label="Опции чата">
-						<svg width="4" height="20" viewBox="0 0 4 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<circle cx="2" cy="2" r="2" fill="#999"/>
-							<circle cx="2" cy="10" r="2" fill="#999"/>
-							<circle cx="2" cy="18" r="2" fill="#999"/>
-						</svg>
-					</button>
+					{{{ ChatOptionsBtn }}}
 					<div id="chatDropdown" class="chat-dropdown">
 						{{{ AddUserBtn }}}
 						{{{ RemoveUserBtn }}}
@@ -52,9 +43,6 @@ const template = `
 				{{{ SendMessageForm }}}
 			</div>
 		{{/if}}
-		{{{ AddUserModal }}}
-		{{{ RemoveUserModal }}}
-		{{{ ChatUsersModal }}}
 	</div>
 `;
 
@@ -62,20 +50,48 @@ export default class ChatPage extends Block {
 	constructor(props: Record<string, unknown>) {
 		super("div", {
 			...props,
-			chatUsersCount: props.chatUsers
-				? (props.chatUsers as string[]).length
-				: 0,
+			AvatarBtn: new Button({
+				id: "avatarBtn",
+				children: "{{{ Avatar }}}",
+				Avatar: new Avatar({
+					class: "chat-avatar",
+					children: `
+						<img src=${avatarImg} alt="avatar" />
+					`,
+				}),
+				events: {
+					click: () => this.handleAvatarClick(),
+				},
+			}),
 			ChatUsersBtn: new Button({
+				class: "chat-users-btn",
 				children: `
 					<span>Участников: {{ chatUsersCount }}</span>
 				`,
+				events: {
+					click: () => ChatPage.handleChatUsersClick(),
+				},
+				chatUsersCount: (props.chatUsers as string[]).length,
+			}),
+			ChatOptionsBtn: new Button({
+				class: "chat-options-btn",
+				children: `
+					<svg width="4" height="20" viewBox="0 0 4 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<circle cx="2" cy="2" r="2" fill="#999"/>
+						<circle cx="2" cy="10" r="2" fill="#999"/>
+						<circle cx="2" cy="18" r="2" fill="#999"/>
+					</svg>
+				`,
+				events: {
+					click: (e?: Event) => ChatPage.handleChatOptionsClick(e),
+				},
 			}),
 			AddUserBtn: new Button({
 				id: "addUserBtn",
 				class: "chat-dropdown-item",
 				children: `Добавить пользователя`,
 				events: {
-					click: (e?: Event) => ChatPage.handleAddUserClick(e),
+					click: () => ChatPage.handleAddUserClick(),
 				},
 			}),
 			RemoveUserBtn: new Button({
@@ -83,154 +99,178 @@ export default class ChatPage extends Block {
 				class: "chat-dropdown-item",
 				children: `Удалить пользователя`,
 				events: {
-					click: (e?: Event) => ChatPage.handleRemoveUserClick(e),
+					click: () => ChatPage.handleRemoveUserClick(),
 				},
 			}),
 			SendMessageForm: new Form({
 				class: "send-msg-form",
 				children: `
-					<input
-						id="message"
-						type="text"
-						name="message"
-						class="message"
-						placeholder="Сообщение"
-					/>
-					<button type="submit" class="chat-send-btn" >
-						<img src=${sendBtn} alt="send" />
-					</button>
+					{{{ SendMessageInput }}}
+					{{{ SendMessageBtn }}}
 				`,
+				SendMessageBtn: new Button({
+					class: "chat-send-btn",
+					type: "submit",
+					children: `
+						<img src=${sendBtn} alt="send" />
+					`,
+				}),
+				SendMessageInput: new Input({
+					id: "message",
+					type: "text",
+					name: "message",
+					class: "message",
+					placeholder: "Сообщение",
+					autocomplete: "message",
+				}),
 				events: {
 					submit: (e?: Event) => ChatPage.handleSendMessageSubmit(e),
 				},
 			}),
-			AddUserModal: new Modal({
-				id: "addUserModal",
-				title: "Добавьте пользователя",
-				children: `
-					{{{ AddUserForm }}}
-				`,
-				AddUserForm: new Form({
-					class: "add-user-form",
-					children: `
-						<label class="add-user-label">
-							<input type="text" id="addUserInput" class="add-user-input" placeholder="Введите логин" />
-						</label>
-						<button type="submit" class="btn add-user-submit-btn">Добавить</button>
-					`,
-					events: {
-						submit: (e?: Event) => this.handleAddUserSubmit(e),
-					},
-				}),
-			}),
-			RemoveUserModal: new Modal({
-				id: "removeUserModal",
-				title: "Удалите пользователя",
-				children: `
-					{{{ RemoveUserForm }}}
-				`,
-				RemoveUserForm: new Form({
-					class: "remove-user-form",
-					children: `
-						<label class="remove-user-label">
-							<input type="text" id="removeUserInput" class="remove-user-input" placeholder="Введите логин" />
-						</label>
-						<button type="submit" class="btn remove-user-submit-btn">Удалить</button>
-					`,
-					events: {
-						submit: (e?: Event) => this.handleRemoveUserSubmit(e),
-					},
-				}),
-			}),
-			ChatUsersModal: new Modal({
-				id: "chatUsersModal",
-				title: "Участники чата",
-				children: `
-					<ul class="chat-users-list"></ul>
-				`,
-			}),
 		});
 	}
 
-	private static handleAddUserClick(e?: Event) {
-		e?.preventDefault();
-		const modal: HTMLElement | null = document.querySelector("#addUserModal");
+	private async handleAvatarClick(): Promise<void> {
+		const fileInput = document.createElement("input");
+		fileInput.type = "file";
+		fileInput.accept =
+			"image/jpeg, image/jpg, image/png, image/gif, image/webp";
+
+		const file = await new Promise<File | null>((resolve) => {
+			fileInput.onchange = (event: Event) => {
+				resolve((event.target as HTMLInputElement).files?.[0] || null);
+			};
+			fileInput.click();
+		});
+
+		if (!file) return;
+
+		const allowedTypes = [
+			"image/jpeg",
+			"image/jpg",
+			"image/png",
+			"image/gif",
+			"image/webp",
+		];
+		if (!allowedTypes.includes(file.type)) {
+			throw new Error("Недопустимый тип файла");
+		}
+
+		const formData = new FormData();
+		formData.append("chatId", String(this.props.chatId));
+		formData.append("avatar", file);
+		await ChatsService.changeAvatar(formData);
+
+		if (this.props.events) {
+			this.props.events.onRefresh();
+		}
+	}
+
+	private static handleAddUserClick() {
+		const modal = document.querySelector<HTMLElement>("#addUserModal");
 		if (!modal) return;
 		modal.style.display = "block";
 	}
 
-	private async handleAddUserSubmit(e?: Event): Promise<void> {
-		e?.preventDefault();
-
-		const modal: HTMLElement | null = document.querySelector("#addUserModal");
-		const input: HTMLInputElement | null =
-			document.querySelector("#addUserInput");
-		if (!modal || !input) return;
-
-		const userData = await UserService.search(input.value);
-		await ChatsService.addUser([userData[0].id], this.props.chatId as number);
-		modal.style.display = "none";
-	}
-
-	private static handleRemoveUserClick(e?: Event) {
-		e?.preventDefault();
-		const modal: HTMLElement | null =
-			document.querySelector("#removeUserModal");
+	private static handleRemoveUserClick() {
+		const modal = document.querySelector<HTMLElement>("#removeUserModal");
 		if (!modal) return;
 		modal.style.display = "block";
 	}
 
-	private async handleRemoveUserSubmit(e?: Event): Promise<void> {
+	private static handleSendMessageSubmit(e?: Event): void {
 		e?.preventDefault();
 
-		const modal: HTMLElement | null =
-			document.querySelector("#removeUserModal");
-		const input: HTMLInputElement | null =
-			document.querySelector("#removeUserInput");
-		if (!modal || !input) return;
+		const input = document.querySelector<HTMLInputElement>("#message");
+		if (!input || !input.value.trim()) return;
 
-		const userData = await UserService.search(input.value);
-		await ChatsService.removeUser(
-			[userData[0].id],
-			this.props.chatId as number
-		);
-		modal.style.display = "none";
-	}
+		ChatController.send({
+			type: "message",
+			content: input.value.trim(),
+		});
 
-	static handleSendMessageSubmit(e?: Event): void {
-		e?.preventDefault();
+		input.value = "";
 	}
 
 	private addUsersToModal() {
-		const chatUsersList: HTMLElement | null =
-			document.querySelector(".chat-users-list");
-		if (!chatUsersList) return;
+		const chatUsersLists =
+			document.querySelectorAll<HTMLUListElement>(".chat-users-list");
 		const users = this.lists.chatUsers as string[];
-		users.forEach((user) => {
-			const li = document.createElement("li");
-			li.textContent = user;
-			chatUsersList.appendChild(li);
+		chatUsersLists.forEach((chatUsersList) => {
+			chatUsersList.replaceChildren();
+			users.forEach((user) => {
+				const li = document.createElement("li");
+				li.textContent = user;
+				chatUsersList.appendChild(li);
+			});
 		});
 	}
 
-	private handleChatUsersClick() {
-		const chatUsersBtn: HTMLButtonElement | null =
-			document.querySelector(".chat-users-btn");
-		const chatUsersModal: HTMLElement | null =
-			document.querySelector("#chatUsersModal");
-		if (!chatUsersBtn || !chatUsersModal) return;
-
-		chatUsersBtn.addEventListener("click", () => {
-			chatUsersModal.style.display = "block";
-		});
+	private static handleChatUsersClick() {
+		const modal = document.querySelector<HTMLElement>("#chatUsersModal");
+		if (!modal) return;
+		modal.style.display = "block";
 	}
 
-	componentDidMount() {
-		if (!this.props.chatId) return;
+	private static handleChatOptionsClick(e?: Event) {
+		const dropdown = document.querySelector<HTMLElement>("#chatDropdown");
 
-		this.addUsersToModal();
-		this.handleChatUsersClick();
+		if (!dropdown) return;
+		e?.stopPropagation();
+		dropdown.classList.toggle("open");
+		dropdown.style.display = dropdown.classList.contains("open")
+			? "flex"
+			: "none";
+	}
 
+	private static closeChatOptionsDropdown = () => {
+		const optionsBtn =
+			document.querySelector<HTMLButtonElement>(".chat-options-btn");
+		const dropdown = document.getElementById("chatDropdown");
+		if (!dropdown || !optionsBtn) return;
+
+		dropdown.classList.remove("open");
+		dropdown.style.display = "none";
+	};
+
+	private setupAvatar = async () => {
+		const chatsData = await ChatsService.getChats();
+		const chatData = chatsData.filter((chat) => chat.id === this.props.chatId);
+
+		const imgSrc = chatData[0].avatar
+			? `${resourcesUrl}${chatData[0].avatar}`
+			: `${avatarImg}`;
+		const imgClass = chatData[0].avatar
+			? "chat-avatar-img"
+			: "chat-default-avatar-img";
+
+		this.setProps({
+			AvatarBtn: new Button({
+				id: "avatarBtn",
+				children: `
+						{{{ Avatar }}}
+					`,
+				Avatar: new Avatar({
+					class: "chat-avatar",
+					children: `
+							<img src="${imgSrc}" class="${imgClass}" />
+						`,
+				}),
+				events: {
+					click: () => this.handleAvatarClick(),
+				},
+			}),
+		});
+	};
+
+	private scrollToBottom() {
+		const messagesContainer = document.querySelector(".chat-body");
+		if (messagesContainer) {
+			messagesContainer.scrollTop = messagesContainer.scrollHeight;
+		}
+	}
+
+	private setupChatConnection() {
 		const containerMsgs = document.querySelector(".chat-messages");
 		if (!containerMsgs) return;
 
@@ -252,46 +292,20 @@ export default class ChatPage extends Block {
 				msgEl.textContent = msg.content;
 				containerMsgs.append(msgEl);
 			});
+			this.scrollToBottom();
 		});
+	}
 
-		const btn: HTMLButtonElement | null =
-			document.querySelector(".chat-send-btn");
-		const input: HTMLInputElement | null = document.querySelector("#message");
+	private async initializeChat() {
+		if (!this.props.chatId) return;
+		await this.setupAvatar();
+		this.addUsersToModal();
+		this.setupChatConnection();
+		document.addEventListener("click", ChatPage.closeChatOptionsDropdown);
+	}
 
-		btn?.addEventListener("click", () => {
-			if (!input) return;
-
-			ChatController.send({
-				type: "message",
-				content: input.value,
-			});
-
-			input.value = "";
-		});
-
-		const optionsBtn: HTMLButtonElement | null =
-			document.querySelector(".chat-options-btn");
-		const dropdown = document.getElementById("chatDropdown");
-
-		optionsBtn?.addEventListener("click", (e) => {
-			if (!dropdown) return;
-			e.stopPropagation();
-			dropdown.classList.toggle("open");
-			dropdown.style.display = dropdown.classList.contains("open")
-				? "flex"
-				: "none";
-		});
-
-		document.addEventListener("click", (e) => {
-			if (!dropdown) return;
-			if (
-				dropdown.contains(e.target as Node) &&
-				optionsBtn?.contains(e.target as Node)
-			) {
-				dropdown.classList.remove("open");
-				dropdown.style.display = "none";
-			}
-		});
+	componentDidMount() {
+		this.initializeChat();
 	}
 
 	render(): HTMLElement {

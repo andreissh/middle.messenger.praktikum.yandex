@@ -78,4 +78,5 @@ class Router {
 }
 
 const router = Router.getInstance("#app");
+export { Router };
 export default router;

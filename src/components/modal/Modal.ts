@@ -42,7 +42,7 @@ export default class Modal extends Block {
 
 	private handleCloseClick(e?: Event): void {
 		e?.preventDefault();
-		const modal: HTMLElement | null = document.querySelector(
+		const modal = document.querySelector<HTMLElement>(
 			`#${this.props.id}`
 		);
 		if (!modal) return;

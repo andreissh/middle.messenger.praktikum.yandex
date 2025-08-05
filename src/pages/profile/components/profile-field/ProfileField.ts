@@ -18,14 +18,10 @@ const template = `
 export default class ProfileField extends Block {
 	constructor(props: ProfileFieldProps) {
 		super("div", {
+			id: props.id,
 			label: props.label,
 			Input: new Input({
 				...props,
-				events: props.events,
-				id: props.id,
-				type: props.type,
-				name: props.name,
-				autocomplete: props.autocomplete,
 				class: "profile-field-input",
 			}),
 		});

@@ -7,6 +7,7 @@ import { UserData } from "@/types/types";
 import backBtn from "@/assets/icons/back-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import AuthService from "@/services/AuthService";
+import Avatar from "@/components/avatar/Avatar";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileFields } from "../utils/profileData";
 import ProfileEditPage from "../profile-edit/ProfileEditPage";
@@ -19,7 +20,7 @@ const template = `
     <div class="profile-info-content-wrapper">
       <div class="profile-info-content">
         <div class="profile-info-avatar-block">
-          {{{ AvatarBtn }}}
+          {{{ Avatar }}}
           <span class="profile-info-username">Иван</span>
         </div>
         <div class="profile-info-data-block">
@@ -54,19 +55,15 @@ export default class ProfileInfoPage extends Block {
 					</div>
 				`,
 				events: {
-					click: (e?: Event) => ProfileInfoPage.handleBackClick(e),
+					click: () => ProfileInfoPage.handleBackClick(),
 				},
 			}),
-			AvatarBtn: new Button({
-				id: "avatarBtn",
+			Avatar: new Avatar({
+				class: "profile-info-avatar",
+				name: "avatar",
 				children: `
-					<span class="profile-info-avatar" name="avatar">
-						<img src="${avatarImg}" class="profile-info-avatar-img" />
-					</span>
+					<img src="${avatarImg}" class="profile-info-default-avatar-img" />
 				`,
-				events: {
-					click: (e?: Event) => ProfileInfoPage.handleAvatarClick(e),
-				},
 			}),
 			ProfileFieldsList: new ProfileFieldsList({
 				fields: profileFields,
@@ -76,7 +73,7 @@ export default class ProfileInfoPage extends Block {
 				class: "profile-info-btns-item-btn",
 				children: "Изменить данные",
 				events: {
-					click: (e?: Event) => ProfileInfoPage.handleChangeDataClick(e),
+					click: () => ProfileInfoPage.handleChangeDataClick(),
 				},
 			}),
 			ChangePasswordBtn: new Button({
@@ -84,7 +81,7 @@ export default class ProfileInfoPage extends Block {
 				class: "profile-info-btns-item-btn",
 				children: "Изменить пароль",
 				events: {
-					click: (e?: Event) => ProfileInfoPage.handleChangePassClick(e),
+					click: () => ProfileInfoPage.handleChangePassClick(),
 				},
 			}),
 			LogoutBtn: new Button({
@@ -92,36 +89,28 @@ export default class ProfileInfoPage extends Block {
 				class: "profile-info-btns-item-btn profile-info-btns-item-btn--danger",
 				children: "Выйти",
 				events: {
-					click: (e?: Event) => ProfileInfoPage.handleLogoutClick(e),
+					click: () => ProfileInfoPage.handleLogoutClick(),
 				},
 			}),
 		});
 	}
 
-	private static handleBackClick(e?: Event): void {
-		e?.preventDefault();
+	private static handleBackClick(): void {
 		router.go("/messenger");
 	}
 
-	private static async handleAvatarClick(e?: Event): Promise<void> {
-		e?.preventDefault();
-	}
-
-	private static handleChangeDataClick(e?: Event): void {
-		e?.preventDefault();
+	private static handleChangeDataClick(): void {
 		const profileEditPage = new ProfileEditPage();
 		renderDOM("#app", profileEditPage);
 	}
 
-	private static handleChangePassClick(e?: Event): void {
-		e?.preventDefault();
+	private static handleChangePassClick(): void {
 		const profileEditPassPage = new ProfileEditPassPage();
 		renderDOM("#app", profileEditPassPage);
 	}
 
-	private static async handleLogoutClick(e?: Event): Promise<void> {
-		e?.preventDefault();
-		AuthService.logout();
+	private static async handleLogoutClick(): Promise<void> {
+		await AuthService.logout();
 		router.go("/");
 	}
 
@@ -133,21 +122,23 @@ export default class ProfileInfoPage extends Block {
 				...field,
 				value: String(userData[field.id as keyof UserData]) ?? field.value,
 			}));
+			const imgSrc = userData.avatar
+				? `${resourcesUrl}${userData.avatar}`
+				: `${avatarImg}`;
+			const imgClass = userData.avatar
+				? "profile-info-avatar-img"
+				: "profile-info-default-avatar-img";
 
 			this.setProps({
 				ProfileFieldsList: new ProfileFieldsList({
 					fields: profileFieldsClone,
 				}),
-				AvatarBtn: new Button({
-					id: "avatarBtn",
+				Avatar: new Avatar({
+					class: "profile-info-avatar",
+					name: "avatar",
 					children: `
-							<span class="profile-info-avatar" name="avatar">
-								<img src="${resourcesUrl}${userData.avatar}" class="profile-info-avatar-img" />
-							</span>
-						`,
-					events: {
-						click: (e?: Event) => ProfileInfoPage.handleAvatarClick(e),
-					},
+						<img src="${imgSrc}" class="${imgClass}" />
+					`,
 				}),
 			});
 		};

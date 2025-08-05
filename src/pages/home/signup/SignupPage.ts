@@ -112,7 +112,7 @@ export default class SignupPage extends Block {
 				class: "btn-secondary",
 				children: "Войти",
 				events: {
-					click: (e?: Event) => SignupPage.handleSigninClick(e),
+					click: () => SignupPage.handleSigninClick(),
 				},
 			}),
 		});
@@ -161,8 +161,7 @@ export default class SignupPage extends Block {
 		}
 	}
 
-	private static handleSigninClick(e?: Event): void {
-		e?.preventDefault();
+	private static handleSigninClick(): void {
 		router.go("/");
 	}
 

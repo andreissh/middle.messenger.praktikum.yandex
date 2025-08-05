@@ -49,7 +49,7 @@ export default class SigninPage extends Block {
 				class: "btn-secondary",
 				children: "Нет аккаунта?",
 				events: {
-					click: (e?: Event) => SigninPage.handleSignupClick(e),
+					click: () => SigninPage.handleSignupClick(),
 				},
 			}),
 			SigninForm: new Form({
@@ -113,8 +113,7 @@ export default class SigninPage extends Block {
 		}
 	}
 
-	private static handleSignupClick(e?: Event): void {
-		e?.preventDefault();
+	private static handleSignupClick(): void {
 		router.go("/sign-up");
 	}
 

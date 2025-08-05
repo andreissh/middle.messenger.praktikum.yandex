@@ -7,8 +7,10 @@ export default defineConfig({
 	appType: "spa",
 	server: {
 		port: 3000,
-		historyApiFallback: true,
 		strict: false,
+	},
+	preview: {
+		port: 3000,
 	},
 	plugins: [
 		handlebars({

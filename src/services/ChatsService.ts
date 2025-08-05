@@ -90,6 +90,14 @@ class ChatsService {
 			});
 		}
 	}
+
+	async changeAvatar(formData: FormData): Promise<void> {
+		try {
+			await http.put("/chats/avatar", { body: formData });
+		} catch (err) {
+			throw new Error("Ошибка при обновлении аватара", { cause: err });
+		}
+	}
 }
 
 export default new ChatsService();

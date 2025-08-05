@@ -1,33 +1,24 @@
 import Block from "@/framework/Block";
+import { EventsType } from "@/types/types";
 import "./context-menu.css";
 
 type ContextMenuProps = {
 	x?: number;
 	y?: number;
-	onDelete?: () => void;
+	events?: EventsType;
+	children?: Block | Block[] | string;
+	[key: string]: unknown;
 };
 
 const contextMenuTemplate = `
   <div class="context-menu" style="left: {{ x }}px; top: {{ y }}px;">
-    <button class="context-menu-delete-btn">Удалить</button>
+    {{{ children }}}
   </div>
 `;
 
 export default class ContextMenu extends Block {
 	constructor(props: ContextMenuProps) {
-		super("div", {
-			...props,
-			events: {
-				click: (e?: Event) => {
-					const target = e?.target as HTMLElement;
-					if (target.classList.contains("context-menu-delete-btn")) {
-						if (props.onDelete) {
-							props.onDelete();
-						}
-					}
-				},
-			},
-		});
+		super("div", props);
 	}
 
 	render(): HTMLElement {

@@ -10,6 +10,7 @@ import { resourcesUrl } from "@/utils/utils";
 import Form from "@/components/form/Form";
 import AuthService from "@/services/AuthService";
 import UserService from "@/services/UserService";
+import Avatar from "@/components/avatar/Avatar";
 import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
 import { profileEditFields } from "../utils/profileData";
 import "./profile-edit.css";
@@ -41,18 +42,24 @@ export default class ProfileEditPage extends Block {
 					</div>
 				`,
 				events: {
-					click: (e?: Event) => ProfileEditPage.handleBackClick(e),
+					click: () => ProfileEditPage.handleBackClick(),
 				},
 			}),
 			AvatarBtn: new Button({
 				id: "avatarBtn",
 				children: `
-					<span class="profile-edit-avatar" name="avatar">
-						<img src="${avatarImg}" class="profile-edit-avatar-img" />
-					</span>
+					{{{ Avatar }}}
 				`,
+				Avatar: new Avatar({
+					class: "profile-edit-avatar",
+					name: "avatar",
+					children: `
+						<img src="${avatarImg}" class="profile-edit-default-avatar-img" />
+						<span class="avatar-overlay-text">Поменять аватар</span>
+					`,
+				}),
 				events: {
-					click: (e?: Event) => this.handleAvatarClick(e),
+					click: () => this.handleAvatarClick(),
 				},
 			}),
 			ProfileEditForm: new Form({
@@ -86,6 +93,8 @@ export default class ProfileEditPage extends Block {
 		this.validator = this.initValidator();
 	}
 
+	private selectedAvatarFile: File | null = null;
+
 	private initValidator(): FormValidator {
 		const form = this.element?.querySelector(
 			".profile-edit-data-form"
@@ -97,14 +106,11 @@ export default class ProfileEditPage extends Block {
 		return new FormValidator(form, ".profile-field-item");
 	}
 
-	private static handleBackClick(e?: Event): void {
-		e?.preventDefault();
+	private static handleBackClick(): void {
 		router.go("/settings");
 	}
 
-	private async handleAvatarClick(e?: Event): Promise<void> {
-		e?.preventDefault();
-
+	private async handleAvatarClick(): Promise<void> {
 		const fileInput = document.createElement("input");
 		fileInput.type = "file";
 		fileInput.accept =
@@ -130,32 +136,24 @@ export default class ProfileEditPage extends Block {
 			throw new Error("Недопустимый тип файла");
 		}
 
-		const reader = new FileReader();
-		reader.onload = (event) => {
-			const avatarImgEl = document.querySelector(
-				".profile-edit-avatar-img"
-			) as HTMLImageElement;
-			if (avatarImgEl && event.target?.result) {
-				avatarImgEl.src = event.target.result as string;
-			}
-		};
-		reader.readAsDataURL(file);
+		this.selectedAvatarFile = file;
 
-		const formData = new FormData();
-		formData.append("avatar", file);
-		await UserService.changeAvatar(formData);
-		const userData = await AuthService.userInfo();
-
+		const previewUrl = URL.createObjectURL(file);
 		this.setProps({
 			AvatarBtn: new Button({
 				id: "avatarBtn",
 				children: `
-						<span class="profile-edit-avatar" name="avatar">
-							<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-avatar-img" />
-						</span>
+					{{{ Avatar }}}
+				`,
+				Avatar: new Avatar({
+					class: "profile-edit-avatar",
+					name: "avatar",
+					children: `
+						<img src="${previewUrl}" class="profile-edit-avatar-img" />
 					`,
+				}),
 				events: {
-					click: (event?: Event) => this.handleAvatarClick(event),
+					click: () => this.handleAvatarClick(),
 				},
 			}),
 		});
@@ -163,6 +161,7 @@ export default class ProfileEditPage extends Block {
 
 	private async handleSaveSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
+
 		const form = this.element?.querySelector(
 			".profile-edit-data-form"
 		) as HTMLFormElement;
@@ -171,16 +170,27 @@ export default class ProfileEditPage extends Block {
 		if (this.validator.validateForm()) {
 			const data = getFormData(form);
 			if (data) {
-				const inputFields: NodeListOf<HTMLInputElement> =
-					document.querySelectorAll(".profile-field-input");
-				const reqBody: UserProfileReq = {} as UserProfileReq;
-				profileEditFields.forEach((field, i) => {
-					reqBody[field.id as keyof UserProfileReq] =
-						inputFields[i].value ?? field.value;
-				});
+				try {
+					const inputFields: NodeListOf<HTMLInputElement> =
+						document.querySelectorAll(".profile-field-input");
+					const reqBody: UserProfileReq = {} as UserProfileReq;
+					profileEditFields.forEach((field, i) => {
+						reqBody[field.id as keyof UserProfileReq] =
+							inputFields[i].value ?? field.value;
+					});
 
-				await UserService.changeProfile(reqBody);
-				router.go("/settings");
+					await UserService.changeProfile(reqBody);
+
+					if (this.selectedAvatarFile) {
+						const formData = new FormData();
+						formData.append("avatar", this.selectedAvatarFile);
+						await UserService.changeAvatar(formData);
+					}
+
+					router.go("/settings");
+				} catch (err) {
+					throw new Error("Ошибка при сохранении профиля", { cause: err });
+				}
 			}
 		}
 	}
@@ -200,6 +210,13 @@ export default class ProfileEditPage extends Block {
 				...field,
 				value: String(userData[field.id as keyof UserData]) ?? field.value,
 			}));
+
+			const imgSrc = userData.avatar
+				? `${resourcesUrl}${userData.avatar}`
+				: `${avatarImg}`;
+			const imgClass = userData.avatar
+				? "profile-edit-avatar-img"
+				: "profile-edit-default-avatar-img";
 
 			this.setProps({
 				ProfileEditForm: new Form({
@@ -231,12 +248,13 @@ export default class ProfileEditPage extends Block {
 				AvatarBtn: new Button({
 					id: "avatarBtn",
 					children: `
-							<span class="profile-edit-avatar" name="avatar">
-								<img src="${resourcesUrl}${userData.avatar}" class="profile-edit-avatar-img" />
-							</span>
-						`,
+						<span class="profile-edit-avatar" name="avatar">
+							<img src="${imgSrc}" class="${imgClass}" />
+							<span class="avatar-overlay-text">Поменять аватар</span>
+						</span>
+					`,
 					events: {
-						click: (e?: Event) => this.handleAvatarClick(e),
+						click: () => this.handleAvatarClick(),
 					},
 				}),
 			});
