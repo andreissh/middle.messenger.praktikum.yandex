@@ -263,6 +263,13 @@ export default class ChatPage extends Block {
 		});
 	};
 
+	private scrollToBottom() {
+		const messagesContainer = document.querySelector(".chat-body");
+		if (messagesContainer) {
+			messagesContainer.scrollTop = messagesContainer.scrollHeight;
+		}
+	}
+
 	private setupChatConnection() {
 		const containerMsgs = document.querySelector(".chat-messages");
 		if (!containerMsgs) return;
@@ -285,6 +292,7 @@ export default class ChatPage extends Block {
 				msgEl.textContent = msg.content;
 				containerMsgs.append(msgEl);
 			});
+			this.scrollToBottom();
 		});
 	}
 
