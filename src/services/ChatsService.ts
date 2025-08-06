@@ -36,8 +36,6 @@ class ChatsService {
 					chatId: id,
 				},
 			});
-
-			console.log(`Удален чат с ID: ${id}`);
 		} catch (err) {
 			throw new Error("Ошибка при удалении чата", { cause: err });
 		}

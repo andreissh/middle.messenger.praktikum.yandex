@@ -3,7 +3,7 @@ import Button from "@/components/button/Button";
 import Modal from "@/components/modal/Modal";
 import router from "@/routes/Router";
 import arrowIcon from "@/assets/icons/arrow-right.svg";
-import plusIcon from "@/assets/icons/plus.svg";
+import plusIcon from "@/assets/icons/plus-btn.svg";
 import formatChatDate from "@/utils/formatChatDate";
 import Form from "@/components/form/Form";
 import ChatsService from "@/services/ChatsService";

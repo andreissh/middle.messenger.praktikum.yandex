@@ -4,11 +4,11 @@ import Button from "@/components/button/Button";
 import router from "@/routes/Router";
 import renderDOM from "@/utils/renderDOM";
 import { UserData } from "@/types/types";
-import backBtn from "@/assets/icons/back-btn.svg";
+import backBtn from "@/assets/icons/arrow-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import AuthService from "@/services/AuthService";
 import Avatar from "@/components/avatar/Avatar";
-import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
+import ProfileFields from "../components/profile-fields/ProfileFields";
 import { profileFields } from "../utils/profileData";
 import ProfileEditPage from "../profile-edit/ProfileEditPage";
 import ProfileEditPassPage from "../profile-edit-pass/ProfileEditPassPage";
@@ -24,7 +24,7 @@ const template = `
           <span class="profile-info-username">Иван</span>
         </div>
         <div class="profile-info-data-block">
-          {{{ ProfileFieldsList }}}
+          {{{ ProfileFields }}}
         </div>
         <div class="profile-info-btns-block">
           <ul class="profile-info-btns-list">
@@ -65,7 +65,7 @@ export default class ProfileInfoPage extends Block {
 					<img src="${avatarImg}" class="profile-info-default-avatar-img" />
 				`,
 			}),
-			ProfileFieldsList: new ProfileFieldsList({
+			ProfileFields: new ProfileFields({
 				fields: profileFields,
 			}),
 			ChangeDataBtn: new Button({
@@ -130,7 +130,7 @@ export default class ProfileInfoPage extends Block {
 				: "profile-info-default-avatar-img";
 
 			this.setProps({
-				ProfileFieldsList: new ProfileFieldsList({
+				ProfileFields: new ProfileFields({
 					fields: profileFieldsClone,
 				}),
 				Avatar: new Avatar({

@@ -4,14 +4,14 @@ import router from "@/routes/Router";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import { UserPassReq, ValidationResult } from "@/types/types";
-import backBtn from "@/assets/icons/back-btn.svg";
+import backBtn from "@/assets/icons/arrow-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import { resourcesUrl } from "@/utils/utils";
 import Form from "@/components/form/Form";
 import AuthService from "@/services/AuthService";
 import UserService from "@/services/UserService";
 import Avatar from "@/components/avatar/Avatar";
-import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
+import ProfileFields from "../components/profile-fields/ProfileFields";
 import { passwordFields } from "../utils/profileData";
 import "./profile-edit-pass.css";
 
@@ -56,13 +56,13 @@ export default class ProfileEditPassPage extends Block {
 				class: "profile-edit-pass-data-form",
 				children: `
 				    <div class="profile-edit-pass-data-block">
-						{{{ ProfileFieldsList }}}
+						{{{ ProfileFields }}}
 					</div>
 					<div class="profile-edit-pass-btns-container">
 						{{{ SaveBtn }}}
 					</div>
 				`,
-				ProfileFieldsList: new ProfileFieldsList({
+				ProfileFields: new ProfileFields({
 					fields: passwordFields,
 					events: {
 						blur: (e?: Event) => this.handleFieldBlur(e),

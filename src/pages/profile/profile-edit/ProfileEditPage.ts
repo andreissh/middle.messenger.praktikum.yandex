@@ -4,14 +4,14 @@ import router from "@/routes/Router";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import { UserData, UserProfileReq } from "@/types/types";
-import backBtn from "@/assets/icons/back-btn.svg";
+import backBtn from "@/assets/icons/arrow-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import { resourcesUrl } from "@/utils/utils";
 import Form from "@/components/form/Form";
 import AuthService from "@/services/AuthService";
 import UserService from "@/services/UserService";
 import Avatar from "@/components/avatar/Avatar";
-import ProfileFieldsList from "../components/profile-fields-list/ProfileFieldsList";
+import ProfileFields from "../components/profile-fields/ProfileFields";
 import { profileEditFields } from "../utils/profileData";
 import "./profile-edit.css";
 
@@ -66,13 +66,13 @@ export default class ProfileEditPage extends Block {
 				class: "profile-edit-data-form",
 				children: `
 					<div class="profile-edit-data-block">
-						{{{ ProfileFieldsList }}}
+						{{{ ProfileFields }}}
 					</div>
 					<div class="profile-edit-btns-container">
 						{{{ SaveBtn }}}
 					</div>
 				`,
-				ProfileFieldsList: new ProfileFieldsList({
+				ProfileFields: new ProfileFields({
 					fields: profileEditFields,
 					events: {
 						blur: (e?: Event) => this.handleFieldBlur(e),
@@ -223,13 +223,13 @@ export default class ProfileEditPage extends Block {
 					class: "profile-edit-data-form",
 					children: `
 						<div class="profile-edit-data-block">
-							{{{ ProfileFieldsList }}}
+							{{{ ProfileFields }}}
 						</div>
 						<div class="profile-edit-btns-container">
 							{{{ SaveBtn }}}
 						</div>
 					`,
-					ProfileFieldsList: new ProfileFieldsList({
+					ProfileFields: new ProfileFields({
 						fields: profileEditFieldsClone,
 						events: {
 							blur: (e?: Event) => this.handleFieldBlur(e),

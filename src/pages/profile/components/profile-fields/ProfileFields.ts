@@ -2,7 +2,7 @@ import Block from "@/framework/Block";
 import { EventsType } from "@/types/types";
 import ProfileField from "../profile-field/ProfileField";
 import { InputProps } from "../../utils/profileData";
-import "./profile-fields-list.css";
+import "./profile-fields.css";
 
 type ProfileFieldsProps = {
 	fields: Array<InputProps & { label: string }>;
@@ -10,12 +10,12 @@ type ProfileFieldsProps = {
 };
 
 const template = `
-  <ul class="profile-fields-list">
+  <ul class="profile-fields">
     {{{ fields }}}
   </ul>
 `;
 
-export default class ProfileFieldsList extends Block {
+export default class ProfileFields extends Block {
 	constructor(props: ProfileFieldsProps) {
 		super("div", {
 			fields: props.fields.map(

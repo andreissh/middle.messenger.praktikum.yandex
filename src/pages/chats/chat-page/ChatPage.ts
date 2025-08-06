@@ -1,6 +1,6 @@
 import Block from "@/framework/Block";
 import ChatController from "@/api/ChatController";
-import sendBtn from "@/assets/icons/back-btn.svg";
+import sendBtn from "@/assets/icons/arrow-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import Button from "@/components/button/Button";
 import Form from "@/components/form/Form";

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	extends: ["stylelint-config-standard"],
 	rules: {
 		// Добавил правило, чтобы использовать бэм подход с именованием модификатора через двойной дефис
