@@ -107,26 +107,26 @@ export default class ChatsPage extends Block {
 					},
 					children: `
 						<label class="create-chat-label">
+							Введите название
 							{{{ CreateChatInput }}}
 						</label>
 						{{{ CreateChatBtn }}}
 					`,
-					CreateChatBtn: new Button({
-						attributes: {
-							class: "btn create-chat-submit-btn",
-							type: "submit",
-						},
-						children: "Создать",
-					}),
 					CreateChatInput: new Input({
 						attributes: {
 							id: "createChatInput",
 							class: "create-chat-input",
 							type: "text",
 							name: "createChatInput",
-							placeholder: "Введите название",
 							autocomplete: "createChatInput",
 						},
+					}),
+					CreateChatBtn: new Button({
+						attributes: {
+							class: "btn create-chat-submit-btn",
+							type: "submit",
+						},
+						children: "Создать",
 					}),
 					events: {
 						submit: (e?: Event) => this.handleCreateChatSubmit(e),
@@ -184,6 +184,7 @@ export default class ChatsPage extends Block {
 					},
 					children: `
 						<label class="add-user-label">
+							Логин
 							{{{ AddUserInput }}}
 						</label>
 						{{{ AddUserBtn }}}
@@ -201,7 +202,6 @@ export default class ChatsPage extends Block {
 							class: "add-user-input",
 							type: "text",
 							name: "addUserInput",
-							placeholder: "Введите логин",
 							autocomplete: "addUserInput",
 						},
 					}),
@@ -228,6 +228,7 @@ export default class ChatsPage extends Block {
 					},
 					children: `
 						<label class="remove-user-label">
+							Логин
 							{{{ RemoveUserInput }}}
 						</label>
 						{{{ RemoveUserBtn }}}
@@ -245,7 +246,6 @@ export default class ChatsPage extends Block {
 							class: "remove-user-input",
 							type: "text",
 							name: "removeUserInput",
-							placeholder: "Введите логин",
 							autocomplete: "removeUserInput",
 						},
 					}),

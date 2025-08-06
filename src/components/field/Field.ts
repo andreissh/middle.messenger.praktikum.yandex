@@ -1,9 +1,9 @@
 import Block from "@/framework/Block";
 import { EventsType } from "@/types/types";
 import Input from "@/components/input/Input";
-import "./login-field.css";
+import "./field.css";
 
-export type LoginFieldProps = {
+export type FieldProps = {
 	id: string;
 	label: string;
 	type: string;
@@ -14,14 +14,14 @@ export type LoginFieldProps = {
 };
 
 const template = `
-  <li class="login-field-item">
-    <label for="{{ id }}" class="login-field-label">{{ label }}</label>
+  <li class="field-item">
+    <label for="{{ id }}" class="field-label">{{ label }}</label>
     {{{ Input }}}
   </li>
 `;
 
-export default class LoginField extends Block {
-	constructor(props: LoginFieldProps) {
+export default class Field extends Block {
+	constructor(props: FieldProps) {
 		const { events, ...plainProps } = props;
 
 		super("div", {
@@ -32,7 +32,7 @@ export default class LoginField extends Block {
 			Input: new Input({
 				attributes: {
 					...plainProps,
-					class: "login-field-input",
+					class: "field-input",
 				},
 				events,
 			}),

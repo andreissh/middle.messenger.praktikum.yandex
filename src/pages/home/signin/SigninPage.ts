@@ -7,7 +7,7 @@ import FormValidator from "@/utils/FormValidator";
 import Form from "@/components/form/Form";
 import AuthService from "@/services/AuthService";
 import { AuthData } from "@/types/types";
-import LoginFields from "../components/login-fields/LoginFields";
+import LoginFields from "@/components/fields/Fields";
 import "./signin.css";
 
 const fields: Array<InputProps & { label: string }> = [

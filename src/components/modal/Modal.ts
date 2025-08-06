@@ -17,7 +17,7 @@ const template = `
 		<div class="modal">
 			<div class="modal-header">
 				{{{ CloseBtn }}}
-				<h2>{{ title }}</h2>
+				<h2 class="modal-title">{{ title }}</h2>
 			</div>
 			<div class="modal-body">
 				{{{ children }}}
