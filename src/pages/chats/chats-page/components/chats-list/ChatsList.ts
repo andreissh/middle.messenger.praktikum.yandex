@@ -7,13 +7,15 @@ type ChatsListProps = {
 };
 
 const template = `
-  <ul class="chat-list">
-		{{#if hasChats}}
-			{{{ chats }}}
-		{{ else }}
-			<p>Список чатов пуст</p>
-		{{/if}}
-  </ul>
+	<div class="chat-list-wrapper">
+		<ul class="chat-list">
+			{{#if hasChats}}
+				{{{ chats }}}
+			{{ else }}
+				<p>Список чатов пуст</p>
+			{{/if}}
+		</ul>
+	</div>
 `;
 
 export default class ChatsList extends Block {
