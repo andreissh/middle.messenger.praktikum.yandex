@@ -1,10 +1,14 @@
 import Block from "@/framework/Block";
 import { EventsType } from "@/types/types";
 import Input from "@/components/input/Input";
-import { InputProps } from "../../utils/profileData";
 import "./profile-field.css";
 
-export type ProfileFieldProps = InputProps & { label: string } & {
+export type ProfileFieldProps = {
+	id: string;
+	label: string;
+	type: string;
+	name: string;
+	autocomplete: string;
 	events?: EventsType;
 };
 
@@ -18,11 +22,15 @@ const template = `
 export default class ProfileField extends Block {
 	constructor(props: ProfileFieldProps) {
 		super("div", {
-			id: props.id,
+			attributes: {
+				id: props.id,
+			},
 			label: props.label,
 			Input: new Input({
-				...props,
-				class: "profile-field-input",
+				attributes: {
+					...props,
+					class: "profile-field-input",
+				},
 			}),
 		});
 	}

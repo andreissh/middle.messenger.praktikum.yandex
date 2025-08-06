@@ -84,7 +84,9 @@ export default class SignupPage extends Block {
 	constructor() {
 		super("div", {
 			SignupForm: new Form({
-				class: "signup-form",
+				attributes: {
+					class: "signup-form",
+				},
 				children: `
 				    {{{ LoginFields }}}
 					<div class="signup-form-signup-btn-container">
@@ -98,18 +100,22 @@ export default class SignupPage extends Block {
 					},
 				}),
 				SignupBtn: new Button({
-					id: "signup",
-					class: "btn",
+					attributes: {
+						id: "signup",
+						class: "btn",
+						type: "submit",
+					},
 					children: "Зарегистрироваться",
-					type: "submit",
 				}),
 				events: {
 					submit: (e?: Event) => this.handleSignupSubmit(e),
 				},
 			}),
 			SigninBtn: new Button({
-				id: "signin",
-				class: "btn-secondary",
+				attributes: {
+					id: "signin",
+					class: "btn-secondary",
+				},
 				children: "Войти",
 				events: {
 					click: () => SignupPage.handleSigninClick(),

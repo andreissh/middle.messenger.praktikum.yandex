@@ -3,11 +3,13 @@ import { EventsType } from "@/types/types";
 import "./button.css";
 
 type ButtonProps = {
-	id?: string;
-	class?: string;
+	attributes?: {
+		type?: string;
+		id?: string;
+		class?: string;
+	};
 	children?: Block | Block[] | string;
 	events?: EventsType;
-	type?: string;
 	[key: string]: unknown;
 };
 

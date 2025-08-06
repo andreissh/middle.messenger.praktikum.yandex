@@ -35,7 +35,9 @@ export default class ProfileEditPassPage extends Block {
 	constructor() {
 		super("div", {
 			BackBtn: new Button({
-				id: "backBtn",
+				attributes: {
+					id: "backBtn",
+				},
 				children: `
 					<div class="profile-edit-pass-goback-block">
 						<img src="${backBtn}" alt="backBtn" />
@@ -46,14 +48,18 @@ export default class ProfileEditPassPage extends Block {
 				},
 			}),
 			Avatar: new Avatar({
-				class: "profile-edit-pass-avatar",
-				name: "avatar",
+				attributes: {
+					class: "profile-edit-pass-avatar",
+					name: "avatar",
+				},
 				children: `
 					<img src="${avatarImg}" class="profile-edit-pass-default-avatar-img" />
 				`,
 			}),
 			ProfileEditPassForm: new Form({
-				class: "profile-edit-pass-data-form",
+				attributes: {
+					class: "profile-edit-pass-data-form",
+				},
 				children: `
 				    <div class="profile-edit-pass-data-block">
 						{{{ ProfileFields }}}
@@ -69,10 +75,12 @@ export default class ProfileEditPassPage extends Block {
 					},
 				}),
 				SaveBtn: new Button({
-					id: "save",
-					class: "btn",
+					attributes: {
+						id: "save",
+						class: "btn",
+						type: "submit",
+					},
 					children: "Сохранить",
-					type: "submit",
 				}),
 				events: {
 					submit: (e?: Event) => this.handleSaveSubmit(e),
@@ -170,8 +178,10 @@ export default class ProfileEditPassPage extends Block {
 
 			this.setProps({
 				Avatar: new Avatar({
-					class: "profile-edit-pass-avatar",
-					name: "avatar",
+					attributes: {
+						class: "profile-edit-pass-avatar",
+						name: "avatar",
+					},
 					children: `
 						<img src="${imgSrc}" class="${imgClass}" />
 					`,

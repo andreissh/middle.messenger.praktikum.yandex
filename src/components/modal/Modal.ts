@@ -4,7 +4,9 @@ import Button from "../button/Button";
 import "./modal.css";
 
 type ModalProps = {
-	id: string;
+	attributes: {
+		id: string;
+	};
 	title?: string;
 	children?: Block | Block[] | string;
 	[key: string]: unknown;
@@ -29,7 +31,9 @@ export default class Modal extends Block {
 		super("div", {
 			...props,
 			CloseBtn: new Button({
-				class: "modal-close-btn",
+				attributes: {
+					class: "modal-close-btn",
+				},
 				children: `
 					<img src=${closeBtn} alt="close" />
 				`,
@@ -43,7 +47,7 @@ export default class Modal extends Block {
 	private handleCloseClick(e?: Event): void {
 		e?.preventDefault();
 		const modal = document.querySelector<HTMLElement>(
-			`#${this.props.id}`
+			`#${this.props.attributes!.id}`
 		);
 		if (!modal) return;
 		modal.style.display = "none";

@@ -35,7 +35,9 @@ export default class ProfileEditPage extends Block {
 	constructor() {
 		super("div", {
 			BackBtn: new Button({
-				id: "backBtn",
+				attributes: {
+					id: "backBtn",
+				},
 				children: `
 					<div class="profile-edit-goback-block">
 						<img src="${backBtn}" alt="backBtn" />
@@ -46,13 +48,17 @@ export default class ProfileEditPage extends Block {
 				},
 			}),
 			AvatarBtn: new Button({
-				id: "avatarBtn",
+				attributes: {
+					id: "avatarBtn",
+				},
 				children: `
 					{{{ Avatar }}}
 				`,
 				Avatar: new Avatar({
-					class: "profile-edit-avatar",
-					name: "avatar",
+					attributes: {
+						class: "profile-edit-avatar",
+						name: "avatar",
+					},
 					children: `
 						<img src="${avatarImg}" class="profile-edit-default-avatar-img" />
 						<span class="avatar-overlay-text">Поменять аватар</span>
@@ -63,7 +69,9 @@ export default class ProfileEditPage extends Block {
 				},
 			}),
 			ProfileEditForm: new Form({
-				class: "profile-edit-data-form",
+				attributes: {
+					class: "profile-edit-data-form",
+				},
 				children: `
 					<div class="profile-edit-data-block">
 						{{{ ProfileFields }}}
@@ -79,10 +87,12 @@ export default class ProfileEditPage extends Block {
 					},
 				}),
 				SaveBtn: new Button({
-					id: "save",
-					class: "btn",
+					attributes: {
+						id: "save",
+						class: "btn",
+						type: "submit",
+					},
 					children: "Сохранить",
-					type: "submit",
 				}),
 				events: {
 					submit: (e?: Event) => this.handleSaveSubmit(e),
@@ -146,8 +156,10 @@ export default class ProfileEditPage extends Block {
 					{{{ Avatar }}}
 				`,
 				Avatar: new Avatar({
-					class: "profile-edit-avatar",
-					name: "avatar",
+					attributes: {
+						class: "profile-edit-avatar",
+						name: "avatar",
+					},
 					children: `
 						<img src="${previewUrl}" class="profile-edit-avatar-img" />
 					`,
@@ -220,7 +232,9 @@ export default class ProfileEditPage extends Block {
 
 			this.setProps({
 				ProfileEditForm: new Form({
-					class: "profile-edit-data-form",
+					attributes: {
+						class: "profile-edit-data-form",
+					},
 					children: `
 						<div class="profile-edit-data-block">
 							{{{ ProfileFields }}}
@@ -236,10 +250,12 @@ export default class ProfileEditPage extends Block {
 						},
 					}),
 					SaveBtn: new Button({
-						id: "save",
-						class: "btn",
+						attributes: {
+							id: "save",
+							class: "btn",
+							type: "submit",
+						},
 						children: "Сохранить",
-						type: "submit",
 					}),
 					events: {
 						submit: (e?: Event) => this.handleSaveSubmit(e),

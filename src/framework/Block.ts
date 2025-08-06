@@ -114,7 +114,13 @@ abstract class Block {
 	private _createResources(): void {
 		const { tagName } = this._meta;
 		this._element = Block._createDocumentElement(tagName);
+	}
 
+	private static _createDocumentElement(tagName: string): HTMLElement {
+		return document.createElement(tagName);
+	}
+
+	private _setAttributes(): void {
 		if (this._props.attributes) {
 			Object.entries(this._props.attributes).forEach(([name, value]) => {
 				if (value !== undefined && value !== false) {
@@ -123,10 +129,6 @@ abstract class Block {
 				}
 			});
 		}
-	}
-
-	private static _createDocumentElement(tagName: string): HTMLElement {
-		return document.createElement(tagName);
 	}
 
 	private _render(): void {
@@ -138,6 +140,7 @@ abstract class Block {
 
 		this._removeEvents();
 		this._element = block;
+		this._setAttributes();
 		this._addEvents();
 	}
 

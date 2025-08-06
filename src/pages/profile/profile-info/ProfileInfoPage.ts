@@ -48,7 +48,9 @@ export default class ProfileInfoPage extends Block {
 	constructor() {
 		super("div", {
 			BackBtn: new Button({
-				id: "backBtn",
+				attributes: {
+					id: "backBtn",
+				},
 				children: `
 					<div class="profile-info-goback-block">
 						<img src="${backBtn}" alt="backBtn" />
@@ -59,8 +61,10 @@ export default class ProfileInfoPage extends Block {
 				},
 			}),
 			Avatar: new Avatar({
-				class: "profile-info-avatar",
-				name: "avatar",
+				attributes: {
+					class: "profile-info-avatar",
+					name: "avatar",
+				},
 				children: `
 					<img src="${avatarImg}" class="profile-info-default-avatar-img" />
 				`,
@@ -69,24 +73,31 @@ export default class ProfileInfoPage extends Block {
 				fields: profileFields,
 			}),
 			ChangeDataBtn: new Button({
-				id: "renderProfileEditBtn",
-				class: "profile-info-btns-item-btn",
+				attributes: {
+					id: "renderProfileEditBtn",
+					class: "profile-info-btns-item-btn",
+				},
 				children: "Изменить данные",
 				events: {
 					click: () => ProfileInfoPage.handleChangeDataClick(),
 				},
 			}),
 			ChangePasswordBtn: new Button({
-				id: "renderProfileEditPassBtn",
-				class: "profile-info-btns-item-btn",
+				attributes: {
+					id: "renderProfileEditPassBtn",
+					class: "profile-info-btns-item-btn",
+				},
 				children: "Изменить пароль",
 				events: {
 					click: () => ProfileInfoPage.handleChangePassClick(),
 				},
 			}),
 			LogoutBtn: new Button({
-				id: "renderSigninBtn",
-				class: "profile-info-btns-item-btn profile-info-btns-item-btn--danger",
+				attributes: {
+					id: "renderSigninBtn",
+					class:
+						"profile-info-btns-item-btn profile-info-btns-item-btn--danger",
+				},
 				children: "Выйти",
 				events: {
 					click: () => ProfileInfoPage.handleLogoutClick(),
@@ -134,8 +145,10 @@ export default class ProfileInfoPage extends Block {
 					fields: profileFieldsClone,
 				}),
 				Avatar: new Avatar({
-					class: "profile-info-avatar",
-					name: "avatar",
+					attributes: {
+						class: "profile-info-avatar",
+						name: "avatar",
+					},
 					children: `
 						<img src="${imgSrc}" class="${imgClass}" />
 					`,

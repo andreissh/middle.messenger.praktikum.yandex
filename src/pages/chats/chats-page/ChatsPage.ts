@@ -14,7 +14,9 @@ import ChatPage from "../chat-page/ChatPage";
 import "./chats-page.css";
 
 type UserChatListData = {
-	id: number;
+	attributes: {
+		id: string;
+	};
 	name: string;
 	text: string;
 	time: string;
@@ -51,8 +53,10 @@ export default class ChatsPage extends Block {
 	constructor() {
 		super("div", {
 			ProfileBtn: new Button({
-				id: "renderProfileInfoBtn",
-				class: "chats-aside-to-profile-btn",
+				attributes: {
+					id: "renderProfileInfoBtn",
+					class: "chats-aside-to-profile-btn",
+				},
 				children: `
 					<span class="chats-aside-to-profile-btn-text">Профиль</span>
 					<img src="${arrowIcon}" alt="profile" />
@@ -62,19 +66,23 @@ export default class ChatsPage extends Block {
 				},
 			}),
 			SearchInput: new Input({
-				id: "search",
-				class: "chats-aside-search",
-				type: "search",
-				name: "search",
-				placeholder: "Поиск",
-				autocomplete: "search",
+				attributes: {
+					id: "search",
+					class: "chats-aside-search",
+					type: "search",
+					name: "search",
+					placeholder: "Поиск",
+					autocomplete: "search",
+				},
 			}),
 			ChatsList: new ChatsList({
 				chats: [],
 			}),
 			CreateChatBtn: new Button({
-				id: "createChatBtn",
-				class: "create-chat-btn",
+				attributes: {
+					id: "createChatBtn",
+					class: "create-chat-btn",
+				},
 				children: `
 					<img src=${plusIcon} alt="add chat" />
 				`,
@@ -86,13 +94,17 @@ export default class ChatsPage extends Block {
 				chatUsers: [],
 			}),
 			CreateChatModal: new Modal({
-				id: "createChatModal",
+				attributes: {
+					id: "createChatModal",
+				},
 				title: "Создайте чат",
 				children: `
 					{{{ CreateChatForm }}}
 				`,
 				CreateChatForm: new Form({
-					class: "create-chat-form",
+					attributes: {
+						class: "create-chat-form",
+					},
 					children: `
 						<label class="create-chat-label">
 							{{{ CreateChatInput }}}
@@ -100,17 +112,21 @@ export default class ChatsPage extends Block {
 						{{{ CreateChatBtn }}}
 					`,
 					CreateChatBtn: new Button({
-						class: "btn create-chat-submit-btn",
-						type: "submit",
+						attributes: {
+							class: "btn create-chat-submit-btn",
+							type: "submit",
+						},
 						children: "Создать",
 					}),
 					CreateChatInput: new Input({
-						id: "createChatInput",
-						class: "create-chat-input",
-						type: "text",
-						name: "createChatInput",
-						placeholder: "Введите название",
-						autocomplete: "createChatInput",
+						attributes: {
+							id: "createChatInput",
+							class: "create-chat-input",
+							type: "text",
+							name: "createChatInput",
+							placeholder: "Введите название",
+							autocomplete: "createChatInput",
+						},
 					}),
 					events: {
 						submit: (e?: Event) => this.handleCreateChatSubmit(e),
@@ -118,7 +134,9 @@ export default class ChatsPage extends Block {
 				}),
 			}),
 			DeleteChatModal: new Modal({
-				id: "deleteChatModal",
+				attributes: {
+					id: "deleteChatModal",
+				},
 				title: "Удаление чата",
 				children: `
 					<div class="delete-chat-modal-btns">
@@ -128,16 +146,20 @@ export default class ChatsPage extends Block {
 					</div>
 				`,
 				DeleteChatCancelBtn: new Button({
-					id: "deleteChatCancelBtn",
-					class: "btn-secondary",
+					attributes: {
+						id: "deleteChatCancelBtn",
+						class: "btn-secondary",
+					},
 					children: "Нет",
 					events: {
 						click: () => ChatsPage.handleDeleteChatCancelClick(),
 					},
 				}),
 				DeleteChatConfirmBtn: new Button({
-					id: "deleteChatConfirmBtn",
-					class: "btn",
+					attributes: {
+						id: "deleteChatConfirmBtn",
+						class: "btn",
+					},
 					children: "Да",
 					events: {
 						click: () => this.handleDeleteChatConfirmClick(),
@@ -145,7 +167,9 @@ export default class ChatsPage extends Block {
 				}),
 			}),
 			AddUserModal: new Modal({
-				id: "addUserModal",
+				attributes: {
+					id: "addUserModal",
+				},
 				title: "Добавьте пользователя",
 				children: `
 					{{{ AddUserForm }}}
@@ -155,7 +179,9 @@ export default class ChatsPage extends Block {
 					</div>
 				`,
 				AddUserForm: new Form({
-					class: "add-user-form",
+					attributes: {
+						class: "add-user-form",
+					},
 					children: `
 						<label class="add-user-label">
 							{{{ AddUserInput }}}
@@ -163,17 +189,21 @@ export default class ChatsPage extends Block {
 						{{{ AddUserBtn }}}
 					`,
 					AddUserBtn: new Button({
-						class: "btn add-user-submit-btn",
-						type: "submit",
+						attributes: {
+							class: "btn add-user-submit-btn",
+							type: "submit",
+						},
 						children: "Добавить",
 					}),
 					AddUserInput: new Input({
-						id: "addUserInput",
-						class: "add-user-input",
-						type: "text",
-						name: "addUserInput",
-						placeholder: "Введите логин",
-						autocomplete: "addUserInput",
+						attributes: {
+							id: "addUserInput",
+							class: "add-user-input",
+							type: "text",
+							name: "addUserInput",
+							placeholder: "Введите логин",
+							autocomplete: "addUserInput",
+						},
 					}),
 					events: {
 						submit: (e?: Event) => this.handleAddUserSubmit(e),
@@ -181,7 +211,9 @@ export default class ChatsPage extends Block {
 				}),
 			}),
 			RemoveUserModal: new Modal({
-				id: "removeUserModal",
+				attributes: {
+					id: "removeUserModal",
+				},
 				title: "Удалите пользователя",
 				children: `
 					{{{ RemoveUserForm }}}
@@ -191,7 +223,9 @@ export default class ChatsPage extends Block {
 					</div>
 				`,
 				RemoveUserForm: new Form({
-					class: "remove-user-form",
+					attributes: {
+						class: "remove-user-form",
+					},
 					children: `
 						<label class="remove-user-label">
 							{{{ RemoveUserInput }}}
@@ -199,17 +233,21 @@ export default class ChatsPage extends Block {
 						{{{ RemoveUserBtn }}}
 					`,
 					RemoveUserBtn: new Button({
-						class: "btn remove-user-submit-btn",
-						type: "submit",
+						attributes: {
+							class: "btn remove-user-submit-btn",
+							type: "submit",
+						},
 						children: "Удалить",
 					}),
 					RemoveUserInput: new Input({
-						id: "removeUserInput",
-						class: "remove-user-input",
-						type: "text",
-						name: "removeUserInput",
-						placeholder: "Введите логин",
-						autocomplete: "removeUserInput",
+						attributes: {
+							id: "removeUserInput",
+							class: "remove-user-input",
+							type: "text",
+							name: "removeUserInput",
+							placeholder: "Введите логин",
+							autocomplete: "removeUserInput",
+						},
 					}),
 					events: {
 						submit: (e?: Event) => this.handleRemoveUserSubmit(e),
@@ -217,7 +255,9 @@ export default class ChatsPage extends Block {
 				}),
 			}),
 			ChatUsersModal: new Modal({
-				id: "chatUsersModal",
+				attributes: {
+					id: "chatUsersModal",
+				},
 				title: "Участники чата",
 				children: `
 					<div class="chat-users-list-container">
@@ -316,7 +356,9 @@ export default class ChatsPage extends Block {
 
 		userChats.forEach((chat) => {
 			newChats.push({
-				id: chat.id,
+				attributes: {
+					id: String(chat.id),
+				},
 				name: chat.title,
 				text: chat.last_message?.content ?? "",
 				time: chat.last_message
@@ -330,6 +372,9 @@ export default class ChatsPage extends Block {
 				title = chat.title;
 			}
 		});
+		console.log(chatId);
+		console.log(title);
+		console.log(chatUsers);
 
 		const props = {
 			ChatsList: new ChatsList({

@@ -45,17 +45,21 @@ export default class SigninPage extends Block {
 	constructor() {
 		super("div", {
 			SignupBtn: new Button({
-				id: "renderSignupBtn",
-				class: "btn-secondary",
+				attributes: {
+					id: "renderSignupBtn",
+					class: "btn-secondary",
+				},
 				children: "Нет аккаунта?",
 				events: {
 					click: () => SigninPage.handleSignupClick(),
 				},
 			}),
 			SigninForm: new Form({
-				class: "signin-form",
+				attributes: {
+					class: "signin-form",
+				},
 				children: `
-				    {{{ fields }}}
+				  {{{ fields }}}
 					<div class="signin-form-signin-btn-container">
 						{{{ SigninBtn }}}
 					</div>
@@ -67,10 +71,12 @@ export default class SigninPage extends Block {
 					},
 				}),
 				SigninBtn: new Button({
-					id: "renderChatsBtn",
-					class: "btn",
+					attributes: {
+						id: "renderChatsBtn",
+						class: "btn",
+						type: "submit",
+					},
 					children: "Войти",
-					type: "submit",
 				}),
 				events: {
 					submit: (e?: Event) => this.handleSigninSubmit(e),

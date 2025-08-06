@@ -1,5 +1,18 @@
 import Block from "@/framework/Block";
-import { InputProps } from "@/pages/profile/utils/profileData";
+import { EventsType } from "@/types/types";
+
+type TInputProps = {
+	attributes: {
+		id: string;
+		class: string;
+		type: string;
+		name: string;
+		autocomplete: string;
+		placeholder?: string;
+		readonly?: boolean;
+	};
+	events?: EventsType;
+};
 
 const template = `
   <input
@@ -15,7 +28,7 @@ const template = `
 `;
 
 export default class Input extends Block {
-	constructor(props: InputProps) {
+	constructor(props: TInputProps) {
 		super("div", props);
 	}
 

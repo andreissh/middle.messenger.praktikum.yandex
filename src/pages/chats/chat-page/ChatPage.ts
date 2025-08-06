@@ -51,30 +51,34 @@ export default class ChatPage extends Block {
 		super("div", {
 			...props,
 			AvatarBtn: new Button({
-				id: "avatarBtn",
+				attributes: {
+					id: "avatarBtn",
+				},
 				children: "{{{ Avatar }}}",
 				Avatar: new Avatar({
-					class: "chat-avatar",
-					children: `
-						<img src=${avatarImg} alt="avatar" />
-					`,
+					attributes: {
+						class: "chat-avatar",
+					},
+					children: `<img src=${avatarImg} alt="avatar" />`,
 				}),
 				events: {
 					click: () => this.handleAvatarClick(),
 				},
 			}),
 			ChatUsersBtn: new Button({
-				class: "chat-users-btn",
-				children: `
-					<span>Участников: {{ chatUsersCount }}</span>
-				`,
+				attributes: {
+					class: "chat-users-btn",
+				},
+				children: "<span>Участников: {{ chatUsersCount }}</span>",
+				chatUsersCount: (props.chatUsers as string[]).length,
 				events: {
 					click: () => ChatPage.handleChatUsersClick(),
 				},
-				chatUsersCount: (props.chatUsers as string[]).length,
 			}),
 			ChatOptionsBtn: new Button({
-				class: "chat-options-btn",
+				attributes: {
+					class: "chat-options-btn",
+				},
 				children: `
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 20" width="4" height="20" fill="none">
 						<circle cx="2" cy="2" r="2" fill="#999"/>
@@ -87,41 +91,51 @@ export default class ChatPage extends Block {
 				},
 			}),
 			AddUserBtn: new Button({
-				id: "addUserBtn",
-				class: "chat-dropdown-item",
-				children: `Добавить пользователя`,
+				attributes: {
+					id: "addUserBtn",
+					class: "chat-dropdown-item",
+				},
+				children: "Добавить пользователя",
 				events: {
 					click: () => ChatPage.handleAddUserClick(),
 				},
 			}),
 			RemoveUserBtn: new Button({
-				id: "removeUserBtn",
-				class: "chat-dropdown-item",
-				children: `Удалить пользователя`,
+				attributes: {
+					id: "removeUserBtn",
+					class: "chat-dropdown-item",
+				},
+				children: "Удалить пользователя",
 				events: {
 					click: () => ChatPage.handleRemoveUserClick(),
 				},
 			}),
 			SendMessageForm: new Form({
-				class: "send-msg-form",
+				attributes: {
+					class: "send-msg-form",
+				},
 				children: `
 					{{{ SendMessageInput }}}
 					{{{ SendMessageBtn }}}
 				`,
 				SendMessageBtn: new Button({
-					class: "chat-send-btn",
-					type: "submit",
+					attributes: {
+						class: "chat-send-btn",
+						type: "submit",
+					},
 					children: `
 						<img src=${sendBtn} alt="send" />
 					`,
 				}),
 				SendMessageInput: new Input({
-					id: "message",
-					type: "text",
-					name: "message",
-					class: "message",
-					placeholder: "Сообщение",
-					autocomplete: "message",
+					attributes: {
+						id: "message",
+						type: "text",
+						name: "message",
+						class: "message",
+						placeholder: "Сообщение",
+						autocomplete: "message",
+					},
 				}),
 				events: {
 					submit: (e?: Event) => ChatPage.handleSendMessageSubmit(e),
@@ -246,12 +260,16 @@ export default class ChatPage extends Block {
 
 		this.setProps({
 			AvatarBtn: new Button({
-				id: "avatarBtn",
+				attributes: {
+					id: "avatarBtn",
+				},
 				children: `
 						{{{ Avatar }}}
 					`,
 				Avatar: new Avatar({
-					class: "chat-avatar",
+					attributes: {
+						class: "chat-avatar",
+					},
 					children: `
 							<img src="${imgSrc}" class="${imgClass}" />
 						`,

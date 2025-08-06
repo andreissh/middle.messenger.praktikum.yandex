@@ -1,11 +1,16 @@
 import Block from "@/framework/Block";
 import { EventsType } from "@/types/types";
 import Input from "@/components/input/Input";
-import { InputProps } from "@/pages/profile/utils/profileData";
 import "./login-field.css";
 
-export type LoginFieldProps = InputProps & { label: string } & {
+export type LoginFieldProps = {
+	id: string;
+	label: string;
+	type: string;
+	name: string;
+	autocomplete: string;
 	events?: EventsType;
+	[key: string]: unknown;
 };
 
 const template = `
@@ -17,12 +22,19 @@ const template = `
 
 export default class LoginField extends Block {
 	constructor(props: LoginFieldProps) {
+		const { events, ...plainProps } = props;
+
 		super("div", {
-			id: props.id,
-			label: props.label,
+			attributes: {
+				id: plainProps.id,
+			},
+			label: plainProps.label,
 			Input: new Input({
-				...props,
-				class: "login-field-input",
+				attributes: {
+					...plainProps,
+					class: "login-field-input",
+				},
+				events,
 			}),
 		});
 	}

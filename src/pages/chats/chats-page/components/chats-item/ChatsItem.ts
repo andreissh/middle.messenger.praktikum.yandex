@@ -9,7 +9,9 @@ import deleteImg from "@/assets/icons/delete.svg";
 import "./chats-item.css";
 
 export type ChatsItemProps = {
-	id: number;
+	attributes: {
+		id: string;
+	};
 	name: string;
 	text: string;
 	time: string;
@@ -41,7 +43,9 @@ export default class ChatsItem extends Block {
 		super("div", {
 			...props,
 			Avatar: new Avatar({
-				class: "chat-item-avatar",
+				attributes: {
+					class: "chat-item-avatar",
+				},
 				children: `
 					<img src=${
 						props.avatar ? resourcesUrl + props.avatar : avatarImg
@@ -62,7 +66,7 @@ export default class ChatsItem extends Block {
 		const modal = document.querySelector<HTMLElement>("#deleteChatModal");
 		if (!modal) return;
 
-		sessionStorage.setItem("chatId", String(this.props.id));
+		sessionStorage.setItem("chatId", String(this.props.attributes!.id));
 		modal.style.display = "block";
 	};
 
@@ -73,7 +77,7 @@ export default class ChatsItem extends Block {
 		if (deleteBtn) {
 			this.showDeleteChatModal();
 		} else {
-			router.go(`/messenger/${this.props.id}`);
+			router.go(`/messenger/${this.props.attributes!.id}`);
 		}
 	}
 
@@ -83,15 +87,17 @@ export default class ChatsItem extends Block {
 
 		this.setProps({
 			ContextMenu: new ContextMenu({
+				x: mouseEvent.clientX,
+				y: mouseEvent.clientY,
 				children: `
 					{{{ DeleteBtn }}}
 				 `,
 				DeleteBtn: new Button({
-					class: "context-menu-delete-btn",
+					attributes: {
+						class: "context-menu-delete-btn",
+					},
 					children: "Удалить",
 				}),
-				x: mouseEvent.clientX,
-				y: mouseEvent.clientY,
 				events: {
 					click: () => this.showDeleteChatModal(),
 				},

@@ -1,6 +1,9 @@
 import Block from "@/framework/Block";
 
 type FormProps = {
+	attributes: {
+		class: string;
+	};
 	[key: string]: unknown;
 };
 
