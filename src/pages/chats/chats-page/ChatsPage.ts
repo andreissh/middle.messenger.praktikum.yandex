@@ -372,9 +372,6 @@ export default class ChatsPage extends Block {
 				title = chat.title;
 			}
 		});
-		console.log(chatId);
-		console.log(title);
-		console.log(chatUsers);
 
 		const props = {
 			ChatsList: new ChatsList({
