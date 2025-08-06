@@ -6,9 +6,9 @@ import Button from "@/components/button/Button";
 import Form from "@/components/form/Form";
 import Input from "@/components/input/Input";
 import Avatar from "@/components/avatar/Avatar";
-import "./chat-page.css";
 import { resourcesUrl } from "@/utils/utils";
 import ChatsService from "@/services/ChatsService";
+import "./chat-page.css";
 
 const template = `
 	<div class="chat-content">

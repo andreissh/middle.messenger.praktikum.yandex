@@ -252,10 +252,7 @@ abstract class Block {
 		});
 	}
 
-	// Eslint конфиг требует this внутри метода, хотя он здесь не нужен, поэтому отключил правило
-	// Отключил правило для обязательного использования аргумента в теле функции,
-	// т.к. метод должен переопределяться в конструкторе дочернего класса
-	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public componentDidMount(_oldProps?: Props): void {}
 
 	public dispatchComponentDidMount(): void {
@@ -270,8 +267,6 @@ abstract class Block {
 		}
 	}
 
-	// Eslint конфиг требует this внутри метода, хотя он здесь не нужен, поэтому отключил правило
-	// eslint-disable-next-line class-methods-use-this
 	protected componentDidUpdate(oldProps: Props, newProps: Props): boolean {
 		return oldProps !== newProps;
 	}

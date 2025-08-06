@@ -1,8 +1,8 @@
 import Block from "@/framework/Block";
-import "./login-field.css";
 import { EventsType } from "@/types/types";
 import Input from "@/components/input/Input";
 import { InputProps } from "@/pages/profile/utils/profileData";
+import "./login-field.css";
 
 export type LoginFieldProps = InputProps & { label: string } & {
 	events?: EventsType;

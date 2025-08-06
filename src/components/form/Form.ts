@@ -5,9 +5,9 @@ type FormProps = {
 };
 
 const template = `
-    <form class="{{ class }}">
-        {{{ children }}}
-    </form>
+	<form class="{{ class }}">
+		{{{ children }}}
+	</form>
 `;
 
 export default class Form extends Block {

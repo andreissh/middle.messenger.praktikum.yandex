@@ -7,9 +7,9 @@ type AvatarProps = {
 };
 
 const template = `
-    <span class="{{ class }}" name="{{ name }}">
-        {{{ children }}}
-    </span>
+	<span class="{{ class }}" name="{{ name }}">
+		{{{ children }}}
+	</span>
 `;
 
 export default class Avatar extends Block {

@@ -1,17 +1,15 @@
 .login-field-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
 }
 
 .login-field-label {
-  font-size: 9px;
-  line-height: 9px;
-  color: var(--text-color-muted);
+	font-size: 0.5625rem;
+	line-height: 0.5625rem;
+	color: var(--text-color-muted);
 }
 
 .login-field-input {
-  border: none;
-  outline: none;
-  border-bottom: 1px solid var(--bg-color-blue);
+	border-bottom: 1px solid var(--bg-color-blue);
 }

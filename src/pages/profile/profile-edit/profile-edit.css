@@ -38,7 +38,7 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 	color: var(--text-color-white);
-	font-size: 12px;
+	font-size: 0.75rem;
 	opacity: 0;
 	transition: opacity 0.3s ease;
 	pointer-events: none;
@@ -112,8 +112,8 @@
 
 .profile-edit-btns-item-btn {
 	display: inline-block;
-	font-size: 13px;
-	line-height: 13px;
+	font-size: 0.8125rem;
+	line-height: 0.8125rem;
 	color: var(--text-color-blue);
 	text-decoration: none;
 }

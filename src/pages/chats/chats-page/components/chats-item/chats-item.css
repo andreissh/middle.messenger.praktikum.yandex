@@ -4,8 +4,8 @@
 	align-items: center;
 	width: 20px;
 	height: 20px;
-	font-size: 12px;
-	line-height: 12px;
+	font-size: 0.75rem;
+	line-height: 0.75rem;
 	border-radius: 50%;
 	color: var(--text-color-white);
 	background-color: var(--bg-color-blue);
@@ -27,14 +27,14 @@
 	opacity: 0;
 	visibility: hidden;
 	cursor: pointer;
-	padding: 2px;
+	padding: 0.125rem;
 	transition: opacity 0.3s ease, visibility 0.3s ease;
 	z-index: 2;
 }
 
 .chat-item {
 	display: flex;
-	min-height: 4.5rem;
+	min-height: 72px;
 	padding: 0.75rem 0.625rem;
 	border-bottom: 1px solid var(--border-color);
 	cursor: pointer;
@@ -82,8 +82,8 @@
 }
 
 .chat-item-message {
-	font-size: 12px;
-	line-height: 15px;
+	font-size: 0.75rem;
+	line-height: 1rem;
 	color: var(--text-color-muted);
 	width: 100%;
 	max-width: 160px;
@@ -101,12 +101,12 @@
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
-	gap: 10px;
+	gap: 0.625rem;
 	width: 60px;
 }
 
 .chat-item-msg-time {
-	font-size: 9px;
-	line-height: 13px;
+	font-size: 0.5625rem;
+	line-height: 0.8125rem;
 	color: var(--text-color-muted);
 }

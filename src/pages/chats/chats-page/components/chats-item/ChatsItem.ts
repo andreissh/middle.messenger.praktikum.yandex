@@ -29,7 +29,6 @@ const template = `
       {{#if count}}
         <span class="chat-item-msg-count">{{ count }}</span>
       {{/if}}
-	  <span class="chat-item-msg-count">{{ count }}</span>
       <button class="chat-item-delete-btn">
 		<img src="${deleteImg}" alt="delete" />
       </button>

@@ -6,15 +6,24 @@
 }
 
 .modal {
+	display: flex;
+	flex-direction: column;
 	position: relative;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	width: 400px;
 	min-height: 200px;
-	padding: 16px;
+	padding: 1rem;
 	background-color: #fff;
-	border-radius: 12px;
+	border-radius: 0.75rem;
+}
+
+.modal-body {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	flex: 1;
 }
 
 .modal-close-btn {
@@ -23,9 +32,6 @@
 	right: 8px;
 	width: 16px;
 	height: 16px;
-	border: none;
-	background: none;
-	padding: 0;
 	cursor: pointer;
 
 	& img {

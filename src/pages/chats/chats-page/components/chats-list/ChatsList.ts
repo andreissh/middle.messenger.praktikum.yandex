@@ -8,11 +8,11 @@ type ChatsListProps = {
 
 const template = `
   <ul class="chat-list">
-	{{#if hasChats}}
-		{{{ chats }}}
-	{{ else }}
-		<p>Список чатов пуст</p>
-	{{/if}}
+		{{#if hasChats}}
+			{{{ chats }}}
+		{{ else }}
+			<p>Список чатов пуст</p>
+		{{/if}}
   </ul>
 `;
 
