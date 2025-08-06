@@ -73,11 +73,15 @@ export default class ChatsItem extends Block {
 	private handleChatItemClick(e?: Event): void {
 		const target = e?.target as HTMLElement;
 		const deleteBtn = target.closest(".chat-item-delete-btn");
+		const chatId = window.location.pathname.split("/").pop();
 
 		if (deleteBtn) {
 			this.showDeleteChatModal();
 		} else {
-			router.go(`/messenger/${this.props.attributes!.id}`);
+			const {id} = (this.props.attributes!);
+			if (id !== chatId) {
+				router.go(`/messenger/${id}`);
+			}
 		}
 	}
 
