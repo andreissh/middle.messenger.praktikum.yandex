@@ -6,6 +6,12 @@ import avatarImg from "@/assets/icons/avatar-img.svg";
 import Button from "@/components/button/Button";
 import Avatar from "@/components/avatar/Avatar";
 import deleteImg from "@/assets/icons/delete.svg";
+import {
+	positionContextMenu,
+	removeContextMenu,
+	renderContextMenu,
+	showContextMenu,
+} from "@/utils/contextMenu";
 import "./chats-item.css";
 
 export type ChatsItemProps = {
@@ -59,7 +65,7 @@ export default class ChatsItem extends Block {
 			},
 		});
 
-		document.addEventListener("click", ChatsItem.removeContextMenu);
+		document.addEventListener("click", removeContextMenu);
 	}
 
 	private showDeleteChatModal = (): void => {
@@ -78,7 +84,7 @@ export default class ChatsItem extends Block {
 		if (deleteBtn) {
 			this.showDeleteChatModal();
 		} else {
-			const {id} = (this.props.attributes!);
+			const { id } = this.props.attributes!;
 			if (id !== chatId) {
 				router.go(`/messenger/${id}`);
 			}
@@ -89,66 +95,30 @@ export default class ChatsItem extends Block {
 		e?.preventDefault();
 		const mouseEvent = e as MouseEvent;
 
-		this.setProps({
-			ContextMenu: new ContextMenu({
-				x: mouseEvent.clientX,
-				y: mouseEvent.clientY,
-				children: `
+		const menu = new ContextMenu({
+			x: mouseEvent.clientX,
+			y: mouseEvent.clientY,
+			children: `
 					{{{ DeleteBtn }}}
 				 `,
-				DeleteBtn: new Button({
-					attributes: {
-						class: "context-menu-delete-btn",
-					},
-					children: "Удалить",
-				}),
-				events: {
-					click: () => this.showDeleteChatModal(),
+			DeleteBtn: new Button({
+				attributes: {
+					class: "context-menu-delete-btn",
 				},
+				children: "Удалить",
 			}),
+			events: {
+				click: () => this.showDeleteChatModal(),
+			},
 		});
 
-		this.renderContextMenu();
-		ChatsItem.positionContextMenu(mouseEvent.clientX, mouseEvent.clientY);
+		this.setProps({
+			ContextMenu: menu,
+		});
 
-		const contextMenu = document.querySelector<HTMLElement>(".context-menu");
-		if (!contextMenu) return;
-		contextMenu.style.display = "block";
-	}
-
-	private renderContextMenu() {
-		const contextMenu = document.querySelector<HTMLElement>(".context-menu");
-		if (!contextMenu) {
-			document.body.appendChild(this.children.ContextMenu.getContent());
-		}
-	}
-
-	private static positionContextMenu(x: number, y: number) {
-		const contextMenu = document.querySelector<HTMLElement>(".context-menu");
-		if (!contextMenu) return;
-
-		const menuElement = contextMenu;
-		const menuWidth = menuElement.offsetWidth;
-		const menuHeight = menuElement.offsetHeight;
-		const windowWidth = window.innerWidth;
-		const windowHeight = window.innerHeight;
-
-		const adjustedX =
-			x + menuWidth > windowWidth ? windowWidth - menuWidth - 5 : x;
-		const adjustedY =
-			y + menuHeight > windowHeight ? windowHeight - menuHeight - 5 : y;
-
-		menuElement.style.position = "fixed";
-		menuElement.style.left = `${adjustedX}px`;
-		menuElement.style.top = `${adjustedY}px`;
-		menuElement.style.zIndex = "1000";
-	}
-
-	private static removeContextMenu() {
-		const contextMenu = document.querySelector<HTMLElement>(".context-menu");
-		if (!contextMenu) return;
-
-		contextMenu.remove();
+		renderContextMenu(menu);
+		positionContextMenu(mouseEvent.clientX, mouseEvent.clientY);
+		showContextMenu();
 	}
 
 	render(): HTMLElement {
