@@ -57,6 +57,12 @@ export default function validateField(
 			break;
 
 		case "password_repeat":
+			if (!patterns.password.test(value)) {
+				return {
+					valid: false,
+					error: "От 8 до 40 символов, обязательно заглавная буква и цифра",
+				};
+			}
 			if (relatedValues && value !== relatedValues.password) {
 				return { valid: false, error: "Пароли не совпадают" };
 			}

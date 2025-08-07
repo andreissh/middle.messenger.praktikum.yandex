@@ -4,10 +4,10 @@ import router from "@/routes/Router";
 import { InputProps } from "@/pages/profile/utils/profileData";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
-import { SignupData, ValidationResult } from "@/types/types";
+import { SignupData } from "@/types/types";
 import Form from "@/components/form/Form";
 import AuthService from "@/services/AuthService";
-import LoginFields from "@/components/fields/Fields";
+import Fields from "@/components/fields/Fields";
 import "./signup.css";
 
 const fields: Array<InputProps & { label: string }> = [
@@ -77,10 +77,6 @@ const template = `
 export default class SignupPage extends Block {
 	private validator?: FormValidator;
 
-	private customChecks = {
-		password_repeat: () => this.checkPasswordsMatch(),
-	};
-
 	constructor() {
 		super("div", {
 			SignupForm: new Form({
@@ -88,12 +84,12 @@ export default class SignupPage extends Block {
 					class: "signup-form",
 				},
 				children: `
-				    {{{ LoginFields }}}
+				  {{{ Fields }}}
 					<div class="signup-form-signup-btn-container">
 						{{{ SignupBtn }}}
 					</div>
 				`,
-				LoginFields: new LoginFields({
+				Fields: new Fields({
 					fields,
 					events: {
 						blur: (e?: Event) => this.handleFieldBlur(e),
@@ -122,43 +118,23 @@ export default class SignupPage extends Block {
 				},
 			}),
 		});
-
-		this.validator = this.initValidator();
 	}
 
 	private initValidator(): FormValidator {
-		const form = this.element?.querySelector(".signup-form") as HTMLFormElement;
+		const form = document.querySelector<HTMLFormElement>(".signup-form");
 		if (!form) {
 			throw new Error("Не найдена форма для инициализации валидатора");
 		}
 
-		return new FormValidator(form, ".login-field-item");
-	}
-
-	private checkPasswordsMatch(): ValidationResult {
-		const form = this.element?.querySelector(".signup-form");
-		if (!form) return { valid: false };
-
-		const password = form.querySelector<HTMLInputElement>(
-			'input[name="password"]'
-		)?.value;
-		const repeat = form.querySelector<HTMLInputElement>(
-			'input[name="password_repeat"]'
-		)?.value;
-
-		const valid = password === repeat;
-		return {
-			valid,
-			error: valid ? undefined : "Пароли не совпадают",
-		};
+		return new FormValidator(form, ".field-item");
 	}
 
 	private async handleSignupSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
-		const form = this.element?.querySelector(".signup-form") as HTMLFormElement;
+		const form = document.querySelector<HTMLFormElement>(".signup-form");
 		if (!form || !this.validator) return;
 
-		if (this.validator.validateForm(this.customChecks)) {
+		if (this.validator.validateForm()) {
 			const data = getFormData(form);
 			if (data) {
 				await AuthService.signup(data as SignupData);
@@ -171,11 +147,12 @@ export default class SignupPage extends Block {
 		router.go("/");
 	}
 
-	private handleFieldBlur(e?: Event) {
-		if (!this.validator) return;
-		if (e) {
-			this.validator.handleBlur(e, this.customChecks);
-		}
+	private handleFieldBlur(e?: Event): void {
+		const target = e?.target as HTMLElement;
+		const input = target.closest<HTMLInputElement>(".field-input");
+		if (!this.validator || !input) return;
+
+		this.validator.validateInput(input);
 	}
 
 	componentDidMount() {

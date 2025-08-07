@@ -7,7 +7,7 @@ import FormValidator from "@/utils/FormValidator";
 import Form from "@/components/form/Form";
 import AuthService from "@/services/AuthService";
 import { AuthData } from "@/types/types";
-import LoginFields from "@/components/fields/Fields";
+import Fields from "@/components/fields/Fields";
 import "./signin.css";
 
 const fields: Array<InputProps & { label: string }> = [
@@ -59,12 +59,12 @@ export default class SigninPage extends Block {
 					class: "signin-form",
 				},
 				children: `
-				  {{{ fields }}}
+				  {{{ Fields }}}
 					<div class="signin-form-signin-btn-container">
 						{{{ SigninBtn }}}
 					</div>
 				`,
-				fields: new LoginFields({
+				Fields: new Fields({
 					fields,
 					events: {
 						blur: (e?: Event) => this.handleFieldBlur(e),
@@ -83,32 +83,31 @@ export default class SigninPage extends Block {
 				},
 			}),
 		});
-
-		this.validator = this.initValidator();
 	}
 
 	private initValidator(): FormValidator {
-		const form = this.element?.querySelector(".signin-form") as HTMLFormElement;
+		const form = document.querySelector<HTMLFormElement>(".signin-form");
 		if (!form) {
 			throw new Error("Не найдена форма для инициализации валидатора");
 		}
-		return new FormValidator(form, ".login-field-item");
+
+		return new FormValidator(form, ".field-item");
 	}
 
 	private handleFieldBlur(e?: Event): void {
-		const input = (e?.target as HTMLElement).closest("input.login-field-input");
-
+		const target = e?.target as HTMLElement;
+		const input = target.closest<HTMLInputElement>(".field-input");
 		if (!this.validator || !input) return;
 
-		this.validator.validateInput(input as HTMLInputElement);
+		this.validator.validateInput(input);
 	}
 
 	private async handleSigninSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
-		const form = this.element?.querySelector(".signin-form") as HTMLFormElement;
-		if (!form) return;
+		const form = document.querySelector<HTMLFormElement>(".signin-form");
+		if (!form || !this.validator) return;
 
-		if (this.validator && this.validator.validateForm()) {
+		if (this.validator.validateForm()) {
 			const data = getFormData(form) as AuthData;
 			if (data) {
 				await AuthService.signin(data);

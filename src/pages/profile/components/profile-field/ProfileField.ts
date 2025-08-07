@@ -21,16 +21,19 @@ const template = `
 
 export default class ProfileField extends Block {
 	constructor(props: ProfileFieldProps) {
+		const { events, ...plainProps } = props;
+
 		super("div", {
 			attributes: {
-				id: props.id,
+				id: plainProps.id,
 			},
-			label: props.label,
+			label: plainProps.label,
 			Input: new Input({
 				attributes: {
-					...props,
+					...plainProps,
 					class: "profile-field-input",
 				},
+				events,
 			}),
 		});
 	}

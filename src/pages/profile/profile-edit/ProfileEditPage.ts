@@ -99,16 +99,14 @@ export default class ProfileEditPage extends Block {
 				},
 			}),
 		});
-
-		this.validator = this.initValidator();
 	}
 
 	private selectedAvatarFile: File | null = null;
 
 	private initValidator(): FormValidator {
-		const form = this.element?.querySelector(
+		const form = document.querySelector<HTMLFormElement>(
 			".profile-edit-data-form"
-		) as HTMLFormElement;
+		);
 		if (!form) {
 			throw new Error("Не найдена форма для инициализации валидатора");
 		}
@@ -147,8 +145,8 @@ export default class ProfileEditPage extends Block {
 		}
 
 		this.selectedAvatarFile = file;
-
 		const previewUrl = URL.createObjectURL(file);
+
 		this.setProps({
 			AvatarBtn: new Button({
 				id: "avatarBtn",
@@ -174,17 +172,18 @@ export default class ProfileEditPage extends Block {
 	private async handleSaveSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
 
-		const form = this.element?.querySelector(
+		const form = document.querySelector<HTMLFormElement>(
 			".profile-edit-data-form"
-		) as HTMLFormElement;
+		);
 		if (!form || !this.validator) return;
 
 		if (this.validator.validateForm()) {
 			const data = getFormData(form);
 			if (data) {
 				try {
-					const inputFields: NodeListOf<HTMLInputElement> =
-						document.querySelectorAll(".profile-field-input");
+					const inputFields = document.querySelectorAll<HTMLInputElement>(
+						".profile-field-input"
+					);
 					const reqBody: UserProfileReq = {} as UserProfileReq;
 					profileEditFields.forEach((field, i) => {
 						reqBody[field.id as keyof UserProfileReq] =
@@ -208,10 +207,11 @@ export default class ProfileEditPage extends Block {
 	}
 
 	private handleFieldBlur(e?: Event): void {
-		if (!this.validator) return;
-		if (e) {
-			this.validator.handleBlur(e);
-		}
+		const target = e?.target as HTMLElement;
+		const input = target.closest<HTMLInputElement>(".profile-field-input");
+		if (!this.validator || !input) return;
+
+		this.validator.validateInput(input);
 	}
 
 	componentDidMount() {

@@ -11,14 +11,14 @@ type FieldsProps = {
 
 const template = `
   <ul class="fields-list">
-    {{{ fields }}}
+    {{{ Fields }}}
   </ul>
 `;
 
 export default class Fields extends Block {
 	constructor(props: FieldsProps) {
 		super("div", {
-			fields: props.fields.map(
+			Fields: props.fields.map(
 				(field) => new Field({ ...field, events: props.events })
 			),
 		});

@@ -88,14 +88,14 @@ export const passwordFields: Array<InputProps & { label: string }> = [
 		id: "newPassword",
 		label: "Новый пароль",
 		type: "password",
-		name: "newPassword",
+		name: "password",
 		autocomplete: "new-password",
 	},
 	{
 		id: "repeatPassword",
 		label: "Повторите пароль",
 		type: "password",
-		name: "repeatPassword",
-		autocomplete: "new-password",
+		name: "password_repeat",
+		autocomplete: "repeat-password",
 	},
 ];

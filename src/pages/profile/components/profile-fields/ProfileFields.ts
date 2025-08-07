@@ -11,14 +11,14 @@ type ProfileFieldsProps = {
 
 const template = `
   <ul class="profile-fields">
-    {{{ fields }}}
+    {{{ Fields }}}
   </ul>
 `;
 
 export default class ProfileFields extends Block {
 	constructor(props: ProfileFieldsProps) {
 		super("div", {
-			fields: props.fields.map(
+			Fields: props.fields.map(
 				(field) =>
 					new ProfileField({
 						...field,
