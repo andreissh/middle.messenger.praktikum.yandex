@@ -6,7 +6,10 @@ import http from "./HttpClient";
 class ChatController {
 	private socket: WebSocket | null = null;
 
-	async connectToChat(chatId: number, onMessage: (msg: unknown) => void) {
+	async connectToChat(
+		chatId: number,
+		onMessage: (msg: unknown) => void
+	): Promise<void> {
 		const user = await http.get<UserData>("/auth/user");
 		const { token } = await ChatsService.getWSToken(chatId);
 
@@ -17,7 +20,7 @@ class ChatController {
 		socket.addEventListener("open", () => {
 			console.log("WebSocket открыт");
 
-			this.send({ content: "0", type: "get old" });
+			this.getOldMessages(0);
 		});
 
 		socket.addEventListener("message", (event) => {
@@ -35,21 +38,36 @@ class ChatController {
 			console.log("WebSocket закрыт");
 		});
 
-		socket.addEventListener("error", (e) => {
-			throw new Error("Ошибка WebSocket соединения", { cause: e });
+		socket.addEventListener("error", (err) => {
+			throw new Error("Ошибка WebSocket соединения", { cause: err });
 		});
 	}
 
-	send(data: { content?: string; type: string }) {
-		if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-			this.socket.send(JSON.stringify(data));
+	isConnected(): boolean {
+		return !!this.socket && this.socket.readyState === WebSocket.OPEN;
+	}
+
+	send(data: { content?: string; type: string }): void {
+		if (this.isConnected()) {
+			if (this.socket) {
+				this.socket.send(JSON.stringify(data));
+			}
 		} else {
 			console.log("WebSocket не подключен");
 		}
 	}
 
-	close() {
-		this.socket?.close();
+	getOldMessages(offset: number): void {
+		if (this.isConnected()) {
+			this.send({ content: String(offset), type: "get old" });
+		}
+	}
+
+	close(): void {
+		if (this.socket) {
+			this.socket.close();
+			this.socket = null;
+		}
 	}
 }
 

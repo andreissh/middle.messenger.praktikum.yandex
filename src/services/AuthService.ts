@@ -1,10 +1,16 @@
 import http, { HttpStatus } from "@/api/HttpClient";
-import { HttpError, UserData } from "@/types/types";
+import {
+	AuthData,
+	HttpError,
+	SignupData,
+	SignupRes,
+	UserData,
+} from "@/types/types";
 
 class AuthService {
-	async signin(data: unknown): Promise<void> {
+	async signin(data: AuthData): Promise<void> {
 		try {
-			await http.post("/auth/signin", {
+			await http.post<string, AuthData>("/auth/signin", {
 				body: data,
 			});
 
@@ -18,11 +24,14 @@ class AuthService {
 		}
 	}
 
-	async signup(data: unknown): Promise<void> {
+	async signup(data: SignupData): Promise<void> {
 		try {
-			const response: { id: number } = await http.post("/auth/signup", {
-				body: data,
-			});
+			const response: { id: number } = await http.post<SignupRes, SignupData>(
+				"/auth/signup",
+				{
+					body: data,
+				}
+			);
 
 			localStorage.setItem("isSignedIn", "true");
 			localStorage.setItem("userId", String(response.id));
@@ -38,7 +47,7 @@ class AuthService {
 
 	async logout(): Promise<void> {
 		try {
-			await http.post("/auth/logout");
+			await http.post<string>("/auth/logout");
 
 			localStorage.setItem("isSignedIn", "false");
 			localStorage.removeItem("userId");

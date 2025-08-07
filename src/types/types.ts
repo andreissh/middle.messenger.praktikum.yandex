@@ -29,6 +29,19 @@ export type AuthData = {
 	password: string;
 };
 
+export type SignupData = {
+	first_name: string;
+	second_name: string;
+	login: string;
+	email: string;
+	password: string;
+	phone: string;
+};
+
+export type SignupRes = {
+	id: number;
+};
+
 export type UserData = {
 	id: number;
 	first_name: string;
