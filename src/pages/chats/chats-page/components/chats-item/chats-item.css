@@ -55,6 +55,11 @@
 	}
 }
 
+.chat-item--active {
+	background-color: var(--bg-color-lightblue);
+	filter: brightness(0.96);
+}
+
 .chat-item-avatar {
 	position: relative;
 	display: block;

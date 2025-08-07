@@ -23,10 +23,11 @@ export type ChatsItemProps = {
 	time: string;
 	count: number;
 	avatar: string;
+	active?: boolean | null;
 };
 
 const template = `
-  <li id="{{ id }}" class="chat-item">
+  <li id="{{ id }}" class="chat-item{{#if active}} chat-item--active{{/if}}">
     {{{ Avatar }}}
     <div class="chat-item-content-block">
       <h5 class="chat-item-header">{{ name }}</h5>
@@ -85,6 +86,7 @@ export default class ChatsItem extends Block {
 			this.showDeleteChatModal();
 		} else {
 			const { id } = this.props.attributes!;
+			sessionStorage.setItem("chatId", String(id));
 			if (id !== chatId) {
 				router.go(`/messenger/${id}`);
 			}
