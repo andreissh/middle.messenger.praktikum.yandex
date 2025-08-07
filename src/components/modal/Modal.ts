@@ -50,6 +50,8 @@ export default class Modal extends Block {
 			`#${this.props.attributes!.id}`
 		);
 		if (!modal) return;
+		const inputs = modal.querySelectorAll<HTMLInputElement>("input");
+		inputs.forEach((input) => (input.value = ""));
 		modal.style.display = "none";
 	}
 

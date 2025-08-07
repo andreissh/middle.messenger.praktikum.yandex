@@ -305,11 +305,12 @@ export default class ChatsPage extends Block {
 
 		const modal = document.querySelector<HTMLElement>("#createChatModal");
 		const input = document.querySelector<HTMLInputElement>("#createChatInput");
-		if (!modal || !input) return;
+		if (!modal || !input || !input.value) return;
 
 		await ChatsService.addChat(input.value);
 
 		modal.style.display = "none";
+		input.value = "";
 		this.getChats();
 	}
 
@@ -319,11 +320,13 @@ export default class ChatsPage extends Block {
 		const modal = document.querySelector<HTMLElement>("#addUserModal");
 		const input = document.querySelector<HTMLInputElement>("#addUserInput");
 		const chatId = Number(window.location.pathname.split("/").pop());
-		if (!modal || !input || !chatId) return;
+		if (!modal || !input || !input.value || !chatId) return;
 
 		const userData = await UserService.search(input.value);
 		await ChatsService.addUser([userData[0].id], chatId as number);
+
 		modal.style.display = "none";
+		input.value = "";
 		this.getChats();
 	}
 
@@ -333,11 +336,13 @@ export default class ChatsPage extends Block {
 		const modal = document.querySelector<HTMLElement>("#removeUserModal");
 		const input = document.querySelector<HTMLInputElement>("#removeUserInput");
 		const chatId = Number(window.location.pathname.split("/").pop());
-		if (!modal || !input || !chatId) return;
+		if (!modal || !input || !input.value || !chatId) return;
 
 		const userData = await UserService.search(input.value);
 		await ChatsService.removeUser([userData[0].id], chatId as number);
+
 		modal.style.display = "none";
+		input.value = "";
 		this.getChats();
 	}
 

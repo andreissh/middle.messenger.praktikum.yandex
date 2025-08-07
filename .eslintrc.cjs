@@ -10,6 +10,8 @@ module.exports = {
 	rules: {
 		"no-underscore-dangle": "off",
 		"class-methods-use-this": "off",
+		"no-param-reassign": ["error", { props: false }],
+		"no-return-assign": ["error", "except-parens"],
 	},
 	ignorePatterns: [
 		"dist/",
