@@ -2,12 +2,14 @@ import Block from "@/framework/Block";
 import ChatController from "@/api/ChatController";
 import sendBtn from "@/assets/icons/arrow-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
+import arrowIcon from "@/assets/icons/arrow-right.svg";
 import Button from "@/components/button/Button";
 import Form from "@/components/form/Form";
 import Input from "@/components/input/Input";
 import Avatar from "@/components/avatar/Avatar";
 import { resourcesUrl } from "@/utils/utils";
 import ChatsService from "@/services/ChatsService";
+import router from "@/routes/Router";
 import "./chat-page.css";
 
 const template = `
@@ -15,6 +17,7 @@ const template = `
 		{{#if chatId}}
 			<div class="chat-header">
 				<div class="chat-header-info">
+					{{{ BackBtn }}}
 					{{{ AvatarBtn }}}
 					<div class="chat-header-info-text-block">
 						<h5 class="chat-title">{{ title }}</h5>
@@ -50,6 +53,16 @@ export default class ChatPage extends Block {
 	constructor(props: Record<string, unknown>) {
 		super("div", {
 			...props,
+			BackBtn: new Button({
+				attributes: {
+					id: "backBtn",
+					class: "chat-back-btn",
+				},
+				children: `<img src="${arrowIcon}" alt="backBtn" />`,
+				events: {
+					click: () => this.handleBackClick(),
+				},
+			}),
 			AvatarBtn: new Button({
 				attributes: {
 					id: "avatarBtn",
@@ -142,6 +155,10 @@ export default class ChatPage extends Block {
 				},
 			}),
 		});
+	}
+
+	private handleBackClick(): void {
+		router.go("/messenger");
 	}
 
 	private async handleAvatarClick(): Promise<void> {

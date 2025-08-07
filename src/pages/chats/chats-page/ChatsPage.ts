@@ -341,6 +341,25 @@ export default class ChatsPage extends Block {
 		this.getChats();
 	}
 
+	private toggleChatsPageContentVisibility() {
+		const chatId = Number(window.location.pathname.split("/").pop());
+		const chatsAside = document.querySelector<HTMLElement>(".chats-aside");
+		const chatsMain = document.querySelector<HTMLElement>(".chats-main");
+		if (!chatsAside || !chatsMain) return;
+		if (window.innerWidth < 640) {
+			if (chatId) {
+				chatsAside.style.display = "none";
+				chatsMain.style.display = "block";
+			} else {
+				chatsAside.style.display = "block";
+				chatsMain.style.display = "none";
+			}
+		} else {
+			chatsAside.style.display = "block";
+			chatsMain.style.display = "block";
+		}
+	}
+
 	private async getChats() {
 		const userChats = await ChatsService.getChats();
 		const newChats: UserChatListData[] = [];
@@ -390,10 +409,13 @@ export default class ChatsPage extends Block {
 
 		this.setProps(props);
 		props.ChatPage.dispatchComponentDidMount();
+		this.toggleChatsPageContentVisibility();
 	}
 
 	componentDidMount() {
+		this.toggleChatsPageContentVisibility();
 		this.getChats();
+		window.addEventListener("resize", this.toggleChatsPageContentVisibility);
 	}
 
 	render(): HTMLElement {
