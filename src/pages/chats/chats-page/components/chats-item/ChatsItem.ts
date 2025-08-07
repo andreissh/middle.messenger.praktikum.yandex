@@ -86,7 +86,6 @@ export default class ChatsItem extends Block {
 			this.showDeleteChatModal();
 		} else {
 			const { id } = this.props.attributes!;
-			sessionStorage.setItem("chatId", String(id));
 			if (id !== chatId) {
 				router.go(`/messenger/${id}`);
 			}

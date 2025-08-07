@@ -1,17 +1,23 @@
 .profile-edit {
 	display: flex !important;
-	min-height: 100vh;
+	height: 100vh;
 }
 
 .profile-edit-goback-block {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 64px;
-	min-height: 100vh;
+	width: 40px;
+	height: 100vh;
 	background-color: var(--bg-color-subtle);
 	border-right: 1px solid var(--border-color);
 	cursor: pointer;
+}
+
+@media (width >= 640px) {
+	.profile-edit-goback-block {
+		width: 64px;
+	}
 }
 
 .profile-edit-content-wrapper {
@@ -22,7 +28,13 @@
 }
 
 .profile-edit-content {
-	width: 510px;
+	width: 300px;
+}
+
+@media (width >= 640px) {
+	.profile-edit-content {
+		width: 510px;
+	}
 }
 
 .profile-edit-avatar-block {

@@ -376,7 +376,7 @@ export default class ChatsPage extends Block {
 		const props = {
 			ChatsList: new ChatsList({
 				chats: newChats,
-				active: sessionStorage.getItem("chatId") || null,
+				active: String(chatId) || null,
 			}),
 			ChatPage: new ChatPage({
 				chatId,
