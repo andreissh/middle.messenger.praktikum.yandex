@@ -129,7 +129,7 @@ export default class SignupPage extends Block {
 	private initValidator(): FormValidator {
 		const form = this.element?.querySelector(".signup-form") as HTMLFormElement;
 		if (!form) {
-			throw new Error("Form not found for validator initialization");
+			throw new Error("Не найдена форма для инициализации валидатора");
 		}
 
 		return new FormValidator(form, ".login-field-item");

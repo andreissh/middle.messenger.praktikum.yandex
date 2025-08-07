@@ -110,7 +110,7 @@ export default class ProfileEditPage extends Block {
 			".profile-edit-data-form"
 		) as HTMLFormElement;
 		if (!form) {
-			throw new Error("Form not found for validator initialization");
+			throw new Error("Не найдена форма для инициализации валидатора");
 		}
 
 		return new FormValidator(form, ".profile-field-item");

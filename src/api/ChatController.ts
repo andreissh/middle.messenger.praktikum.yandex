@@ -36,7 +36,7 @@ class ChatController {
 		});
 
 		socket.addEventListener("error", (e) => {
-			throw new Error("WebSocket ошибка соединения", { cause: e });
+			throw new Error("Ошибка WebSocket соединения", { cause: e });
 		});
 	}
 
@@ -44,7 +44,7 @@ class ChatController {
 		if (this.socket && this.socket.readyState === WebSocket.OPEN) {
 			this.socket.send(JSON.stringify(data));
 		} else {
-			console.warn("WebSocket не подключен");
+			console.log("WebSocket не подключен");
 		}
 	}
 

@@ -56,12 +56,12 @@ describe("ChatController", () => {
 			readyState: WebSocket.CLOSED,
 		};
 
-		const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+		const spy = jest.spyOn(console, "log").mockImplementation(() => {});
 
 		ChatController.send({ type: "message", content: "Hello" });
 
-		expect(warnSpy).toHaveBeenCalledWith("WebSocket не подключен");
-		warnSpy.mockRestore();
+		expect(spy).toHaveBeenCalledWith("WebSocket не подключен");
+		spy.mockRestore();
 	});
 
 	it("should close socket", () => {
@@ -78,7 +78,7 @@ describe("ChatController", () => {
 
 		expect(() => {
 			onErrorHandler(new Event("error"));
-		}).toThrow("WebSocket ошибка соединения");
+		}).toThrow("Ошибка WebSocket соединения");
 	});
 
 	it("should open websocket and send get old message", async () => {

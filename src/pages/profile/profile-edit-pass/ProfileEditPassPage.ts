@@ -96,7 +96,7 @@ export default class ProfileEditPassPage extends Block {
 			".profile-edit-pass-data-form"
 		) as HTMLFormElement;
 		if (!form) {
-			throw new Error("Form not found for validator initialization");
+			throw new Error("Не найдена форма для инициализации валидатора");
 		}
 
 		return new FormValidator(form, ".profile-field-item");

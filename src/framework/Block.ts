@@ -229,11 +229,11 @@ abstract class Block {
 		const fragmentElem = fragment.content.firstElementChild;
 
 		if (!fragmentElem) {
-			throw new Error("Compiled template returned empty result");
+			throw new Error("Ошибка при компиляции шаблона");
 		}
 
 		if (!(fragmentElem instanceof HTMLElement)) {
-			throw new Error("Compiled template returned non-HTML element");
+			throw new Error("Скомпилированный шаблон вернул не HTML элемент");
 		}
 
 		return fragmentElem;
@@ -241,7 +241,7 @@ abstract class Block {
 
 	public getContent(): HTMLElement {
 		if (!this._element) {
-			throw new Error("Element not initialized");
+			throw new Error("Элемент не инициализирован");
 		}
 
 		return this._element;
