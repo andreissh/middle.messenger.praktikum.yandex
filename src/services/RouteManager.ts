@@ -8,7 +8,7 @@ import { IRouteManager } from "../interfaces/IRouteManager";
 import router from "../routes/Router";
 
 class RouteManager implements IRouteManager {
-	public setupRoutes() {
+	setupRoutes() {
 		router
 			.use("/", SigninPage)
 			.use("/sign-up", SignupPage)
@@ -18,7 +18,7 @@ class RouteManager implements IRouteManager {
 			.use("/500", ServerErrorPage);
 	}
 
-	public updateRoutes() {
+	updateRoutes() {
 		router.reset();
 		this.setupRoutes();
 		router.start();

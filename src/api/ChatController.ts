@@ -1,7 +1,6 @@
-import { UserData } from "@/types/types";
 import { baseWsUrl } from "@/utils/utils";
 import ChatsService from "@/services/ChatsService";
-import http from "./HttpClient";
+import AuthService from "@/services/AuthService";
 
 class ChatController {
 	private socket: WebSocket | null = null;
@@ -10,7 +9,7 @@ class ChatController {
 		chatId: number,
 		onMessage: (msg: unknown) => void
 	): Promise<void> {
-		const user = await http.get<UserData>("/auth/user");
+		const user = await AuthService.userInfo();
 		const { token } = await ChatsService.getWSToken(chatId);
 
 		const socket = new WebSocket(`${baseWsUrl}/${user.id}/${chatId}/${token}`);

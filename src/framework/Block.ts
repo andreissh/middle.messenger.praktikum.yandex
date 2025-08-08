@@ -8,9 +8,9 @@ type Lists = Record<string, Block[] | string[]>;
 type Attributes = Record<string, string | boolean>;
 
 type Props = {
+	[key: string]: unknown;
 	attributes?: Attributes;
 	events?: EventsType;
-	[key: string]: unknown;
 };
 
 type BlockMeta = {
@@ -26,7 +26,7 @@ abstract class Block {
 		FLOW_RENDER: "flow:render",
 	};
 
-	private _element!: HTMLElement;
+	private _element: HTMLElement | null;
 
 	private _meta: BlockMeta;
 
@@ -53,6 +53,7 @@ abstract class Block {
 		};
 		this._id = makeUUID();
 		this._props = this._makePropsProxy({ ...props, __id: this._id });
+		this._element = null;
 		this._registerEvents(eventBus);
 
 		this._eventBus.emit(Block.EVENTS.INIT);
@@ -82,6 +83,7 @@ abstract class Block {
 
 	private _makePropsProxy(props: Props): Props {
 		const self = this;
+
 		return new Proxy(props, {
 			get(target: Props, prop: string) {
 				const value = target[prop];
@@ -113,6 +115,7 @@ abstract class Block {
 
 	private _createResources(): void {
 		const { tagName } = this._meta;
+
 		this._element = Block._createDocumentElement(tagName);
 	}
 
@@ -121,11 +124,17 @@ abstract class Block {
 	}
 
 	private _setAttributes(): void {
+		if (!this._element) {
+			throw new Error("Элемент не проинициализирован");
+		}
+
 		if (this._props.attributes) {
 			Object.entries(this._props.attributes).forEach(([name, value]) => {
 				if (value !== undefined && value !== false) {
 					const attrValue = value === true ? "" : String(value);
-					this._element.setAttribute(name, attrValue);
+					if (this._element) {
+						this._element.setAttribute(name, attrValue);
+					}
 				}
 			});
 		}
@@ -151,7 +160,7 @@ abstract class Block {
 		if (!this._element) return;
 
 		Object.entries(events).forEach(([eventName, handler]) => {
-			if (typeof handler === "function") {
+			if (this._element) {
 				this._element.addEventListener(eventName, handler);
 			}
 		});
@@ -162,7 +171,9 @@ abstract class Block {
 		if (!this._element) return;
 
 		Object.entries(events).forEach(([eventName, handler]) => {
-			this._element.removeEventListener(eventName, handler);
+			if (this._element) {
+				this._element.removeEventListener(eventName, handler);
+			}
 		});
 	}
 
@@ -292,12 +303,9 @@ abstract class Block {
 		this._eventBus.emit(Block.EVENTS.FLOW_CDU, this._props, nextProps);
 	};
 
-	public get element(): HTMLElement | null {
-		return this._element;
-	}
-
 	public show(): void {
 		const content = this.getContent();
+
 		if (content) {
 			content.style.display = "block";
 		}
@@ -305,6 +313,7 @@ abstract class Block {
 
 	public hide(): void {
 		const content = this.getContent();
+
 		if (content) {
 			content.style.display = "none";
 		}
