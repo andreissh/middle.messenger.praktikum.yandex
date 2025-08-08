@@ -1,4 +1,4 @@
-async function handleImageUpload(): Promise<File | null> {
+export default async function handleImageUpload(): Promise<File | null> {
 	const fileInput = document.createElement("input");
 	fileInput.type = "file";
 	const allowedTypes = [
@@ -29,5 +29,3 @@ async function handleImageUpload(): Promise<File | null> {
 		throw new Error("Недопустимый тип файла");
 	}
 }
-
-export default handleImageUpload;

@@ -107,33 +107,6 @@
 	margin-bottom: 3.75rem;
 }
 
-.profile-edit-btns-list {
-	display: flex;
-	flex-direction: column;
-	gap: 0.625rem;
-}
-
-.profile-edit-btns-item {
-	padding-bottom: 0.625rem;
-	border-bottom: 1px solid var(--border-color);
-
-	&:last-child {
-		border-bottom: none;
-	}
-}
-
-.profile-edit-btns-item-btn {
-	display: inline-block;
-	font-size: 0.8125rem;
-	line-height: 0.8125rem;
-	color: var(--text-color-blue);
-	text-decoration: none;
-}
-
-.profile-edit-btns-item-btn--danger {
-	color: var(--text-color-danger);
-}
-
 .profile-edit-btns-container {
 	display: flex;
 	justify-content: center;

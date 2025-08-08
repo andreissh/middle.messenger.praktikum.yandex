@@ -1,5 +1,5 @@
 import { ValidationResult } from "@/types/types";
-import validateField from "./validate";
+import validateField from "./validateField";
 
 export default class FormValidator {
 	private form: HTMLFormElement;

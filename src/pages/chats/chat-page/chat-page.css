@@ -84,10 +84,10 @@
 	text-align: left;
 	cursor: pointer;
 	font-size: 0.875rem;
-}
 
-.chat-dropdown-item:hover {
-	background-color: var(--bg-color-lightgrey);
+	&:hover {
+		background-color: var(--bg-color-lightgrey);
+	}
 }
 
 .chat-avatar {
@@ -175,7 +175,7 @@
 	}
 }
 
-.my-messages {
+.chat-my-messages {
 	display: flex;
 	align-self: end;
 	padding: 0.75rem;
@@ -186,7 +186,7 @@
 	word-break: break-all;
 }
 
-.users-messages {
+.chat-users-messages {
 	display: flex;
 	align-self: start;
 	padding: 0.75rem;

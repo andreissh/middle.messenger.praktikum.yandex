@@ -8,12 +8,3 @@
 	max-width: 200px;
 	transform: translate(0, 0);
 }
-
-.context-menu-delete-btn {
-	padding: 0.5rem 1rem;
-	cursor: pointer;
-
-	&:hover {
-		background-color: var(--bg-color-lightgrey);
-	}
-}

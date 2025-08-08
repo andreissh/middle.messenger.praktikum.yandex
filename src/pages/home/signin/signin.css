@@ -27,13 +27,6 @@
 	margin: 1.25rem 0 2.5rem;
 }
 
-.login-field-list {
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
-	margin-bottom: 2rem;
-}
-
 .signin-form-signin-btn-container {
 	display: flex;
 	flex-direction: column;

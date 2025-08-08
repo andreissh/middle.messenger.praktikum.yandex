@@ -310,9 +310,9 @@ export default class ChatPage extends Block {
 			messages.forEach((msg) => {
 				const msgEl = document.createElement("p");
 				if (msg.user_id === Number(localStorage.getItem("userId"))) {
-					msgEl.classList.add("my-messages");
+					msgEl.classList.add("chat-my-messages");
 				} else {
-					msgEl.classList.add("users-messages");
+					msgEl.classList.add("chat-users-messages");
 				}
 				msgEl.textContent = msg.content;
 				containerMsgs.append(msgEl);
