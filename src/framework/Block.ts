@@ -8,9 +8,9 @@ type Lists = Record<string, Block[] | string[]>;
 type Attributes = Record<string, string | boolean>;
 
 type Props = {
+	[key: string]: unknown;
 	attributes?: Attributes;
 	events?: EventsType;
-	[key: string]: unknown;
 };
 
 type BlockMeta = {
@@ -26,7 +26,7 @@ abstract class Block {
 		FLOW_RENDER: "flow:render",
 	};
 
-	private _element!: HTMLElement;
+	private _element: HTMLElement | null;
 
 	private _meta: BlockMeta;
 
@@ -53,6 +53,7 @@ abstract class Block {
 		};
 		this._id = makeUUID();
 		this._props = this._makePropsProxy({ ...props, __id: this._id });
+		this._element = null;
 		this._registerEvents(eventBus);
 
 		this._eventBus.emit(Block.EVENTS.INIT);
@@ -82,6 +83,7 @@ abstract class Block {
 
 	private _makePropsProxy(props: Props): Props {
 		const self = this;
+
 		return new Proxy(props, {
 			get(target: Props, prop: string) {
 				const value = target[prop];
@@ -113,20 +115,29 @@ abstract class Block {
 
 	private _createResources(): void {
 		const { tagName } = this._meta;
+
 		this._element = Block._createDocumentElement(tagName);
+	}
+
+	private static _createDocumentElement(tagName: string): HTMLElement {
+		return document.createElement(tagName);
+	}
+
+	private _setAttributes(): void {
+		if (!this._element) {
+			throw new Error("Элемент не проинициализирован");
+		}
 
 		if (this._props.attributes) {
 			Object.entries(this._props.attributes).forEach(([name, value]) => {
 				if (value !== undefined && value !== false) {
 					const attrValue = value === true ? "" : String(value);
-					this._element.setAttribute(name, attrValue);
+					if (this._element) {
+						this._element.setAttribute(name, attrValue);
+					}
 				}
 			});
 		}
-	}
-
-	private static _createDocumentElement(tagName: string): HTMLElement {
-		return document.createElement(tagName);
 	}
 
 	private _render(): void {
@@ -138,6 +149,7 @@ abstract class Block {
 
 		this._removeEvents();
 		this._element = block;
+		this._setAttributes();
 		this._addEvents();
 	}
 
@@ -148,7 +160,7 @@ abstract class Block {
 		if (!this._element) return;
 
 		Object.entries(events).forEach(([eventName, handler]) => {
-			if (typeof handler === "function") {
+			if (this._element) {
 				this._element.addEventListener(eventName, handler);
 			}
 		});
@@ -159,7 +171,9 @@ abstract class Block {
 		if (!this._element) return;
 
 		Object.entries(events).forEach(([eventName, handler]) => {
-			this._element.removeEventListener(eventName, handler);
+			if (this._element) {
+				this._element.removeEventListener(eventName, handler);
+			}
 		});
 	}
 
@@ -226,11 +240,11 @@ abstract class Block {
 		const fragmentElem = fragment.content.firstElementChild;
 
 		if (!fragmentElem) {
-			throw new Error("Compiled template returned empty result");
+			throw new Error("Ошибка при компиляции шаблона");
 		}
 
 		if (!(fragmentElem instanceof HTMLElement)) {
-			throw new Error("Compiled template returned non-HTML element");
+			throw new Error("Скомпилированный шаблон вернул не HTML элемент");
 		}
 
 		return fragmentElem;
@@ -238,7 +252,7 @@ abstract class Block {
 
 	public getContent(): HTMLElement {
 		if (!this._element) {
-			throw new Error("Element not initialized");
+			throw new Error("Элемент не инициализирован");
 		}
 
 		return this._element;
@@ -252,10 +266,7 @@ abstract class Block {
 		});
 	}
 
-	// Eslint конфиг требует this внутри метода, хотя он здесь не нужен, поэтому отключил правило
-	// Отключил правило для обязательного использования аргумента в теле функции,
-	// т.к. метод должен переопределяться в конструкторе дочернего класса
-	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public componentDidMount(_oldProps?: Props): void {}
 
 	public dispatchComponentDidMount(): void {
@@ -270,8 +281,6 @@ abstract class Block {
 		}
 	}
 
-	// Eslint конфиг требует this внутри метода, хотя он здесь не нужен, поэтому отключил правило
-	// eslint-disable-next-line class-methods-use-this
 	protected componentDidUpdate(oldProps: Props, newProps: Props): boolean {
 		return oldProps !== newProps;
 	}
@@ -294,12 +303,9 @@ abstract class Block {
 		this._eventBus.emit(Block.EVENTS.FLOW_CDU, this._props, nextProps);
 	};
 
-	public get element(): HTMLElement | null {
-		return this._element;
-	}
-
 	public show(): void {
 		const content = this.getContent();
+
 		if (content) {
 			content.style.display = "block";
 		}
@@ -307,6 +313,7 @@ abstract class Block {
 
 	public hide(): void {
 		const content = this.getContent();
+
 		if (content) {
 			content.style.display = "none";
 		}

@@ -10,7 +10,7 @@ class Router {
 
 	private _currentRoute: Route | null = null;
 
-	private _rootQuery!: string;
+	private _rootQuery: string;
 
 	private constructor(rootQuery: string) {
 		this._rootQuery = rootQuery;
@@ -20,16 +20,18 @@ class Router {
 		if (!Router.__instance) {
 			Router.__instance = new Router(rootQuery);
 		}
+
 		return Router.__instance;
 	}
 
-	use(pathname: string, block: new () => Block) {
+	use(pathname: string, block: new () => Block): this {
 		const route = new Route(pathname, block, { rootQuery: this._rootQuery });
 		this.routes.push(route);
+
 		return this;
 	}
 
-	start() {
+	start(): void {
 		window.onpopstate = (event: PopStateEvent) => {
 			this._onRoute((event.currentTarget as Window).location.pathname);
 		};
@@ -37,7 +39,7 @@ class Router {
 		this._onRoute(window.location.pathname);
 	}
 
-	_onRoute(pathname: string) {
+	_onRoute(pathname: string): void {
 		let route;
 		if (pathname.includes("messenger")) {
 			route = this.getRoute("/messenger");
@@ -54,24 +56,24 @@ class Router {
 		route.render();
 	}
 
-	go(pathname: string) {
+	go(pathname: string): void {
 		this.history.pushState({}, "", pathname);
 		this._onRoute(pathname);
 	}
 
-	back() {
+	back(): void {
 		this.history.back();
 	}
 
-	forward() {
+	forward(): void {
 		this.history.forward();
 	}
 
-	getRoute(pathname: string) {
+	getRoute(pathname: string): Route | void {
 		return this.routes.find((route) => route.match(pathname));
 	}
 
-	reset() {
+	reset(): void {
 		this.routes = [];
 		this._currentRoute = null;
 	}

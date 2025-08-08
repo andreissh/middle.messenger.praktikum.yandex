@@ -1,15 +1,17 @@
 import Block from "@/framework/Block";
 
 type AvatarProps = {
-	class: string;
-	name?: string;
-	children: Block | Block[] | string;
+	attributes?: {
+		class?: string;
+		name?: string;
+	};
+	children: string;
 };
 
 const template = `
-    <span class="{{ class }}" name="{{ name }}">
-        {{{ children }}}
-    </span>
+	<span class="{{ class }}" name="{{ name }}">
+		{{{ children }}}
+	</span>
 `;
 
 export default class Avatar extends Block {

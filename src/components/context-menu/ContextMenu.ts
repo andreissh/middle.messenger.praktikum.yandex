@@ -3,11 +3,11 @@ import { EventsType } from "@/types/types";
 import "./context-menu.css";
 
 type ContextMenuProps = {
+	[key: string]: unknown;
 	x?: number;
 	y?: number;
+	children?: string;
 	events?: EventsType;
-	children?: Block | Block[] | string;
-	[key: string]: unknown;
 };
 
 const contextMenuTemplate = `

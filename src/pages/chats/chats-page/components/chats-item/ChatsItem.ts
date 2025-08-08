@@ -6,19 +6,28 @@ import avatarImg from "@/assets/icons/avatar-img.svg";
 import Button from "@/components/button/Button";
 import Avatar from "@/components/avatar/Avatar";
 import deleteImg from "@/assets/icons/delete.svg";
+import {
+	positionContextMenu,
+	removeContextMenu,
+	renderContextMenu,
+	showContextMenu,
+} from "@/utils/contextMenu";
 import "./chats-item.css";
 
 export type ChatsItemProps = {
-	id: number;
+	attributes: {
+		id: string;
+	};
 	name: string;
 	text: string;
 	time: string;
 	count: number;
 	avatar: string;
+	active?: boolean | null;
 };
 
 const template = `
-  <li id="{{ id }}" class="chat-item">
+  <li id="{{ id }}" class="chat-item{{#if active}} chat-item--active{{/if}}">
     {{{ Avatar }}}
     <div class="chat-item-content-block">
       <h5 class="chat-item-header">{{ name }}</h5>
@@ -41,7 +50,9 @@ export default class ChatsItem extends Block {
 		super("div", {
 			...props,
 			Avatar: new Avatar({
-				class: "chat-item-avatar",
+				attributes: {
+					class: "chat-item-avatar",
+				},
 				children: `
 					<img src=${
 						props.avatar ? resourcesUrl + props.avatar : avatarImg
@@ -55,90 +66,62 @@ export default class ChatsItem extends Block {
 			},
 		});
 
-		document.addEventListener("click", ChatsItem.removeContextMenu);
+		document.addEventListener("click", removeContextMenu);
 	}
 
-	private showDeleteChatModal = (): void => {
+	private showDeleteChatModal(): void {
 		const modal = document.querySelector<HTMLElement>("#deleteChatModal");
 		if (!modal) return;
 
-		sessionStorage.setItem("chatId", String(this.props.id));
+		sessionStorage.setItem("chatId", String(this.props.attributes!.id));
 		modal.style.display = "block";
-	};
+	}
 
 	private handleChatItemClick(e?: Event): void {
 		const target = e?.target as HTMLElement;
 		const deleteBtn = target.closest(".chat-item-delete-btn");
+		const chatId = window.location.pathname.split("/").pop();
 
 		if (deleteBtn) {
 			this.showDeleteChatModal();
 		} else {
-			router.go(`/messenger/${this.props.id}`);
+			if (!this.props.attributes) return;
+
+			const { id } = this.props.attributes;
+			if (id !== chatId) {
+				router.go(`/messenger/${id}`);
+			}
 		}
 	}
 
-	private handleContextMenu(e?: Event) {
+	private handleContextMenu(e?: Event): void {
 		e?.preventDefault();
 		const mouseEvent = e as MouseEvent;
 
-		this.setProps({
-			ContextMenu: new ContextMenu({
-				children: `
+		const menu = new ContextMenu({
+			x: mouseEvent.clientX,
+			y: mouseEvent.clientY,
+			children: `
 					{{{ DeleteBtn }}}
 				 `,
-				DeleteBtn: new Button({
+			DeleteBtn: new Button({
+				attributes: {
 					class: "context-menu-delete-btn",
-					children: "Удалить",
-				}),
-				x: mouseEvent.clientX,
-				y: mouseEvent.clientY,
-				events: {
-					click: () => this.showDeleteChatModal(),
 				},
+				children: "Удалить",
 			}),
+			events: {
+				click: () => this.showDeleteChatModal(),
+			},
 		});
 
-		this.renderContextMenu();
-		ChatsItem.positionContextMenu(mouseEvent.clientX, mouseEvent.clientY);
+		this.setProps({
+			ContextMenu: menu,
+		});
 
-		const contextMenu = document.querySelector<HTMLElement>(".context-menu");
-		if (!contextMenu) return;
-		contextMenu.style.display = "block";
-	}
-
-	private renderContextMenu() {
-		const contextMenu = document.querySelector<HTMLElement>(".context-menu");
-		if (!contextMenu) {
-			document.body.appendChild(this.children.ContextMenu.getContent());
-		}
-	}
-
-	private static positionContextMenu(x: number, y: number) {
-		const contextMenu = document.querySelector<HTMLElement>(".context-menu");
-		if (!contextMenu) return;
-
-		const menuElement = contextMenu;
-		const menuWidth = menuElement.offsetWidth;
-		const menuHeight = menuElement.offsetHeight;
-		const windowWidth = window.innerWidth;
-		const windowHeight = window.innerHeight;
-
-		const adjustedX =
-			x + menuWidth > windowWidth ? windowWidth - menuWidth - 5 : x;
-		const adjustedY =
-			y + menuHeight > windowHeight ? windowHeight - menuHeight - 5 : y;
-
-		menuElement.style.position = "fixed";
-		menuElement.style.left = `${adjustedX}px`;
-		menuElement.style.top = `${adjustedY}px`;
-		menuElement.style.zIndex = "1000";
-	}
-
-	private static removeContextMenu() {
-		const contextMenu = document.querySelector<HTMLElement>(".context-menu");
-		if (!contextMenu) return;
-
-		contextMenu.remove();
+		renderContextMenu(menu);
+		positionContextMenu(mouseEvent.clientX, mouseEvent.clientY);
+		showContextMenu();
 	}
 
 	render(): HTMLElement {

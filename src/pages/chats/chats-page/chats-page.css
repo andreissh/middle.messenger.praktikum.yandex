@@ -7,15 +7,20 @@
 .chats-aside {
 	display: flex;
 	flex-direction: column;
-	width: 310px;
-	padding: 0 0.625rem;
+	width: 100%;
 	border-right: 1px solid var(--border-color);
+}
+
+@media (width >= 640px) {
+	.chats-aside {
+		width: 310px;
+	}
 }
 
 .chats-aside-top-section {
 	display: flex;
 	flex-direction: column;
-	padding: 1.25rem 0 0.875rem;
+	padding: 1.25rem 0.625rem 0.875rem;
 	border-bottom: 1px solid var(--border-color);
 }
 
@@ -31,23 +36,26 @@
 	text-align: right;
 	text-decoration: none;
 	cursor: pointer;
+	transition: filter 0.3s ease;
+
+	&:hover {
+		filter: brightness(0.8);
+	}
 }
 
 .chats-aside-to-profile-btn-text {
-	font-size: 12px;
-	line-height: 12px;
-	margin-right: 8px;
+	font-size: 0.75rem;
+	line-height: 0.75rem;
+	margin-right: 0.5rem;
 }
 
 .chats-aside-search {
-	border: none;
-	outline: none;
 	padding: 0.375rem 0.625rem;
-	font-size: 12px;
-	line-height: 12px;
+	font-size: 0.75rem;
+	line-height: 0.75rem;
 	color: var(--text-color-muted);
 	background-color: var(--bg-color-muted);
-	border-radius: 5px;
+	border-radius: 0.3125rem;
 }
 
 .chats-main {
@@ -56,7 +64,7 @@
 }
 
 .create-chat-btn-wrapper {
-	padding: 8px 0;
+	padding: 0.5rem 0.625rem;
 }
 
 .create-chat-btn {
@@ -66,8 +74,12 @@
 	cursor: pointer;
 	width: 32px;
 	height: 32px;
-	margin-right: 8px;
 	border-radius: 50%;
+	transition: filter 0.3s ease;
+
+	&:hover {
+		filter: brightness(0.9);
+	}
 
 	& img {
 		position: absolute;
@@ -78,32 +90,30 @@
 	}
 }
 
-.create-chat-input {
-	border: none;
-	outline: none;
-	padding: 0.625rem 1.25rem;
-	font-size: 12px;
-	line-height: 12px;
+.create-chat-label {
+	font-size: 0.5625rem;
+	line-height: 0.5625rem;
 	color: var(--text-color-muted);
-	background-color: var(--bg-color-muted);
-	border-radius: 30px;
+}
+
+.create-chat-input {
 	width: 100%;
-	height: 32px;
+	margin-bottom: 2rem;
+	border-bottom: 1px solid var(--bg-color-blue);
 }
 
 .create-chat-submit-btn {
 	width: 100%;
-	margin-top: 16px;
 }
 
 .delete-chat-modal-btns {
 	display: flex;
 	flex-direction: column;
-	gap: 16px;
+	gap: 1rem;
 
 	& span {
-		font-size: 14px;
-		line-height: 18px;
+		font-size: 0.875rem;
+		line-height: 1.125rem;
 		color: var(--text-color-muted);
 	}
 
@@ -115,20 +125,20 @@
 .chat-users-list-container {
 	display: flex;
 	flex-direction: column;
-	gap: 16px;
+	gap: 1rem;
 }
 
 .chat-users-list-title {
-	font-size: 16px;
-	line-height: 20px;
+	font-size: 1rem;
+	line-height: 1.25rem;
 	color: var(--text-color-muted);
 }
 
 .chat-users-list {
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
-	padding-left: 16px;
+	gap: 0.5rem;
+	padding-left: 1rem;
 
 	& li {
 		list-style: initial;
@@ -137,5 +147,37 @@
 
 .add-user-form,
 .remove-user-form {
-	margin-bottom: 16px;
+	margin-bottom: 3.125rem;
+}
+
+.add-user-label {
+	font-size: 0.5625rem;
+	line-height: 0.5625rem;
+	color: var(--text-color-muted);
+}
+
+.add-user-input {
+	width: 100%;
+	margin-bottom: 2rem;
+	border-bottom: 1px solid var(--bg-color-blue);
+}
+
+.add-user-submit-btn {
+	width: 100%;
+}
+
+.remove-user-label {
+	font-size: 0.5625rem;
+	line-height: 0.5625rem;
+	color: var(--text-color-muted);
+}
+
+.remove-user-input {
+	width: 100%;
+	margin-bottom: 2rem;
+	border-bottom: 1px solid var(--bg-color-blue);
+}
+
+.remove-user-submit-btn {
+	width: 100%;
 }

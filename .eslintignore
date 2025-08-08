@@ -1,5 +1,5 @@
 .eslintrc.cjs
-stylelint.config.cjs
+stylelint.config.js
 vite.config.ts
 node_modules/
 dist/

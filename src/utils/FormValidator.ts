@@ -1,5 +1,5 @@
 import { ValidationResult } from "@/types/types";
-import validateField from "./validate";
+import validateField from "./validateField";
 
 export default class FormValidator {
 	private form: HTMLFormElement;
@@ -11,26 +11,32 @@ export default class FormValidator {
 		this.fieldItemSelector = fieldItemSelector;
 	}
 
-	validateInput(
-		input: HTMLInputElement,
-		customCheck?: () => ValidationResult
-	): boolean {
+	validateInput(input: HTMLInputElement): boolean {
 		let result: ValidationResult;
-		if (customCheck) {
-			result = customCheck();
+
+		const { name, value } = input;
+		if (input.name === "password_repeat") {
+			const password = document.querySelector<HTMLInputElement>(
+				'input[name="password"]'
+			);
+			if (!password) return false;
+			result = validateField(name, value, { [password.name]: password.value });
 		} else {
-			const { name, value } = input;
 			result = validateField(name, value);
 		}
+
 		this.showValidationResult(input, result);
 		return result.valid;
 	}
 
-	showValidationResult(input: HTMLInputElement, result: ValidationResult) {
+	showValidationResult(
+		input: HTMLInputElement,
+		result: ValidationResult
+	): void {
 		const fieldContainer = input.closest(this.fieldItemSelector);
 		if (!fieldContainer) return;
 
-		let errorEl = fieldContainer.nextElementSibling as HTMLElement | null;
+		let errorEl = fieldContainer.nextElementSibling;
 
 		if (!result.valid) {
 			if (!errorEl || !errorEl.classList.contains("error-message")) {
@@ -47,27 +53,16 @@ export default class FormValidator {
 		}
 	}
 
-	validateForm(
-		customChecks: Record<string, () => ValidationResult> = {}
-	): boolean {
+	validateForm(): boolean {
 		const inputs = Array.from(this.form.elements).filter(
 			(el): el is HTMLInputElement => el instanceof HTMLInputElement
 		);
 
-		return inputs.every((input) => {
-			if (input.name in customChecks) {
-				return this.validateInput(input, customChecks[input.name]);
-			}
-			return this.validateInput(input);
-		});
+		return inputs.every((input) => this.validateInput(input));
 	}
 
-	public handleBlur(
-		e: Event,
-		customChecks: Record<string, () => ValidationResult> = {}
-	): void {
+	handleBlur(e: Event): void {
 		const input = e.target as HTMLInputElement;
-		const checkFn = customChecks[input.name];
-		this.validateInput(input, checkFn?.bind(this));
+		this.validateInput(input);
 	}
 }

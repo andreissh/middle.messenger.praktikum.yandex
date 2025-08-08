@@ -17,8 +17,10 @@ export default class ServerErrorPage extends Block {
 	constructor() {
 		super("div", {
 			HomeBtn: new Button({
-				id: "renderChatsBtn",
-				class: "btn-secondary",
+				attributes: {
+					id: "renderChatsBtn",
+					class: "btn-secondary",
+				},
 				children: "Назад к чатам",
 				events: {
 					click: () => ServerErrorPage.handleHomeClick(),

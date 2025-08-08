@@ -4,23 +4,32 @@ import "./chats-list.css";
 
 type ChatsListProps = {
 	chats: ChatsItemProps[];
+	active?: string | null;
 };
 
 const template = `
-  <ul class="chat-list">
-	{{#if hasChats}}
-		{{{ chats }}}
-	{{ else }}
-		<p>Список чатов пуст</p>
-	{{/if}}
-  </ul>
+	<div class="chat-list-wrapper">
+		<ul class="chat-list">
+			{{#if hasChats}}
+				{{{ chats }}}
+			{{ else }}
+				<p>Список чатов пуст</p>
+			{{/if}}
+		</ul>
+	</div>
 `;
 
 export default class ChatsList extends Block {
 	constructor(props: ChatsListProps) {
 		super("div", {
 			hasChats: props.chats.length > 0,
-			chats: props.chats.map((chat) => new ChatsItem({ ...chat })),
+			chats: props.chats.map(
+				(chat) =>
+					new ChatsItem({
+						...chat,
+						active: chat.attributes.id === props.active,
+					})
+			),
 		});
 	}
 

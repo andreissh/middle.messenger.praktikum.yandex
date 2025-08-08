@@ -1,31 +1,14 @@
 import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
 import router from "@/routes/Router";
-import { InputProps } from "@/pages/profile/utils/profileData";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import Form from "@/components/form/Form";
 import AuthService from "@/services/AuthService";
 import { AuthData } from "@/types/types";
-import LoginFields from "../components/login-fields/LoginFields";
+import Fields from "@/components/fields/Fields";
+import { signinFields } from "../utils/formsData";
 import "./signin.css";
-
-const fields: Array<InputProps & { label: string }> = [
-	{
-		id: "login",
-		label: "Логин",
-		type: "text",
-		name: "login",
-		autocomplete: "login",
-	},
-	{
-		id: "password",
-		label: "Пароль",
-		type: "password",
-		name: "password",
-		autocomplete: "password",
-	},
-];
 
 const template = `
   <div class="signin-wrapper">
@@ -45,67 +28,78 @@ export default class SigninPage extends Block {
 	constructor() {
 		super("div", {
 			SignupBtn: new Button({
-				id: "renderSignupBtn",
-				class: "btn-secondary",
+				attributes: {
+					id: "renderSignupBtn",
+					class: "btn-secondary",
+				},
 				children: "Нет аккаунта?",
 				events: {
 					click: () => SigninPage.handleSignupClick(),
 				},
 			}),
 			SigninForm: new Form({
-				class: "signin-form",
+				attributes: {
+					class: "signin-form",
+				},
 				children: `
-				    {{{ fields }}}
+				  {{{ Fields }}}
 					<div class="signin-form-signin-btn-container">
 						{{{ SigninBtn }}}
 					</div>
 				`,
-				fields: new LoginFields({
-					fields,
+				Fields: new Fields({
+					attributes: {
+						class: "fields",
+						liClass: "field-item",
+						labelClass: "field-label",
+						inputClass: "field-input",
+					},
+					fields: signinFields,
 					events: {
 						blur: (e?: Event) => this.handleFieldBlur(e),
 					},
 				}),
 				SigninBtn: new Button({
-					id: "renderChatsBtn",
-					class: "btn",
+					attributes: {
+						type: "submit",
+						id: "renderChatsBtn",
+						class: "btn",
+					},
 					children: "Войти",
-					type: "submit",
 				}),
 				events: {
 					submit: (e?: Event) => this.handleSigninSubmit(e),
 				},
 			}),
 		});
-
-		this.validator = this.initValidator();
 	}
 
 	private initValidator(): FormValidator {
-		const form = this.element?.querySelector(".signin-form") as HTMLFormElement;
+		const form = document.querySelector<HTMLFormElement>(".signin-form");
 		if (!form) {
-			throw new Error("Form not found for validator initialization");
+			throw new Error("Не найдена форма для инициализации валидатора");
 		}
-		return new FormValidator(form, ".login-field-item");
+
+		return new FormValidator(form, ".field-item");
 	}
 
 	private handleFieldBlur(e?: Event): void {
-		const input = (e?.target as HTMLElement).closest("input.login-field-input");
-
+		const target = e?.target as HTMLElement;
+		const input = target.closest<HTMLInputElement>(".field-input");
 		if (!this.validator || !input) return;
 
-		this.validator.validateInput(input as HTMLInputElement);
+		this.validator.validateInput(input);
 	}
 
 	private async handleSigninSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
-		const form = this.element?.querySelector(".signin-form") as HTMLFormElement;
-		if (!form) return;
+		const form = document.querySelector<HTMLFormElement>(".signin-form");
+		if (!form || !this.validator) return;
 
-		if (this.validator && this.validator.validateForm()) {
-			const data = getFormData(form) as AuthData;
+		if (this.validator.validateForm()) {
+			const data = getFormData(form);
 			if (data) {
-				await AuthService.signin(data);
+				await AuthService.signin(data as AuthData);
 				const { id } = await AuthService.userInfo();
 				localStorage.setItem("userId", String(id));
 				router.go("/messenger");
@@ -117,7 +111,7 @@ export default class SigninPage extends Block {
 		router.go("/sign-up");
 	}
 
-	componentDidMount() {
+	componentDidMount(): void {
 		this.validator = this.initValidator();
 	}
 

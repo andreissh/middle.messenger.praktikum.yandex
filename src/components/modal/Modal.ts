@@ -4,10 +4,12 @@ import Button from "../button/Button";
 import "./modal.css";
 
 type ModalProps = {
-	id: string;
-	title?: string;
-	children?: Block | Block[] | string;
 	[key: string]: unknown;
+	attributes: {
+		id: string;
+	};
+	title: string;
+	children: string;
 };
 
 const template = `
@@ -15,7 +17,7 @@ const template = `
 		<div class="modal">
 			<div class="modal-header">
 				{{{ CloseBtn }}}
-				<h2>{{ title }}</h2>
+				<h2 class="modal-title">{{ title }}</h2>
 			</div>
 			<div class="modal-body">
 				{{{ children }}}
@@ -29,23 +31,27 @@ export default class Modal extends Block {
 		super("div", {
 			...props,
 			CloseBtn: new Button({
-				class: "modal-close-btn",
+				attributes: {
+					class: "modal-close-btn",
+				},
 				children: `
 					<img src=${closeBtn} alt="close" />
 				`,
 				events: {
-					click: (e?: Event) => this.handleCloseClick(e),
+					click: () => this.handleCloseClick(),
 				},
 			}),
 		});
 	}
 
-	private handleCloseClick(e?: Event): void {
-		e?.preventDefault();
+	private handleCloseClick(): void {
 		const modal = document.querySelector<HTMLElement>(
-			`#${this.props.id}`
+			`#${this.props.attributes!.id}`
 		);
 		if (!modal) return;
+
+		const inputs = modal.querySelectorAll<HTMLInputElement>("input");
+		inputs.forEach((input) => (input.value = ""));
 		modal.style.display = "none";
 	}
 

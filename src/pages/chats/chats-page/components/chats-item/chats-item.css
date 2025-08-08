@@ -1,9 +1,63 @@
+.chat-item-msg-count {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 20px;
+	height: 20px;
+	font-size: 0.75rem;
+	line-height: 0.75rem;
+	border-radius: 50%;
+	color: var(--text-color-white);
+	background-color: var(--bg-color-blue);
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	opacity: 1;
+	visibility: visible;
+	transition: opacity 0.3s ease, visibility 0.3s ease;
+	z-index: 1;
+}
+
+.chat-item-delete-btn {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 20px;
+	height: 20px;
+	opacity: 0;
+	visibility: hidden;
+	cursor: pointer;
+	padding: 0.125rem;
+	transition: opacity 0.3s ease, visibility 0.3s ease;
+	z-index: 2;
+}
+
 .chat-item {
 	display: flex;
-	min-height: 4.5rem;
-	padding: 0.75rem 0;
+	min-height: 72px;
+	padding: 0.75rem 0.625rem;
 	border-bottom: 1px solid var(--border-color);
 	cursor: pointer;
+	transition: background-color 0.5s ease;
+
+	&:hover {
+		background-color: var(--bg-color-lightblue);
+
+		& .chat-item-msg-count {
+			opacity: 0;
+			visibility: hidden;
+		}
+
+		& .chat-item-delete-btn {
+			opacity: 1;
+			visibility: visible;
+		}
+	}
+}
+
+.chat-item--active {
+	background-color: var(--bg-color-lightblue);
+	filter: brightness(0.96);
 }
 
 .chat-item-avatar {
@@ -33,8 +87,8 @@
 }
 
 .chat-item-message {
-	font-size: 12px;
-	line-height: 15px;
+	font-size: 0.75rem;
+	line-height: 1rem;
 	color: var(--text-color-muted);
 	width: 100%;
 	max-width: 160px;
@@ -48,43 +102,25 @@
 }
 
 .chat-item-info-block {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
-	gap: 10px;
+	gap: 0.625rem;
 	width: 60px;
 }
 
 .chat-item-msg-time {
-	font-size: 9px;
-	line-height: 13px;
+	font-size: 0.5625rem;
+	line-height: 0.8125rem;
 	color: var(--text-color-muted);
 }
 
-.chat-item-msg-count {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 20px;
-	height: 20px;
-	font-size: 12px;
-	line-height: 12px;
-	border-radius: 50%;
-	color: var(--text-color-white);
-	background-color: var(--bg-color-blue);
-}
-
-.chat-item-delete-btn {
-	display: none;
+.context-menu-delete-btn {
+	padding: 0.5rem 1rem;
 	cursor: pointer;
-	padding: 2px;
-	margin-top: auto;
-}
 
-.chat-item:hover .chat-item-delete-btn {
-	display: inline-block;
-}
-
-.chat-item:hover .chat-item-msg-count {
-	display: none;
+	&:hover {
+		background-color: var(--bg-color-lightgrey);
+	}
 }

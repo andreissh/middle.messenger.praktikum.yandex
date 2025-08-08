@@ -17,8 +17,10 @@ export default class NotFoundPage extends Block {
 	constructor() {
 		super("div", {
 			HomeBtn: new Button({
-				id: "renderChatsBtn",
-				class: "btn-secondary",
+				attributes: {
+					id: "renderChatsBtn",
+					class: "btn-secondary",
+				},
 				children: "Назад к чатам",
 				events: {
 					click: () => NotFoundPage.handleHomeClick(),

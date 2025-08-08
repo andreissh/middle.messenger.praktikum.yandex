@@ -1,0 +1,12 @@
+.fields {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin-bottom: 2rem;
+}
+
+.profile-fields {
+	display: flex;
+	flex-direction: column;
+	gap: 0.625rem;
+}

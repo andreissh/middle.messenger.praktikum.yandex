@@ -1,17 +1,23 @@
 .profile-edit {
 	display: flex !important;
-	min-height: 100vh;
+	height: 100vh;
 }
 
 .profile-edit-goback-block {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 64px;
-	min-height: 100vh;
+	width: 40px;
+	height: 100vh;
 	background-color: var(--bg-color-subtle);
 	border-right: 1px solid var(--border-color);
 	cursor: pointer;
+}
+
+@media (width >= 640px) {
+	.profile-edit-goback-block {
+		width: 64px;
+	}
 }
 
 .profile-edit-content-wrapper {
@@ -22,7 +28,13 @@
 }
 
 .profile-edit-content {
-	width: 510px;
+	width: 300px;
+}
+
+@media (width >= 640px) {
+	.profile-edit-content {
+		width: 510px;
+	}
 }
 
 .profile-edit-avatar-block {
@@ -38,7 +50,7 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 	color: var(--text-color-white);
-	font-size: 12px;
+	font-size: 0.75rem;
 	opacity: 0;
 	transition: opacity 0.3s ease;
 	pointer-events: none;
@@ -93,33 +105,6 @@
 
 .profile-edit-data-block {
 	margin-bottom: 3.75rem;
-}
-
-.profile-edit-btns-list {
-	display: flex;
-	flex-direction: column;
-	gap: 0.625rem;
-}
-
-.profile-edit-btns-item {
-	padding-bottom: 0.625rem;
-	border-bottom: 1px solid var(--border-color);
-
-	&:last-child {
-		border-bottom: none;
-	}
-}
-
-.profile-edit-btns-item-btn {
-	display: inline-block;
-	font-size: 13px;
-	line-height: 13px;
-	color: var(--text-color-blue);
-	text-decoration: none;
-}
-
-.profile-edit-btns-item-btn--danger {
-	color: var(--text-color-danger);
 }
 
 .profile-edit-btns-container {

@@ -1,17 +1,28 @@
 .profile-edit-pass {
 	display: flex !important;
-	min-height: 100vh;
+	height: 100vh;
 }
 
 .profile-edit-pass-goback-block {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 64px;
-	min-height: 100vh;
+	width: 40px;
+	height: 100vh;
 	background-color: var(--bg-color-subtle);
 	border-right: 1px solid var(--border-color);
 	cursor: pointer;
+	transition: filter 0.3s ease;
+
+	&:hover {
+		filter: brightness(0.96);
+	}
+}
+
+@media (width >= 640px) {
+	.profile-edit-pass-goback-block {
+		width: 64px;
+	}
 }
 
 .profile-edit-pass-content-wrapper {
@@ -22,7 +33,13 @@
 }
 
 .profile-edit-pass-content {
-	width: 510px;
+	width: 300px;
+}
+
+@media (width >= 640px) {
+	.profile-edit-pass-content {
+		width: 510px;
+	}
 }
 
 .profile-edit-pass-avatar-block {
@@ -59,33 +76,6 @@
 
 .profile-edit-pass-data-block {
 	margin-bottom: 3.75rem;
-}
-
-.profile-edit-pass-data-list {
-	display: flex;
-	flex-direction: column;
-	gap: 0.625rem;
-}
-
-.profile-edit-pass-btns-item {
-	padding-bottom: 0.625rem;
-	border-bottom: 1px solid var(--border-color);
-
-	&:last-child {
-		border-bottom: none;
-	}
-}
-
-.profile-edit-pass-btns-item-btn {
-	display: inline-block;
-	font-size: 13px;
-	line-height: 13px;
-	color: var(--text-color-blue);
-	text-decoration: none;
-}
-
-.profile-edit-pass-btns-item-btn--danger {
-	color: var(--text-color-danger);
 }
 
 .profile-edit-pass-btns-container {
