@@ -1,7 +1,7 @@
 .context-menu {
 	position: fixed;
-	background: white;
-	border: 1px solid #ddd;
+	background: var(--bg-color-white);
+	border: 1px solid var(--border-color);
 	border-radius: 0.25rem;
 	box-shadow: 0 0.125rem 0.625rem rgb(0 0 0 / 10%);
 	z-index: 1000;
@@ -12,8 +12,8 @@
 .context-menu-delete-btn {
 	padding: 0.5rem 1rem;
 	cursor: pointer;
-}
 
-.context-menu-delete-btn:hover {
-	background: var(--bg-color-lightgrey);
+	&:hover {
+		background-color: var(--bg-color-lightgrey);
+	}
 }

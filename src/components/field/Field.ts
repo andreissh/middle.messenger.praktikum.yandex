@@ -1,38 +1,28 @@
 import Block from "@/framework/Block";
-import { EventsType } from "@/types/types";
+import { TFieldProps } from "@/types/types";
 import Input from "@/components/input/Input";
 import "./field.css";
 
-export type FieldProps = {
-	id: string;
-	label: string;
-	type: string;
-	name: string;
-	autocomplete: string;
-	events?: EventsType;
-	[key: string]: unknown;
-};
-
 const template = `
-  <li class="field-item">
-    <label for="{{ id }}" class="field-label">{{ label }}</label>
+  <li class="{{ liClass }}">
+    <label for="{{ id }}" class="{{ labelClass }}">{{ label }}</label>
     {{{ Input }}}
   </li>
 `;
 
 export default class Field extends Block {
-	constructor(props: FieldProps) {
-		const { events, ...plainProps } = props;
+	constructor(props: TFieldProps) {
+		const { events, label, attributes, ...inputProps } = props;
 
 		super("div", {
-			attributes: {
-				id: plainProps.id,
-			},
-			label: plainProps.label,
+			liClass: attributes ? attributes.liClass : "",
+			id: inputProps.id,
+			labelClass: attributes ? attributes.labelClass : "",
+			label,
 			Input: new Input({
 				attributes: {
-					...plainProps,
-					class: "field-input",
+					...inputProps,
+					class: attributes ? attributes.inputClass : "",
 				},
 				events,
 			}),

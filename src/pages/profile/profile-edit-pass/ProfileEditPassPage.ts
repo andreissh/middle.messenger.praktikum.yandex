@@ -11,8 +11,8 @@ import Form from "@/components/form/Form";
 import AuthService from "@/services/AuthService";
 import UserService from "@/services/UserService";
 import Avatar from "@/components/avatar/Avatar";
-import ProfileFields from "../components/profile-fields/ProfileFields";
-import { passwordFields } from "../utils/profileData";
+import Fields from "@/components/fields/Fields";
+import { passwordFields } from "../utils/formsData";
 import "./profile-edit-pass.css";
 
 const template = `
@@ -62,13 +62,19 @@ export default class ProfileEditPassPage extends Block {
 				},
 				children: `
 				  <div class="profile-edit-pass-data-block">
-						{{{ ProfileFields }}}
+						{{{ Fields }}}
 					</div>
 					<div class="profile-edit-pass-btns-container">
 						{{{ SaveBtn }}}
 					</div>
 				`,
-				ProfileFields: new ProfileFields({
+				Fields: new Fields({
+					attributes: {
+						class: "profile-fields",
+						liClass: "profile-field-item",
+						labelClass: "profile-field-label",
+						inputClass: "profile-field-input",
+					},
 					fields: passwordFields,
 					events: {
 						blur: (e?: Event) => this.handleFieldBlur(e),
@@ -76,9 +82,9 @@ export default class ProfileEditPassPage extends Block {
 				}),
 				SaveBtn: new Button({
 					attributes: {
+						type: "submit",
 						id: "save",
 						class: "btn",
-						type: "submit",
 					},
 					children: "Сохранить",
 				}),

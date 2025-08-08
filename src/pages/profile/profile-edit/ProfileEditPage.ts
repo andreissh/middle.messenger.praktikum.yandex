@@ -11,8 +11,8 @@ import Form from "@/components/form/Form";
 import AuthService from "@/services/AuthService";
 import UserService from "@/services/UserService";
 import Avatar from "@/components/avatar/Avatar";
-import ProfileFields from "../components/profile-fields/ProfileFields";
-import { profileEditFields } from "../utils/profileData";
+import Fields from "@/components/fields/Fields";
+import { profileEditFields } from "../utils/formsData";
 import "./profile-edit.css";
 
 const template = `
@@ -74,13 +74,19 @@ export default class ProfileEditPage extends Block {
 				},
 				children: `
 					<div class="profile-edit-data-block">
-						{{{ ProfileFields }}}
+						{{{ Fields }}}
 					</div>
 					<div class="profile-edit-btns-container">
 						{{{ SaveBtn }}}
 					</div>
 				`,
-				ProfileFields: new ProfileFields({
+				Fields: new Fields({
+					attributes: {
+						class: "profile-fields",
+						liClass: "profile-field-item",
+						labelClass: "profile-field-label",
+						inputClass: "profile-field-input",
+					},
 					fields: profileEditFields,
 					events: {
 						blur: (e?: Event) => this.handleFieldBlur(e),
@@ -88,9 +94,9 @@ export default class ProfileEditPage extends Block {
 				}),
 				SaveBtn: new Button({
 					attributes: {
+						type: "submit",
 						id: "save",
 						class: "btn",
-						type: "submit",
 					},
 					children: "Сохранить",
 				}),
@@ -149,7 +155,9 @@ export default class ProfileEditPage extends Block {
 
 		this.setProps({
 			AvatarBtn: new Button({
-				id: "avatarBtn",
+				attributes: {
+					id: "avatarBtn",
+				},
 				children: `
 					{{{ Avatar }}}
 				`,
@@ -237,13 +245,19 @@ export default class ProfileEditPage extends Block {
 					},
 					children: `
 						<div class="profile-edit-data-block">
-							{{{ ProfileFields }}}
+							{{{ Fields }}}
 						</div>
 						<div class="profile-edit-btns-container">
 							{{{ SaveBtn }}}
 						</div>
 					`,
-					ProfileFields: new ProfileFields({
+					Fields: new Fields({
+						attributes: {
+							class: "profile-fields",
+							liClass: "profile-field-item",
+							labelClass: "profile-field-label",
+							inputClass: "profile-field-input",
+						},
 						fields: profileEditFieldsClone,
 						events: {
 							blur: (e?: Event) => this.handleFieldBlur(e),
@@ -251,9 +265,9 @@ export default class ProfileEditPage extends Block {
 					}),
 					SaveBtn: new Button({
 						attributes: {
+							type: "submit",
 							id: "save",
 							class: "btn",
-							type: "submit",
 						},
 						children: "Сохранить",
 					}),
@@ -262,7 +276,9 @@ export default class ProfileEditPage extends Block {
 					},
 				}),
 				AvatarBtn: new Button({
-					id: "avatarBtn",
+					attributes: {
+						id: "avatarBtn",
+					},
 					children: `
 						<span class="profile-edit-avatar" name="avatar">
 							<img src="${imgSrc}" class="${imgClass}" />

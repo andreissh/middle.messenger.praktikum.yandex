@@ -6,6 +6,26 @@ export type HttpError = {
 	status?: number;
 };
 
+export type FieldProps = {
+	[key: string]: unknown;
+	id: string;
+	label: string;
+	type: string;
+	name: string;
+	value: string;
+	autocomplete: string;
+	readonly?: boolean;
+	events?: EventsType;
+};
+
+export type TFieldProps = FieldProps & {
+	attributes?: {
+		liClass: string;
+		labelClass: string;
+		inputClass: string;
+	};
+};
+
 export type AuthData = {
 	login: string;
 	password: string;

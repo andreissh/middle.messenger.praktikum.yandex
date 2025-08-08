@@ -1,26 +1,14 @@
-import { EventsType } from "@/types/types";
+import { FieldProps } from "@/types/types";
 
-export type InputProps = {
-	id: string;
-	class?: string;
-	type: string;
-	name: string;
-	value?: string;
-	autocomplete: string;
-	placeholder?: string;
-	readonly?: boolean;
-	events?: EventsType;
-};
-
-export const profileFields: Array<InputProps & { label: string }> = [
+export const profileFields: FieldProps[] = [
 	{
 		id: "email",
 		label: "Почта",
 		type: "text",
 		name: "email",
 		value: "",
-		readonly: true,
 		autocomplete: "email",
+		readonly: true,
 	},
 	{
 		id: "login",
@@ -28,8 +16,8 @@ export const profileFields: Array<InputProps & { label: string }> = [
 		type: "text",
 		name: "login",
 		value: "",
-		readonly: true,
 		autocomplete: "username",
+		readonly: true,
 	},
 	{
 		id: "first_name",
@@ -37,8 +25,8 @@ export const profileFields: Array<InputProps & { label: string }> = [
 		type: "text",
 		name: "first_name",
 		value: "",
-		readonly: true,
 		autocomplete: "given-name",
+		readonly: true,
 	},
 	{
 		id: "second_name",
@@ -46,8 +34,8 @@ export const profileFields: Array<InputProps & { label: string }> = [
 		type: "text",
 		name: "second_name",
 		value: "",
-		readonly: true,
 		autocomplete: "family-name",
+		readonly: true,
 	},
 	{
 		id: "display_name",
@@ -55,8 +43,8 @@ export const profileFields: Array<InputProps & { label: string }> = [
 		type: "text",
 		name: "display_name",
 		value: "",
-		readonly: true,
 		autocomplete: "nickname",
+		readonly: true,
 	},
 	{
 		id: "phone",
@@ -64,24 +52,26 @@ export const profileFields: Array<InputProps & { label: string }> = [
 		type: "text",
 		name: "phone",
 		value: "",
-		readonly: true,
 		autocomplete: "tel",
+		readonly: true,
 	},
 ];
 
-export const profileEditFields: Array<InputProps & { label: string }> =
-	structuredClone(profileFields).map((field) => {
-		const newField = { ...field };
-		delete newField.readonly;
-		return newField;
-	});
+export const profileEditFields: FieldProps[] = structuredClone(
+	profileFields
+).map((field) => {
+	const newField = { ...field };
+	delete newField.readonly;
+	return newField;
+});
 
-export const passwordFields: Array<InputProps & { label: string }> = [
+export const passwordFields: FieldProps[] = [
 	{
 		id: "oldPassword",
 		label: "Старый пароль",
 		type: "password",
 		name: "oldPassword",
+		value: "",
 		autocomplete: "current-password",
 	},
 	{
@@ -89,6 +79,7 @@ export const passwordFields: Array<InputProps & { label: string }> = [
 		label: "Новый пароль",
 		type: "password",
 		name: "password",
+		value: "",
 		autocomplete: "new-password",
 	},
 	{
@@ -96,6 +87,7 @@ export const passwordFields: Array<InputProps & { label: string }> = [
 		label: "Повторите пароль",
 		type: "password",
 		name: "password_repeat",
+		value: "",
 		autocomplete: "repeat-password",
 	},
 ];

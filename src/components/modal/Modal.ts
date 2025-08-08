@@ -4,12 +4,12 @@ import Button from "../button/Button";
 import "./modal.css";
 
 type ModalProps = {
+	[key: string]: unknown;
 	attributes: {
 		id: string;
 	};
-	title?: string;
-	children?: Block | Block[] | string;
-	[key: string]: unknown;
+	title: string;
+	children: string;
 };
 
 const template = `
@@ -38,18 +38,18 @@ export default class Modal extends Block {
 					<img src=${closeBtn} alt="close" />
 				`,
 				events: {
-					click: (e?: Event) => this.handleCloseClick(e),
+					click: () => this.handleCloseClick(),
 				},
 			}),
 		});
 	}
 
-	private handleCloseClick(e?: Event): void {
-		e?.preventDefault();
+	private handleCloseClick(): void {
 		const modal = document.querySelector<HTMLElement>(
 			`#${this.props.attributes!.id}`
 		);
 		if (!modal) return;
+
 		const inputs = modal.querySelectorAll<HTMLInputElement>("input");
 		inputs.forEach((input) => (input.value = ""));
 		modal.style.display = "none";

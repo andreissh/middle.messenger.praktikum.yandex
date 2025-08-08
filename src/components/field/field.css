@@ -13,3 +13,30 @@
 .field-input {
 	border-bottom: 1px solid var(--bg-color-blue);
 }
+
+.profile-field-item {
+	display: flex;
+	justify-content: space-between;
+	border-bottom: 1px solid var(--border-color);
+	padding-bottom: 0.625rem;
+
+	&:last-child {
+		padding-bottom: 0;
+		border-bottom: none;
+	}
+}
+
+.profile-field-label {
+	min-width: 120px;
+	font-size: 0.8125rem;
+	line-height: 0.8125rem;
+	color: var(--text-color-default);
+}
+
+.profile-field-input {
+	width: 100%;
+	font-size: 0.8125rem;
+	line-height: 0.8125rem;
+	color: var(--text-color-muted);
+	text-align: right;
+}

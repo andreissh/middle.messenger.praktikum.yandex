@@ -1,10 +1,13 @@
 import Block from "@/framework/Block";
+import { EventsType } from "@/types/types";
 
 type FormProps = {
+	[key: string]: unknown;
 	attributes: {
 		class: string;
 	};
-	[key: string]: unknown;
+	children: string;
+	events: EventsType;
 };
 
 const template = `

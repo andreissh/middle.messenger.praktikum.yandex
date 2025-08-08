@@ -1,25 +1,42 @@
 import Block from "@/framework/Block";
-import { EventsType } from "@/types/types";
-import { InputProps } from "@/pages/profile/utils/profileData";
+import { EventsType, FieldProps } from "@/types/types";
 import Field from "../field/Field";
 import "./fields.css";
 
 type FieldsProps = {
-	fields: Array<InputProps & { label: string }>;
+	attributes?: {
+		class: string;
+		liClass: string;
+		labelClass: string;
+		inputClass: string;
+	};
+	fields: FieldProps[];
 	events?: EventsType;
 };
 
 const template = `
-  <ul class="fields-list">
+  <ul class="{{ class }}">
     {{{ Fields }}}
   </ul>
 `;
 
 export default class Fields extends Block {
 	constructor(props: FieldsProps) {
+		const { attributes } = props;
+
 		super("div", {
+			class: attributes ? attributes.class : "",
 			Fields: props.fields.map(
-				(field) => new Field({ ...field, events: props.events })
+				(field) =>
+					new Field({
+						attributes: {
+							liClass: attributes ? attributes.liClass : "",
+							labelClass: attributes ? attributes.labelClass : "",
+							inputClass: attributes ? attributes.inputClass : "",
+						},
+						...field,
+						events: props.events,
+					})
 			),
 		});
 	}

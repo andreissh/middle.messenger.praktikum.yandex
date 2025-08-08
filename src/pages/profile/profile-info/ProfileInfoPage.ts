@@ -8,8 +8,8 @@ import backBtn from "@/assets/icons/arrow-btn.svg";
 import avatarImg from "@/assets/icons/avatar-img.svg";
 import AuthService from "@/services/AuthService";
 import Avatar from "@/components/avatar/Avatar";
-import ProfileFields from "../components/profile-fields/ProfileFields";
-import { profileFields } from "../utils/profileData";
+import Fields from "@/components/fields/Fields";
+import { profileFields } from "../utils/formsData";
 import ProfileEditPage from "../profile-edit/ProfileEditPage";
 import ProfileEditPassPage from "../profile-edit-pass/ProfileEditPassPage";
 import "./profile-info.css";
@@ -24,7 +24,7 @@ const template = `
           <span class="profile-info-username">Иван</span>
         </div>
         <div class="profile-info-data-block">
-          {{{ ProfileFields }}}
+          {{{ Fields }}}
         </div>
         <div class="profile-info-btns-block">
           <ul class="profile-info-btns-list">
@@ -69,7 +69,13 @@ export default class ProfileInfoPage extends Block {
 					<img src="${avatarImg}" class="profile-info-default-avatar-img" />
 				`,
 			}),
-			ProfileFields: new ProfileFields({
+			Fields: new Fields({
+				attributes: {
+					class: "profile-fields",
+					liClass: "profile-field-item",
+					labelClass: "profile-field-label",
+					inputClass: "profile-field-input",
+				},
 				fields: profileFields,
 			}),
 			ChangeDataBtn: new Button({
@@ -141,7 +147,13 @@ export default class ProfileInfoPage extends Block {
 				: "profile-info-default-avatar-img";
 
 			this.setProps({
-				ProfileFields: new ProfileFields({
+				Fields: new Fields({
+					attributes: {
+						class: "profile-fields",
+						liClass: "profile-field-item",
+						labelClass: "profile-field-label",
+						inputClass: "profile-field-input",
+					},
 					fields: profileFieldsClone,
 				}),
 				Avatar: new Avatar({

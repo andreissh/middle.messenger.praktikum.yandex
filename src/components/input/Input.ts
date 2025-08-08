@@ -7,6 +7,7 @@ type TInputProps = {
 		class: string;
 		type: string;
 		name: string;
+		value?: string;
 		autocomplete: string;
 		placeholder?: string;
 		readonly?: boolean;

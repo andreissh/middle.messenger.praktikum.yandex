@@ -1,11 +1,11 @@
 import Block from "@/framework/Block";
 
 type AvatarProps = {
-	children: Block | Block[] | string;
-	attributes: {
-		class: string;
+	attributes?: {
+		class?: string;
 		name?: string;
 	};
+	children: string;
 };
 
 const template = `

@@ -1,66 +1,14 @@
 import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
 import router from "@/routes/Router";
-import { InputProps } from "@/pages/profile/utils/profileData";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import { SignupReq } from "@/types/types";
 import Form from "@/components/form/Form";
 import AuthService from "@/services/AuthService";
 import Fields from "@/components/fields/Fields";
+import { signupFields } from "../utils/formsData";
 import "./signup.css";
-
-const fields: Array<InputProps & { label: string }> = [
-	{
-		id: "email",
-		label: "Почта",
-		type: "text",
-		name: "email",
-		autocomplete: "email",
-	},
-	{
-		id: "login",
-		label: "Логин",
-		type: "text",
-		name: "login",
-		autocomplete: "login",
-	},
-	{
-		id: "first_name",
-		label: "Имя",
-		type: "text",
-		name: "first_name",
-		autocomplete: "first_name",
-	},
-	{
-		id: "second_name",
-		label: "Фамилия",
-		type: "text",
-		name: "second_name",
-		autocomplete: "second_name",
-	},
-	{
-		id: "phone",
-		label: "Телефон",
-		type: "text",
-		name: "phone",
-		autocomplete: "phone",
-	},
-	{
-		id: "password",
-		label: "Пароль",
-		type: "password",
-		name: "password",
-		autocomplete: "password",
-	},
-	{
-		id: "password_repeat",
-		label: "Пароль (еще раз)",
-		type: "password",
-		name: "password_repeat",
-		autocomplete: "password_repeat",
-	},
-];
 
 const template = `
   <div class="signup-wrapper">
@@ -90,16 +38,22 @@ export default class SignupPage extends Block {
 					</div>
 				`,
 				Fields: new Fields({
-					fields,
+					attributes: {
+						class: "fields",
+						liClass: "field-item",
+						labelClass: "field-label",
+						inputClass: "field-input",
+					},
+					fields: signupFields,
 					events: {
 						blur: (e?: Event) => this.handleFieldBlur(e),
 					},
 				}),
 				SignupBtn: new Button({
 					attributes: {
+						type: "submit",
 						id: "signup",
 						class: "btn",
-						type: "submit",
 					},
 					children: "Зарегистрироваться",
 				}),

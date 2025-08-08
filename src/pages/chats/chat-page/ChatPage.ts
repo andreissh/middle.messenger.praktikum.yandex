@@ -133,8 +133,8 @@ export default class ChatPage extends Block {
 				`,
 				SendMessageBtn: new Button({
 					attributes: {
-						class: "chat-send-btn",
 						type: "submit",
+						class: "chat-send-btn",
 					},
 					children: `
 						<img src=${sendBtn} alt="send" />

@@ -123,8 +123,8 @@ export default class ChatsPage extends Block {
 					}),
 					CreateChatBtn: new Button({
 						attributes: {
-							class: "btn create-chat-submit-btn",
 							type: "submit",
+							class: "btn create-chat-submit-btn",
 						},
 						children: "Создать",
 					}),
@@ -191,8 +191,8 @@ export default class ChatsPage extends Block {
 					`,
 					AddUserBtn: new Button({
 						attributes: {
-							class: "btn add-user-submit-btn",
 							type: "submit",
+							class: "btn add-user-submit-btn",
 						},
 						children: "Добавить",
 					}),
@@ -235,8 +235,8 @@ export default class ChatsPage extends Block {
 					`,
 					RemoveUserBtn: new Button({
 						attributes: {
-							class: "btn remove-user-submit-btn",
 							type: "submit",
+							class: "btn remove-user-submit-btn",
 						},
 						children: "Удалить",
 					}),

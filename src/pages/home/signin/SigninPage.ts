@@ -1,31 +1,14 @@
 import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
 import router from "@/routes/Router";
-import { InputProps } from "@/pages/profile/utils/profileData";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import Form from "@/components/form/Form";
 import AuthService from "@/services/AuthService";
 import { AuthData } from "@/types/types";
 import Fields from "@/components/fields/Fields";
+import { signinFields } from "../utils/formsData";
 import "./signin.css";
-
-const fields: Array<InputProps & { label: string }> = [
-	{
-		id: "login",
-		label: "Логин",
-		type: "text",
-		name: "login",
-		autocomplete: "login",
-	},
-	{
-		id: "password",
-		label: "Пароль",
-		type: "password",
-		name: "password",
-		autocomplete: "password",
-	},
-];
 
 const template = `
   <div class="signin-wrapper">
@@ -65,16 +48,22 @@ export default class SigninPage extends Block {
 					</div>
 				`,
 				Fields: new Fields({
-					fields,
+					attributes: {
+						class: "fields",
+						liClass: "field-item",
+						labelClass: "field-label",
+						inputClass: "field-input",
+					},
+					fields: signinFields,
 					events: {
 						blur: (e?: Event) => this.handleFieldBlur(e),
 					},
 				}),
 				SigninBtn: new Button({
 					attributes: {
+						type: "submit",
 						id: "renderChatsBtn",
 						class: "btn",
-						type: "submit",
 					},
 					children: "Войти",
 				}),

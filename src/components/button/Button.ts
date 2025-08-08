@@ -3,14 +3,14 @@ import { EventsType } from "@/types/types";
 import "./button.css";
 
 type ButtonProps = {
+	[key: string]: unknown;
 	attributes?: {
 		type?: string;
 		id?: string;
 		class?: string;
 	};
-	children?: Block | Block[] | string;
+	children: string;
 	events?: EventsType;
-	[key: string]: unknown;
 };
 
 const template = `
