@@ -131,7 +131,7 @@ export default class ProfileInfoPage extends Block {
 		router.go("/");
 	}
 
-	componentDidMount() {
+	componentDidMount(): void {
 		const getUserData = async () => {
 			const userData = await AuthService.userInfo();
 			let profileFieldsClone = structuredClone(profileFields);

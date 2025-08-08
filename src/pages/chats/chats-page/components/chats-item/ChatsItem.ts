@@ -69,13 +69,13 @@ export default class ChatsItem extends Block {
 		document.addEventListener("click", removeContextMenu);
 	}
 
-	private showDeleteChatModal = (): void => {
+	private showDeleteChatModal(): void {
 		const modal = document.querySelector<HTMLElement>("#deleteChatModal");
 		if (!modal) return;
 
 		sessionStorage.setItem("chatId", String(this.props.attributes!.id));
 		modal.style.display = "block";
-	};
+	}
 
 	private handleChatItemClick(e?: Event): void {
 		const target = e?.target as HTMLElement;
@@ -85,14 +85,16 @@ export default class ChatsItem extends Block {
 		if (deleteBtn) {
 			this.showDeleteChatModal();
 		} else {
-			const { id } = this.props.attributes!;
+			if (!this.props.attributes) return;
+
+			const { id } = this.props.attributes;
 			if (id !== chatId) {
 				router.go(`/messenger/${id}`);
 			}
 		}
 	}
 
-	private handleContextMenu(e?: Event) {
+	private handleContextMenu(e?: Event): void {
 		e?.preventDefault();
 		const mouseEvent = e as MouseEvent;
 

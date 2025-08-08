@@ -10,7 +10,16 @@ import Avatar from "@/components/avatar/Avatar";
 import { resourcesUrl } from "@/utils/utils";
 import ChatsService from "@/services/ChatsService";
 import router from "@/routes/Router";
+import { EventsType } from "@/types/types";
 import "./chat-page.css";
+import handleImageUpload from "@/utils/imageUpload";
+
+type ChatPageProps = {
+	chatUsers: string[];
+	chatId?: number;
+	title?: string;
+	events?: EventsType;
+};
 
 const template = `
 	<div class="chat-content">
@@ -50,7 +59,7 @@ const template = `
 `;
 
 export default class ChatPage extends Block {
-	constructor(props: Record<string, unknown>) {
+	constructor(props: ChatPageProps) {
 		super("div", {
 			...props,
 			BackBtn: new Button({
@@ -162,30 +171,8 @@ export default class ChatPage extends Block {
 	}
 
 	private async handleAvatarClick(): Promise<void> {
-		const fileInput = document.createElement("input");
-		fileInput.type = "file";
-		fileInput.accept =
-			"image/jpeg, image/jpg, image/png, image/gif, image/webp";
-
-		const file = await new Promise<File | null>((resolve) => {
-			fileInput.onchange = (event: Event) => {
-				resolve((event.target as HTMLInputElement).files?.[0] || null);
-			};
-			fileInput.click();
-		});
-
+		const file = await handleImageUpload();
 		if (!file) return;
-
-		const allowedTypes = [
-			"image/jpeg",
-			"image/jpg",
-			"image/png",
-			"image/gif",
-			"image/webp",
-		];
-		if (!allowedTypes.includes(file.type)) {
-			throw new Error("Недопустимый тип файла");
-		}
 
 		const formData = new FormData();
 		formData.append("chatId", String(this.props.chatId));
@@ -197,15 +184,17 @@ export default class ChatPage extends Block {
 		}
 	}
 
-	private static handleAddUserClick() {
+	private static handleAddUserClick(): void {
 		const modal = document.querySelector<HTMLElement>("#addUserModal");
 		if (!modal) return;
+
 		modal.style.display = "block";
 	}
 
-	private static handleRemoveUserClick() {
+	private static handleRemoveUserClick(): void {
 		const modal = document.querySelector<HTMLElement>("#removeUserModal");
 		if (!modal) return;
+
 		modal.style.display = "block";
 	}
 
@@ -223,7 +212,7 @@ export default class ChatPage extends Block {
 		input.value = "";
 	}
 
-	private addUsersToModal() {
+	private addUsersToModal(): void {
 		const chatUsersLists =
 			document.querySelectorAll<HTMLUListElement>(".chat-users-list");
 		const users = this.lists.chatUsers as string[];
@@ -237,24 +226,25 @@ export default class ChatPage extends Block {
 		});
 	}
 
-	private static handleChatUsersClick() {
+	private static handleChatUsersClick(): void {
 		const modal = document.querySelector<HTMLElement>("#chatUsersModal");
 		if (!modal) return;
+
 		modal.style.display = "block";
 	}
 
-	private static handleChatOptionsClick(e?: Event) {
-		const dropdown = document.querySelector<HTMLElement>("#chatDropdown");
-
-		if (!dropdown) return;
+	private static handleChatOptionsClick(e?: Event): void {
 		e?.stopPropagation();
+		const dropdown = document.querySelector<HTMLElement>("#chatDropdown");
+		if (!dropdown) return;
+
 		dropdown.classList.toggle("open");
 		dropdown.style.display = dropdown.classList.contains("open")
 			? "flex"
 			: "none";
 	}
 
-	private static closeChatOptionsDropdown = () => {
+	private static closeChatOptionsDropdown(): void {
 		const optionsBtn =
 			document.querySelector<HTMLButtonElement>(".chat-options-btn");
 		const dropdown = document.getElementById("chatDropdown");
@@ -262,9 +252,9 @@ export default class ChatPage extends Block {
 
 		dropdown.classList.remove("open");
 		dropdown.style.display = "none";
-	};
+	}
 
-	private setupAvatar = async () => {
+	private async setupAvatar(): Promise<void> {
 		const chatsData = await ChatsService.getChats();
 		const chatData = chatsData.filter((chat) => chat.id === this.props.chatId);
 
@@ -296,16 +286,16 @@ export default class ChatPage extends Block {
 				},
 			}),
 		});
-	};
+	}
 
-	private scrollToBottom() {
+	private static scrollToBottom(): void {
 		const messagesContainer = document.querySelector(".chat-body");
 		if (messagesContainer) {
 			messagesContainer.scrollTop = messagesContainer.scrollHeight;
 		}
 	}
 
-	private setupChatConnection() {
+	private setupChatConnection(): void {
 		const containerMsgs = document.querySelector(".chat-messages");
 		if (!containerMsgs) return;
 
@@ -327,19 +317,21 @@ export default class ChatPage extends Block {
 				msgEl.textContent = msg.content;
 				containerMsgs.append(msgEl);
 			});
-			this.scrollToBottom();
+
+			ChatPage.scrollToBottom();
 		});
 	}
 
-	private async initializeChat() {
+	private async initializeChat(): Promise<void> {
 		if (!this.props.chatId) return;
+
 		await this.setupAvatar();
 		this.addUsersToModal();
 		this.setupChatConnection();
 		document.addEventListener("click", ChatPage.closeChatOptionsDropdown);
 	}
 
-	componentDidMount() {
+	componentDidMount(): void {
 		this.initializeChat();
 	}
 

@@ -1,7 +1,6 @@
 import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
 import router from "@/routes/Router";
-import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import { UserPassReq } from "@/types/types";
 import backBtn from "@/assets/icons/arrow-btn.svg";
@@ -126,26 +125,23 @@ export default class ProfileEditPassPage extends Block {
 		if (!form || !this.validator) return;
 
 		if (this.validator.validateForm()) {
-			const data = getFormData(form);
-			if (data) {
-				const inputFields = document.querySelectorAll<HTMLInputElement>(
-					".profile-field-input"
-				);
-				const reqBody: UserPassReq = {} as UserPassReq;
-				passwordFields.forEach((field, i) => {
-					if (field.id !== "repeatPassword") {
-						reqBody[field.id as keyof UserPassReq] =
-							inputFields[i].value ?? field.value;
-					}
-				});
+			const inputFields = document.querySelectorAll<HTMLInputElement>(
+				".profile-field-input"
+			);
+			const reqBody: UserPassReq = {} as UserPassReq;
+			passwordFields.forEach((field, i) => {
+				if (field.id !== "repeatPassword") {
+					reqBody[field.id as keyof UserPassReq] =
+						inputFields[i].value ?? field.value;
+				}
+			});
 
-				await UserService.changePass(reqBody);
-				router.go("/settings");
-			}
+			await UserService.changePass(reqBody);
+			router.go("/settings");
 		}
 	}
 
-	componentDidMount() {
+	componentDidMount(): void {
 		const getUserData = async () => {
 			const userData = await AuthService.userInfo();
 

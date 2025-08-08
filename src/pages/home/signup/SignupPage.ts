@@ -109,7 +109,7 @@ export default class SignupPage extends Block {
 		this.validator.validateInput(input);
 	}
 
-	componentDidMount() {
+	componentDidMount(): void {
 		this.validator = this.initValidator();
 	}
 

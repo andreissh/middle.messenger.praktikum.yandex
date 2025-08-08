@@ -1,7 +1,6 @@
 import Block from "@/framework/Block";
 import Button from "@/components/button/Button";
 import router from "@/routes/Router";
-import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
 import { UserData, UserProfileReq } from "@/types/types";
 import backBtn from "@/assets/icons/arrow-btn.svg";
@@ -12,6 +11,7 @@ import AuthService from "@/services/AuthService";
 import UserService from "@/services/UserService";
 import Avatar from "@/components/avatar/Avatar";
 import Fields from "@/components/fields/Fields";
+import handleImageUpload from "@/utils/imageUpload";
 import { profileEditFields } from "../utils/formsData";
 import "./profile-edit.css";
 
@@ -31,6 +31,10 @@ const template = `
 
 export default class ProfileEditPage extends Block {
 	private validator?: FormValidator;
+
+	private selectedAvatarFile: File | null = null;
+
+	private selectedAvatarUrl: string | null = null;
 
 	constructor() {
 		super("div", {
@@ -107,8 +111,6 @@ export default class ProfileEditPage extends Block {
 		});
 	}
 
-	private selectedAvatarFile: File | null = null;
-
 	private initValidator(): FormValidator {
 		const form = document.querySelector<HTMLFormElement>(
 			".profile-edit-data-form"
@@ -125,33 +127,12 @@ export default class ProfileEditPage extends Block {
 	}
 
 	private async handleAvatarClick(): Promise<void> {
-		const fileInput = document.createElement("input");
-		fileInput.type = "file";
-		fileInput.accept =
-			"image/jpeg, image/jpg, image/png, image/gif, image/webp";
-
-		const file = await new Promise<File | null>((resolve) => {
-			fileInput.onchange = (event: Event) => {
-				resolve((event.target as HTMLInputElement).files?.[0] || null);
-			};
-			fileInput.click();
-		});
-
+		const file = await handleImageUpload();
 		if (!file) return;
 
-		const allowedTypes = [
-			"image/jpeg",
-			"image/jpg",
-			"image/png",
-			"image/gif",
-			"image/webp",
-		];
-		if (!allowedTypes.includes(file.type)) {
-			throw new Error("Недопустимый тип файла");
-		}
-
+		if (this.selectedAvatarUrl) URL.revokeObjectURL(this.selectedAvatarUrl);
 		this.selectedAvatarFile = file;
-		const previewUrl = URL.createObjectURL(file);
+		this.selectedAvatarUrl = URL.createObjectURL(file);
 
 		this.setProps({
 			AvatarBtn: new Button({
@@ -167,7 +148,7 @@ export default class ProfileEditPage extends Block {
 						name: "avatar",
 					},
 					children: `
-						<img src="${previewUrl}" class="profile-edit-avatar-img" />
+						<img src="${this.selectedAvatarUrl}" class="profile-edit-avatar-img" />
 					`,
 				}),
 				events: {
@@ -186,30 +167,27 @@ export default class ProfileEditPage extends Block {
 		if (!form || !this.validator) return;
 
 		if (this.validator.validateForm()) {
-			const data = getFormData(form);
-			if (data) {
-				try {
-					const inputFields = document.querySelectorAll<HTMLInputElement>(
-						".profile-field-input"
-					);
-					const reqBody: UserProfileReq = {} as UserProfileReq;
-					profileEditFields.forEach((field, i) => {
-						reqBody[field.id as keyof UserProfileReq] =
-							inputFields[i].value ?? field.value;
-					});
+			try {
+				const inputFields = document.querySelectorAll<HTMLInputElement>(
+					".profile-field-input"
+				);
+				const reqBody: UserProfileReq = {} as UserProfileReq;
+				profileEditFields.forEach((field, i) => {
+					reqBody[field.id as keyof UserProfileReq] =
+						inputFields[i].value ?? field.value;
+				});
 
-					await UserService.changeProfile(reqBody);
+				await UserService.changeProfile(reqBody);
 
-					if (this.selectedAvatarFile) {
-						const formData = new FormData();
-						formData.append("avatar", this.selectedAvatarFile);
-						await UserService.changeAvatar(formData);
-					}
-
-					router.go("/settings");
-				} catch (err) {
-					throw new Error("Ошибка при сохранении профиля", { cause: err });
+				if (this.selectedAvatarFile) {
+					const formData = new FormData();
+					formData.append("avatar", this.selectedAvatarFile);
+					await UserService.changeAvatar(formData);
 				}
+
+				router.go("/settings");
+			} catch (err) {
+				throw new Error("Ошибка при сохранении профиля", { cause: err });
 			}
 		}
 	}
@@ -222,7 +200,7 @@ export default class ProfileEditPage extends Block {
 		this.validator.validateInput(input);
 	}
 
-	componentDidMount() {
+	componentDidMount(): void {
 		const getUserData = async () => {
 			const userData = await AuthService.userInfo();
 			let profileEditFieldsClone = structuredClone(profileEditFields);

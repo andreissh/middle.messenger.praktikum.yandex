@@ -276,25 +276,28 @@ export default class ChatsPage extends Block {
 	private static handleCreateChatClick(): void {
 		const modal = document.querySelector<HTMLElement>("#createChatModal");
 		if (!modal) return;
+
 		modal.style.display = "block";
 	}
 
 	private static handleDeleteChatCancelClick(): void {
 		const modal = document.querySelector<HTMLElement>("#deleteChatModal");
 		if (!modal) return;
+
 		modal.style.display = "none";
 		sessionStorage.removeItem("chatId");
 	}
 
 	private async handleDeleteChatConfirmClick(): Promise<void> {
-		const chatId = sessionStorage.getItem("chatId");
-		const chatIdFromRoute = window.location.pathname.split("/").pop();
 		const modal = document.querySelector<HTMLElement>("#deleteChatModal");
 		if (!modal) return;
-		await ChatsService.deleteChat(Number(chatId));
+		const chatIdStorage = sessionStorage.getItem("chatId");
+		const chatId = window.location.pathname.split("/").pop();
+
+		await ChatsService.deleteChat(Number(chatIdStorage));
 		modal.style.display = "none";
 		sessionStorage.removeItem("chatId");
-		if (chatId === chatIdFromRoute) {
+		if (chatIdStorage === chatId) {
 			router.go("/messenger");
 		}
 		this.getChats();
@@ -302,13 +305,11 @@ export default class ChatsPage extends Block {
 
 	private async handleCreateChatSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
-
 		const modal = document.querySelector<HTMLElement>("#createChatModal");
 		const input = document.querySelector<HTMLInputElement>("#createChatInput");
 		if (!modal || !input || !input.value) return;
 
 		await ChatsService.addChat(input.value);
-
 		modal.style.display = "none";
 		input.value = "";
 		this.getChats();
@@ -316,15 +317,13 @@ export default class ChatsPage extends Block {
 
 	private async handleAddUserSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
-
 		const modal = document.querySelector<HTMLElement>("#addUserModal");
 		const input = document.querySelector<HTMLInputElement>("#addUserInput");
 		const chatId = Number(window.location.pathname.split("/").pop());
 		if (!modal || !input || !input.value || !chatId) return;
 
 		const userData = await UserService.search(input.value);
-		await ChatsService.addUser([userData[0].id], chatId as number);
-
+		await ChatsService.addUser([userData[0].id], chatId);
 		modal.style.display = "none";
 		input.value = "";
 		this.getChats();
@@ -332,25 +331,24 @@ export default class ChatsPage extends Block {
 
 	private async handleRemoveUserSubmit(e?: Event): Promise<void> {
 		e?.preventDefault();
-
 		const modal = document.querySelector<HTMLElement>("#removeUserModal");
 		const input = document.querySelector<HTMLInputElement>("#removeUserInput");
 		const chatId = Number(window.location.pathname.split("/").pop());
 		if (!modal || !input || !input.value || !chatId) return;
 
 		const userData = await UserService.search(input.value);
-		await ChatsService.removeUser([userData[0].id], chatId as number);
-
+		await ChatsService.removeUser([userData[0].id], chatId);
 		modal.style.display = "none";
 		input.value = "";
 		this.getChats();
 	}
 
-	private toggleChatsPageContentVisibility() {
+	private static toggleChatsPageContentVisibility(): void {
 		const chatId = Number(window.location.pathname.split("/").pop());
 		const chatsAside = document.querySelector<HTMLElement>(".chats-aside");
 		const chatsMain = document.querySelector<HTMLElement>(".chats-main");
 		if (!chatsAside || !chatsMain) return;
+
 		if (window.innerWidth < 640) {
 			if (chatId) {
 				chatsAside.style.display = "none";
@@ -365,18 +363,18 @@ export default class ChatsPage extends Block {
 		}
 	}
 
-	private async getChats() {
+	private async getChats(): Promise<void> {
 		const userChats = await ChatsService.getChats();
 		const newChats: UserChatListData[] = [];
 		const chatId = Number(window.location.pathname.split("/").pop());
 		const chatUsers: string[] = [];
+		let title;
 		if (chatId) {
 			const users = await ChatsService.getChatUsers({ id: chatId });
 			users.forEach((user) => {
 				chatUsers.push(user.login);
 			});
 		}
-		let title;
 
 		userChats.forEach((chat) => {
 			newChats.push({
@@ -414,13 +412,16 @@ export default class ChatsPage extends Block {
 
 		this.setProps(props);
 		props.ChatPage.dispatchComponentDidMount();
-		this.toggleChatsPageContentVisibility();
+		ChatsPage.toggleChatsPageContentVisibility();
 	}
 
-	componentDidMount() {
-		this.toggleChatsPageContentVisibility();
+	componentDidMount(): void {
+		ChatsPage.toggleChatsPageContentVisibility();
 		this.getChats();
-		window.addEventListener("resize", this.toggleChatsPageContentVisibility);
+		window.addEventListener(
+			"resize",
+			ChatsPage.toggleChatsPageContentVisibility
+		);
 	}
 
 	render(): HTMLElement {

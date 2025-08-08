@@ -97,9 +97,9 @@ export default class SigninPage extends Block {
 		if (!form || !this.validator) return;
 
 		if (this.validator.validateForm()) {
-			const data = getFormData(form) as AuthData;
+			const data = getFormData(form);
 			if (data) {
-				await AuthService.signin(data);
+				await AuthService.signin(data as AuthData);
 				const { id } = await AuthService.userInfo();
 				localStorage.setItem("userId", String(id));
 				router.go("/messenger");
@@ -111,7 +111,7 @@ export default class SigninPage extends Block {
 		router.go("/sign-up");
 	}
 
-	componentDidMount() {
+	componentDidMount(): void {
 		this.validator = this.initValidator();
 	}
 
