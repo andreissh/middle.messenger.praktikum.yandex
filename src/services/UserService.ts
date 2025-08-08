@@ -1,14 +1,22 @@
 import http from "@/api/HttpClient";
-import { UserData, UserPassReq, UserProfileReq } from "@/types/types";
+import {
+	UserData,
+	UserPassReq,
+	UserProfileReq,
+	UserSearchReq,
+} from "@/types/types";
 
 class UserService {
 	async search(value: string): Promise<UserData[]> {
 		try {
-			const response = await http.post<UserData[]>("/user/search", {
-				body: {
-					login: value,
-				},
-			});
+			const response = await http.post<UserData[], UserSearchReq>(
+				"/user/search",
+				{
+					body: {
+						login: value,
+					},
+				}
+			);
 			return response;
 		} catch (err) {
 			throw new Error("Ошибка при поиске пользователя", { cause: err });
@@ -17,7 +25,9 @@ class UserService {
 
 	async changeAvatar(formData: FormData): Promise<void> {
 		try {
-			await http.put("/user/profile/avatar", { body: formData });
+			await http.put<UserData, FormData>("/user/profile/avatar", {
+				body: formData,
+			});
 		} catch (err) {
 			throw new Error("Ошибка при обновлении аватара", { cause: err });
 		}
@@ -25,10 +35,8 @@ class UserService {
 
 	async changeProfile(reqBody: UserProfileReq): Promise<void> {
 		try {
-			await http.put<UserData>("/user/profile", {
-				body: {
-					...reqBody,
-				},
+			await http.put<UserData, UserProfileReq>("/user/profile", {
+				body: reqBody,
 			});
 		} catch (err) {
 			throw new Error("Ошибка при изменении данных пользователя", {
@@ -39,10 +47,8 @@ class UserService {
 
 	async changePass(reqBody: UserPassReq): Promise<void> {
 		try {
-			await http.put("/user/password", {
-				body: {
-					...reqBody,
-				},
+			await http.put<void, UserPassReq>("/user/password", {
+				body: reqBody,
 			});
 		} catch (err) {
 			throw new Error("Ошибка при смене пароля", { cause: err });

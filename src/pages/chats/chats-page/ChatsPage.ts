@@ -371,7 +371,7 @@ export default class ChatsPage extends Block {
 		const chatId = Number(window.location.pathname.split("/").pop());
 		const chatUsers: string[] = [];
 		if (chatId) {
-			const users = await ChatsService.getChatUsers(chatId);
+			const users = await ChatsService.getChatUsers({ id: chatId });
 			users.forEach((user) => {
 				chatUsers.push(user.login);
 			});

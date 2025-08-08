@@ -4,7 +4,7 @@ import router from "@/routes/Router";
 import { InputProps } from "@/pages/profile/utils/profileData";
 import getFormData from "@/utils/getFormData";
 import FormValidator from "@/utils/FormValidator";
-import { SignupData } from "@/types/types";
+import { SignupReq } from "@/types/types";
 import Form from "@/components/form/Form";
 import AuthService from "@/services/AuthService";
 import Fields from "@/components/fields/Fields";
@@ -137,7 +137,7 @@ export default class SignupPage extends Block {
 		if (this.validator.validateForm()) {
 			const data = getFormData(form);
 			if (data) {
-				await AuthService.signup(data as SignupData);
+				await AuthService.signup(data as SignupReq);
 				router.go("/messenger");
 			}
 		}

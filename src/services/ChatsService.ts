@@ -1,16 +1,21 @@
 import http from "@/api/HttpClient";
 import {
-	ChatsToken,
-	ChatsUserList,
-	ChatsUsers,
-	DeleteChat,
-	UserChats,
+	AddChatReq,
+	AddChatRes,
+	AddUserReq,
+	ChatToken,
+	ChatUser,
+	ChatUsersReq,
+	DeleteChatReq,
+	DeleteChatRes,
+	RemoveUserReq,
+	UserChat,
 } from "@/types/types";
 
 class ChatsService {
-	async getChats(): Promise<UserChats[]> {
+	async getChats(): Promise<UserChat[]> {
 		try {
-			const response = await http.get<UserChats[]>("/chats");
+			const response = await http.get<UserChat[]>("/chats");
 			return response;
 		} catch (err) {
 			throw new Error("Ошибка при получении списка чатов", { cause: err });
@@ -19,7 +24,7 @@ class ChatsService {
 
 	async addChat(value: string): Promise<void> {
 		try {
-			await http.post("/chats", {
+			await http.post<AddChatRes, AddChatReq>("/chats", {
 				body: {
 					title: value,
 				},
@@ -31,7 +36,7 @@ class ChatsService {
 
 	async deleteChat(id: number): Promise<void> {
 		try {
-			await http.delete<DeleteChat>("/chats", {
+			await http.delete<DeleteChatRes, DeleteChatReq>("/chats", {
 				body: {
 					chatId: id,
 				},
@@ -43,7 +48,7 @@ class ChatsService {
 
 	async addUser(users: number[], chatId: number): Promise<void> {
 		try {
-			await http.put<ChatsUsers>("/chats/users", {
+			await http.put<void, AddUserReq>("/chats/users", {
 				body: {
 					users,
 					chatId,
@@ -56,7 +61,7 @@ class ChatsService {
 
 	async removeUser(users: number[], chatId: number): Promise<void> {
 		try {
-			await http.delete<ChatsUsers>("/chats/users", {
+			await http.delete<void, RemoveUserReq>("/chats/users", {
 				body: {
 					users,
 					chatId,
@@ -67,20 +72,18 @@ class ChatsService {
 		}
 	}
 
-	async getWSToken(chatId: number): Promise<ChatsToken> {
+	async getWSToken(chatId: number): Promise<ChatToken> {
 		try {
-			const response = await http.post<ChatsToken>(`/chats/token/${chatId}`);
+			const response = await http.post<ChatToken>(`/chats/token/${chatId}`);
 			return response;
 		} catch (err) {
 			throw new Error("Ошибка при получении токена", { cause: err });
 		}
 	}
 
-	async getChatUsers(chatId: number): Promise<ChatsUserList[]> {
+	async getChatUsers({ id }: ChatUsersReq): Promise<ChatUser[]> {
 		try {
-			const response = await http.get<ChatsUserList[]>(
-				`/chats/${chatId}/users`
-			);
+			const response = await http.get<ChatUser[]>(`/chats/${id}/users`);
 			return response;
 		} catch (err) {
 			throw new Error("Ошибка при получении списка участников чата", {
@@ -91,7 +94,7 @@ class ChatsService {
 
 	async changeAvatar(formData: FormData): Promise<void> {
 		try {
-			await http.put("/chats/avatar", { body: formData });
+			await http.put<UserChat, FormData>("/chats/avatar", { body: formData });
 		} catch (err) {
 			throw new Error("Ошибка при обновлении аватара", { cause: err });
 		}

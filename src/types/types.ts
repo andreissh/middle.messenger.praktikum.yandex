@@ -1,23 +1,5 @@
 export type EventsType = Record<string, (e?: Event) => void>;
 
-export type PageName =
-	| "SigninPage"
-	| "SignupPage"
-	| "ChatsPage"
-	| "ProfileInfoPage"
-	| "ProfileEditPage"
-	| "ProfileEditPassPage"
-	| "NotFoundPage"
-	| "ServerErrorPage";
-
-export type PageProps = {
-	onChangePage: (pageName: PageName) => void;
-};
-
-export type PageConstructor = new (
-	props: PageProps
-) => import("@/framework/Block").default;
-
 export type ValidationResult = { valid: boolean; error?: string };
 
 export type HttpError = {
@@ -29,7 +11,7 @@ export type AuthData = {
 	password: string;
 };
 
-export type SignupData = {
+export type SignupReq = {
 	first_name: string;
 	second_name: string;
 	login: string;
@@ -53,16 +35,21 @@ export type UserData = {
 	email: string;
 };
 
-export type ChatsToken = {
+export type ChatToken = {
 	token: string;
 };
 
-export type ChatsUsers = {
+export type AddUserReq = {
 	users: number[];
 	chatId: number;
 };
 
-export type UserChats = {
+export type RemoveUserReq = {
+	users: number[];
+	chatId: number;
+};
+
+export type UserChat = {
 	id: number;
 	title: string;
 	avatar: string;
@@ -82,7 +69,7 @@ export type UserChats = {
 	};
 };
 
-export type DeleteChat = {
+export type DeleteChatRes = {
 	userId: number;
 	result: {
 		id: number;
@@ -90,6 +77,10 @@ export type DeleteChat = {
 		avatar: string;
 		created_by: number;
 	};
+};
+
+export type DeleteChatReq = {
+	chatId: number;
 };
 
 export type UserProfileReq = {
@@ -106,7 +97,7 @@ export type UserPassReq = {
 	newPassword: string;
 };
 
-export type ChatsUserList = {
+export type ChatUser = {
 	id: number;
 	first_name: string;
 	second_name: string;
@@ -114,4 +105,24 @@ export type ChatsUserList = {
 	login: string;
 	avatar: string;
 	role: string;
+};
+
+export type ChatUsersReq = {
+	id: number;
+	offset?: number;
+	limit?: number;
+	name?: string;
+	email?: string;
+};
+
+export type AddChatReq = {
+	title: string;
+};
+
+export type AddChatRes = {
+	id: number;
+};
+
+export type UserSearchReq = {
+	login: string;
 };
