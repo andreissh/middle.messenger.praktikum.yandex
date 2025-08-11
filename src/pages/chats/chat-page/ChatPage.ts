@@ -46,8 +46,7 @@ const template = `
 			{{#if chatId}}
 				<div class="chat-messages"></div>
 			{{else}}
-				<span class="chat-text-default">Выберите чат, чтобы
-					отправить сообщение</span>
+				<span class="chat-text-default">Выберите чат, чтобы отправить сообщение</span>
 			{{/if}}
 		</div>
 		{{#if chatId}}
