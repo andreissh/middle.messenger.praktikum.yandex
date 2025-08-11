@@ -1,26 +1,22 @@
-import Block from "@/framework/Block";
+import { jest } from "@jest/globals";
+import Form from "./Form";
 
 describe("Form", () => {
 	it("renders component with attributes and children", () => {
-		class Form extends Block {
-			constructor(props: Record<string, unknown> = {}) {
-				super("div", props);
-			}
-
-			render() {
-				return this.compile(`<form class="{{ class }}">
-					{{{ children }}}
-				</form>`);
-			}
-		}
-
+		const mockFn = jest.fn();
+		const mockEvents = {
+			submit: () => mockFn,
+		};
 		const component = new Form({
-			class: "class",
+			attributes: {
+				class: "class",
+			},
 			children: "<div>child</div>",
+			events: mockEvents,
 		});
 		const content = component.getContent();
 
-		expect(content.getAttribute("class")).toBe("class");
+		expect(content.className).toBe("class");
 		expect(content.textContent).toContain("child");
 	});
 });
