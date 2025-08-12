@@ -43,6 +43,7 @@
 		"lint:style": "stylelint src/**/*.css",
 		"typecheck": "tsc --noEmit",
 		"test": "node --experimental-vm-modules --loader ts-node/esm node_modules/jest/bin/jest.js",
+		"test:coverage": "jest --coverage",
 		"prepare": "husky"
 	},
 	"overrides": {
