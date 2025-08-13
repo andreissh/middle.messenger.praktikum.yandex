@@ -9,7 +9,7 @@ import RouteManager from "./RouteManager";
 import router from "../routes/Router";
 import { IRouteManager } from "../interfaces/IRouteManager";
 
-jest.mock("../routes/Router", () => {
+jest.mock("@/routes/Router", () => {
 	const mockRouter = {
 		use: jest.fn().mockReturnThis(),
 		reset: jest.fn(),
@@ -18,10 +18,15 @@ jest.mock("../routes/Router", () => {
 	return mockRouter;
 });
 
+const spyOnUse = jest.spyOn(router, "use");
+const spyOnReset = jest.spyOn(router, "reset");
+const spyOnStart = jest.spyOn(router, "start");
+
 describe("RouteManager", () => {
 	let routeManager: IRouteManager;
 
 	beforeEach(() => {
+		document.body.innerHTML = '<div id="app"></div>';
 		routeManager = new RouteManager();
 		jest.clearAllMocks();
 	});
@@ -30,20 +35,20 @@ describe("RouteManager", () => {
 		it("should register all routes with correct components", () => {
 			routeManager.setupRoutes();
 
-			expect(router.use).toHaveBeenCalledTimes(6);
+			expect(spyOnUse).toHaveBeenCalledTimes(6);
 
-			expect(router.use).toHaveBeenCalledWith("/", SigninPage);
-			expect(router.use).toHaveBeenCalledWith("/sign-up", SignupPage);
-			expect(router.use).toHaveBeenCalledWith("/messenger", ChatsPage);
-			expect(router.use).toHaveBeenCalledWith("/settings", ProfileInfoPage);
-			expect(router.use).toHaveBeenCalledWith("/404", NotFoundPage);
-			expect(router.use).toHaveBeenCalledWith("/500", ServerErrorPage);
+			expect(spyOnUse).toHaveBeenCalledWith("/", SigninPage);
+			expect(spyOnUse).toHaveBeenCalledWith("/sign-up", SignupPage);
+			expect(spyOnUse).toHaveBeenCalledWith("/messenger", ChatsPage);
+			expect(spyOnUse).toHaveBeenCalledWith("/settings", ProfileInfoPage);
+			expect(spyOnUse).toHaveBeenCalledWith("/404", NotFoundPage);
+			expect(spyOnUse).toHaveBeenCalledWith("/500", ServerErrorPage);
 		});
 
 		it("should chain the route registrations", () => {
 			routeManager.setupRoutes();
 
-			expect(router.use).toHaveReturnedWith(router);
+			expect(spyOnUse).toHaveReturnedWith(router);
 		});
 	});
 
@@ -51,9 +56,9 @@ describe("RouteManager", () => {
 		it("should reset, setup, and start the router", () => {
 			routeManager.updateRoutes();
 
-			expect(router.reset).toHaveBeenCalledTimes(1);
-			expect(router.use).toHaveBeenCalledTimes(6);
-			expect(router.start).toHaveBeenCalledTimes(1);
+			expect(spyOnReset).toHaveBeenCalledTimes(1);
+			expect(spyOnUse).toHaveBeenCalledTimes(6);
+			expect(spyOnStart).toHaveBeenCalledTimes(1);
 		});
 
 		it("should call setupRoutes during update", () => {
