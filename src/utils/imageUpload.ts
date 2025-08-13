@@ -14,7 +14,8 @@ export default async function handleImageUpload(): Promise<File | null> {
 		const file = await new Promise<File | null>((resolve) => {
 			fileInput.click();
 			fileInput.onchange = (event: Event) => {
-				resolve((event.target as HTMLInputElement).files?.[0] || null);
+				const { files } = event.target as HTMLInputElement;
+				resolve(files && files.length > 0 ? files[0] : null);
 			};
 		});
 
