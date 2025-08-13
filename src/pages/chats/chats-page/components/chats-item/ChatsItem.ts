@@ -22,7 +22,7 @@ export type ChatsItemProps = {
 	text: string;
 	time: string;
 	count: number;
-	avatar: string;
+	avatar: string | null;
 	active?: boolean | null;
 };
 

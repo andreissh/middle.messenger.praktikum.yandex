@@ -21,7 +21,7 @@ type UserChatListData = {
 	text: string;
 	time: string;
 	count: number;
-	avatar: string;
+	avatar: string | null;
 };
 
 const template = `
