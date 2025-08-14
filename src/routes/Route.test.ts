@@ -1,7 +1,7 @@
 /* eslint-disable import/first */
 import { jest } from "@jest/globals";
 
-await jest.unstable_mockModule("@/utils/renderDOM", () => ({
+jest.unstable_mockModule("@/utils/renderDOM", () => ({
 	__esModule: true,
 	default: jest.fn(),
 }));
