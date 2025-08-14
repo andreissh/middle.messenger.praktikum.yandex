@@ -33,7 +33,7 @@ describe("handleImageUpload", () => {
 		}
 	};
 
-	test("returns null when dialog cancelled", async () => {
+	it("returns null when dialog cancelled", async () => {
 		mockInput.files = null;
 		const promise = handleImageUpload();
 		triggerChange();
@@ -41,7 +41,7 @@ describe("handleImageUpload", () => {
 		expect(result).toBeNull();
 	});
 
-	test("returns null when empty selection", async () => {
+	it("returns null when empty selection", async () => {
 		mockInput.files = [] as unknown as FileList;
 		const promise = handleImageUpload();
 		triggerChange();
@@ -49,7 +49,7 @@ describe("handleImageUpload", () => {
 		expect(result).toBeNull();
 	});
 
-	test("throws for invalid file type", async () => {
+	it("throws for invalid file type", async () => {
 		mockInput.files = [
 			new File([""], "test.txt", { type: "text/plain" }),
 		] as unknown as FileList;
@@ -58,7 +58,7 @@ describe("handleImageUpload", () => {
 		await expect(promise).rejects.toThrow("Недопустимый тип файла");
 	});
 
-	test("returns file for valid selection", async () => {
+	it("returns file for valid selection", async () => {
 		const testFile = new File([""], "test.png", { type: "image/png" });
 		mockInput.files = [testFile] as unknown as FileList;
 		const promise = handleImageUpload();

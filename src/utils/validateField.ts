@@ -1,12 +1,12 @@
 import { ValidationResult } from "@/types/types";
 
 const patterns = {
-	first_name: /^[A-ZА-ЯЁ][a-zа-яё-]+$/u,
-	second_name: /^[A-ZА-ЯЁ][a-zа-яё-]+$/u,
+	first_name: /^[A-ZА-ЯЁ][a-zA-Zа-яё-]+(?:-[A-ZА-ЯЁ][a-zA-Zа-яё-]+)?$/u,
+	second_name: /^[A-ZА-ЯЁ][a-zA-Zа-яё-]+(?:-[A-ZА-ЯЁ][a-zA-Zа-яё-]+)?$/u,
 	login: /^(?=.*[a-zA-Z])[a-zA-Z0-9_-]{3,20}$/,
 	email: /^[a-zA-Z0-9._-]+@[a-zA-Z]+\.[a-zA-Z]+$/,
 	password: /^(?=.*[A-ZА-ЯЁ])(?=.*\d)[^\s]{8,40}$/u,
-	phone: /^\+?\d[\d\s\-()]{9,20}$/,
+	phone: /^\+?(?:\D*\d){10,15}\D*$/,
 	message: /^(?!\s*$).+/,
 };
 
