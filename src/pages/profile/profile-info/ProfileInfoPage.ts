@@ -21,7 +21,7 @@ const template = `
       <div class="profile-info-content">
         <div class="profile-info-avatar-block">
           {{{ Avatar }}}
-          <span class="profile-info-username">Иван</span>
+          <span class="profile-info-username">{{ username }}</span>
         </div>
         <div class="profile-info-data-block">
           {{{ Fields }}}
@@ -47,6 +47,7 @@ const template = `
 export default class ProfileInfoPage extends Block {
 	constructor() {
 		super("div", {
+			username: "username",
 			BackBtn: new Button({
 				attributes: {
 					id: "backBtn",
@@ -147,6 +148,7 @@ export default class ProfileInfoPage extends Block {
 				: "profile-info-default-avatar-img";
 
 			this.setProps({
+				username: userData.display_name,
 				Fields: new Fields({
 					attributes: {
 						class: "profile-fields",
