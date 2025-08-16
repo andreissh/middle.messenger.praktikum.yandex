@@ -51,7 +51,7 @@ export type UserData = {
 	display_name: string;
 	phone: string;
 	login: string;
-	avatar: string;
+	avatar: string | null;
 	email: string;
 };
 
@@ -72,7 +72,7 @@ export type RemoveUserReq = {
 export type UserChat = {
 	id: number;
 	title: string;
-	avatar: string;
+	avatar: string | null;
 	unread_count: number;
 	created_by: number;
 	last_message: {
@@ -86,7 +86,7 @@ export type UserChat = {
 		};
 		time: string;
 		content: string;
-	};
+	} | null;
 };
 
 export type DeleteChatRes = {
@@ -123,7 +123,7 @@ export type ChatUser = {
 	second_name: string;
 	display_name: string;
 	login: string;
-	avatar: string;
+	avatar: string | null;
 	role: string;
 };
 

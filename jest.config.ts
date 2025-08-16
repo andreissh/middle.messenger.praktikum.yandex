@@ -18,6 +18,7 @@ const config: Config = {
 			tsconfig: "./tsconfig.json",
 		},
 	},
+	setupFilesAfterEnv: ["./jest.setup.ts"],
 };
 
 export default config;

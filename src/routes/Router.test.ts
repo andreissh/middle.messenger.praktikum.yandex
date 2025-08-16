@@ -2,7 +2,7 @@ import Block from "@/framework/Block";
 import { jest } from "@jest/globals";
 import { Router } from "./Router";
 
-jest.mock("./Route");
+jest.mock("@/routes/Route");
 
 class TestComponent extends Block {
 	constructor() {

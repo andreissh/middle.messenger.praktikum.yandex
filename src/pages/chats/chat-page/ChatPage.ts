@@ -11,8 +11,8 @@ import { resourcesUrl } from "@/utils/utils";
 import ChatsService from "@/services/ChatsService";
 import router from "@/routes/Router";
 import { EventsType } from "@/types/types";
-import "./chat-page.css";
 import handleImageUpload from "@/utils/imageUpload";
+import "./chat-page.css";
 
 type ChatPageProps = {
 	chatUsers: string[];
@@ -46,8 +46,7 @@ const template = `
 			{{#if chatId}}
 				<div class="chat-messages"></div>
 			{{else}}
-				<span class="chat-text-default">Выберите чат, чтобы
-					отправить сообщение</span>
+				<span class="chat-text-default">Выберите чат, чтобы отправить сообщение</span>
 			{{/if}}
 		</div>
 		{{#if chatId}}
